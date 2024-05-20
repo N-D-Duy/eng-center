@@ -1,5 +1,8 @@
 const express = require('express');
 const app = express();
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+require('./server/config/router')(app);
 
 //connect to mongodb
 const mongoose = require('mongoose');
@@ -10,10 +13,9 @@ mongoose.connect('mongodb+srv://nguyenducduypc160903:oUJoajUVaiCRJC8U@eng-center
 
 app.get('/', (req, res) => {
     //home page home.html
-    res.sendFile(__dirname + '/ui/home.html');
-
+    res.sendFile(__dirname + '/presentation/home.html');
 });
 
-app.listen(3000, () => {
-    console.log('Server is running on http://localhost:3000');
+app.listen(8000, () => {
+    console.log('Server is running on http://localhost:8000');
 });
