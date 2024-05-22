@@ -1,4 +1,6 @@
 const Teacher = require('../../../models/teacher');
+const Account = require('../../../models/account');
+const mongoose = require('mongoose');
 
 const getTeacherInfor = async (req, res) => {
     try {
@@ -30,7 +32,14 @@ const getAllTeachers = async (req, res) => {
 
 const createTeacher = async (req, res) => {
     try {
-        const teacher = await Teacher.create(req.body);
+        //create a new account first
+        const account = new Account(req.body.account);
+        await account.save();
+        //then get the account id
+        const account_id = account._id;
+        //add the account id to the teacher object
+        req.body.teacher.account = account_id;
+        const teacher = await Teacher.create(req.body.teacher);
         return res.status(201).json({
           data: teacher
         });

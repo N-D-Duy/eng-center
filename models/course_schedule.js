@@ -1,29 +1,32 @@
 const mongoose = require('mongoose');
+const uuid = require('uuid');
 
 const scheduleSchema = new mongoose.Schema({
     _id: {
-        type: String,
-        required: 'ID is required'
+        type: mongoose.Schema.Types.ObjectId,
+        default: () => new mongoose.Types.ObjectId()
     },
-    courseId: {
-        type: String,
-        required: 'Course ID is required'
+    course: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Course',
+        required: 'Course is required'
     },
     date: {
         type: Date,
         required: 'Date is required'
     },
-    startTime: {
+    start_time: {
         type: String,
         required: 'Start time is required'
     },
-    endTime: {
+    end_time: {
         type: String,
         required: 'End time is required'
     },
-    teacherId: {
-        type: String,
-        required: 'Teacher ID is required'
+    teacher: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Teacher',
+        required: 'Teacher is required'
     },
     status: {
         type: String,

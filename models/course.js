@@ -4,8 +4,8 @@ const uuid = require('uuid');
 //
 const courseSchema = new mongoose.Schema({
     _id: {
-        type: String,
-        default: uuid.v4
+        type: mongoose.Schema.Types.ObjectId,
+        default: () => new mongoose.Types.ObjectId()
     },
     name: {
         type: String,
@@ -31,8 +31,9 @@ const courseSchema = new mongoose.Schema({
         type: Number,
         required: 'Grade is required'
     },
-    teacher_id: {
-        type: String,
+    teacher: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Teacher',
         required: 'Teacher id is required'
     },
 }, {

@@ -1,4 +1,4 @@
-const Account = require('../models/account.js');
+const Account = require('../../../models/account');
 const loginWithEmailAndPassword = async (email, password) => {
     if (!email || !password) {
         return 'Email and password are required';

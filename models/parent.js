@@ -4,13 +4,14 @@ const uuid = require('uuid');
 
 const parentSchema = new mongoose.Schema({
     _id: {
-        type: String,
-        default: uuid.v4
+        type: mongoose.Schema.Types.ObjectId,
+        default: () => new mongoose.Types.ObjectId()
     },
     account: {
-        type: account.schema,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Account',
         required: 'Account is required'
-    }
+    },
 }, {
     timestamps: true
 });

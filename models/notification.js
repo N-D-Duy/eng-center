@@ -3,11 +3,12 @@ const uuid = require('uuid');
 
 const notificationSchema = new mongoose.Schema({
     _id: {
-        type: String,
-        default: uuid.v4
+        type: mongoose.Schema.Types.ObjectId,
+        default: () => new mongoose.Types.ObjectId()
     },
-    parent_id: {
-        type: String,
+    parent: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Parent',
         required: 'User id is required'
     },
     message: {

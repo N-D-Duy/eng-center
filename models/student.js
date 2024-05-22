@@ -4,12 +4,13 @@ const uuid = require('uuid');
 
 const studentSchema = new mongoose.Schema({
     _id: {
-        type: String,
-        default: uuid.v4
+        type: mongoose.Schema.Types.ObjectId,
+        default: () => new mongoose.Types.ObjectId()
     },
-    parent_id: {
-        type: String,
-        required: 'Parent id is required'
+    parent: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Parent',
+        required: false
     },
     cocc_percent:{
         type: Number,
@@ -24,7 +25,8 @@ const studentSchema = new mongoose.Schema({
         default: 0
     },
     account: {
-        type: account.schema,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Account',
         required: 'Account is required'
     }
 }, {

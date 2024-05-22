@@ -3,11 +3,12 @@ const uuid = require('uuid');
 
 const paymentSchema = new mongoose.Schema({
     _id: {
-        type: String,
-        default: uuid.v4
+        type: mongoose.Schema.Types.ObjectId,
+        default: () => new mongoose.Types.ObjectId()
     },
-    course_student_id: {
-        type: String,
+    course_student: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'CourseStudent',
         required: 'Course id is required'
     },
     amount_paid: {
