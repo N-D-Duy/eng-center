@@ -1,8 +1,10 @@
 {
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "express": "^4.19.2",
     "mongodb": "^6.6.1",
-    "mongoose": "^8.3.5"
+    "mongoose": "^8.3.5",
+    "uuid": "^9.0.1"
   },
   "name": "project",
   "version": "1.0.0",
