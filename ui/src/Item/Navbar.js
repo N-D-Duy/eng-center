@@ -1,24 +1,23 @@
 
 import '../fonts/icomoon/style.css';
 import '../css/bootstrap.min.css';
-import '../css/jquery-ui.css';
-import '../css/owl.carousel.min.css';
-import '../css/owl.theme.default.min.css';
 import '../css/jquery.fancybox.min.css';
 import '../css/bootstrap-datepicker.css';
 import '../fonts/flaticon/font/flaticon.css';
 import '../css/aos.css';
-import '../css/jquery.mb.YTPlayer.min.css';
 import '../css/style.css';
+import '../css/styles.css';
+import logo from '../images/logo.jpg';
 
-const Navbar = () =>{
+// Can them thong tin ve trang thai da dang nhap hay chưa nếu rồi thì hiển thị thông tin cá nhân
+export const Navbar = () =>{
     return (
-    <header class="site-navbar py-4 bg-light site-navbar-target" role="banner">
-        <div class="container">
+    <div class="site-navbar py-4 bg-light site-navbar-target" role="banner">
+        <div class="container container-background">
         <div class="d-flex align-items-center">
             <div class="site-logo">
             <a href="index.html" class="d-block">
-                <img src="../images/logo.jpg" alt="Image" class="img-fluid" />
+                <img src = {logo} alt="Image" class="img-fluid" />
             </a>
             </div>
             <div class="mr-auto">
@@ -44,9 +43,7 @@ const Navbar = () =>{
             </div>
         </div>
         </div>
-    </header>
+    </div>
   );
 
 } 
-
-export default Navbar;
