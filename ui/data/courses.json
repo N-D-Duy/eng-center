@@ -6,6 +6,7 @@
     "price": 1000000,
     "teacher": "Nguyễn Văn A",
     "capacity": 100,
+    "image": "./images/course_1.jpg",
     "students" : [
       {
         "id": 1,
@@ -26,6 +27,7 @@
     "price": 1500000,
     "teacher": "Nguyễn Văn D",
     "capacity": 100,
+    "image": "./images/course_2.jpg",
     "students" : [
       {
         "id": 1,

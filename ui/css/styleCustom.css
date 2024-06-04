@@ -13,3 +13,24 @@
 .item-card button {
     margin: 5px;
 }
+.course-list {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction:  row;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+}
+
+.course-item {
+    display: flex;
+    flex-direction: row;    
+    cursor: pointer;
+    padding: 10px;
+    margin: 10px;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    text-align: center;
+
+}
