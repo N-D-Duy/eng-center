@@ -2,6 +2,7 @@ const Student = require('../../../models/student.js');
 const CourseStudent = require('../../../models/course_student.js');
 const Account = require('../../../models/account.js');
 const mongoose = require('mongoose');
+const { checkValidPassword } = require('../../utils/auth_check.js');
 
 const getStudentInfor = async (req, res) => {
     try {
@@ -35,22 +36,37 @@ const createStudent = async (req, res) => {
     try {
         // Tạo một tài khoản mới
         const account = new Account(req.body.account);
-        await account.save();
-        
-        // Lấy account id
-        const account_id = account._id;
-        
-        // Gán account id cho đối tượng student
-        req.body.student.account = account_id;
-        
-        // Kiểm tra xem parent có được cung cấp hay không
-        if(req.body.student.parent == "") {
-            req.body.student.parent = null;
+        //check nếu password không hợp lệ
+        if(!checkValidPassword(account.password)){
+            return res.status(400).json({
+                error: 'Invalid password'
+            });
+        }
+
+        //check email đã sử dụng
+        const emailExist = await Account.findOne({ email  : account.email });
+        if(emailExist){
+            return res.status(400).json({
+                error: 'Email already exists'
+            });
         }
         
+        await account.save();
+
+        // Lấy account id
+        const account_id = account._id;
+
+        // Gán account id cho đối tượng student
+        req.body.student.account = account_id;
+
+        // convert parent id sang object id nếu parent id rỗng
+        if (req.body.student.parent == "") {
+            req.body.student.parent = null;
+        }
+
         // Chuyển parent id từ string sang ObjectId
         req.body.student.parent = new mongoose.Types.ObjectId.createFromHexString(req.body.student.parent);
-        
+
         // Tạo student mới
         const student = await Student.create(req.body.student);
         return res.status(201).json({
@@ -79,10 +95,30 @@ const getAllCoursesJoined = async (req, res) => {
     }
 }
 
+const updateStudent = async (req, res) => {
+    try {
+        const student = await Student.findByIdAndUpdate(req.params.id, req.body);
+        if (!student) {
+            return res.status(404).json({
+                message: 'Student not found'
+            });
+        }
+        const updatedStudent = await Student.findById(req.params.id);
+        return res.status(200).json({
+            data: updatedStudent
+        });
+    } catch (err) {
+        return res.status(400).json({
+            error: err.message
+        });
+    }
+}
+
 module.exports = {
     getStudentInfor,
     getAllStudents,
     createStudent,
-    getAllCoursesJoined
+    getAllCoursesJoined,
+    updateStudent
 };
 

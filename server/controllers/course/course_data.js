@@ -1,8 +1,16 @@
 const Course = require('../../../models/course.js');
 const CourseStudent = require('../../../models/course_student.js');
+
 const getAllCourses = async (req, res) => {
   try {
-    const courses = await Course.find();
+    const courses = await Course.find().exec();
+
+    if (!courses) {
+      return res.status(404).json({
+        message: 'No courses found'
+      });
+    }
+
     return res.status(200).json({
       data: courses
     });
@@ -15,7 +23,15 @@ const getAllCourses = async (req, res) => {
 
 const getCourseById = async (req, res) => {
   try {
-    const course = await Course.findById(req.params.id);
+    const { id } = req.params;
+    const course = await Course.findById(id).exec();
+
+    if (!course) {
+      return res.status(404).json({
+        message: 'Course not found'
+      });
+    }
+
     return res.status(200).json({
       data: course
     });
@@ -25,6 +41,7 @@ const getCourseById = async (req, res) => {
     });
   }
 };
+
 
 const createCourse = async (req, res) => {
   try {
@@ -42,7 +59,7 @@ const createCourse = async (req, res) => {
 const updateCourse = async (req, res) => {
   try {
     const { id } = req.params;
-    const course = await Course.findByIdAndUpdate(id, req.body)
+    const course = await Course.findByIdAndUpdate(id, req.body);
     if (!course) {
       return res.status(404).json({
         message: 'Course not found'

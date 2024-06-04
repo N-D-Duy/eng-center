@@ -11,6 +11,9 @@ module.exports = (app) => {
     app.get('/api/parent/:id', controller.userData.ParentData.getParentInfor);
     app.get('/api/parents', controller.userData.ParentData.getAllParents);
     app.post('/api/parent', controller.userData.ParentData.createParent);
+
+    //account
+    app.get('/api/accounts', controller.userData.getAccounts);
     
     //auth
     app.post('/api/login', controller.auth.loginWithEmailAndPassword);

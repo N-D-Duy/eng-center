@@ -32,8 +32,9 @@ const getTeacherSchedule = async (teacherId) => {
 
 const updateSchedule = async ({studentId, courseId}) => {
     try {
-        //
-        return studentSchedule;
+        //when a student registers for a course, create a new student schedule
+        const schedule = await StudentSchedule.create({student: studentId, course_schedule: courseId});
+        return schedule;
     }
     catch (err) {
         return err.message;
