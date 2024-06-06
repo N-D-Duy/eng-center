@@ -8,7 +8,7 @@ const { checkValidEmail, checkValidPassword } = require('../../utils/auth_check'
  * @returns {Promise<string|object>} - A promise that resolves to either an error message or the user account object.
  */
 const loginWithEmailOrUsernameAndPassword = async (req, res) => {
-    const {emailOrUsername, password, role} = req.body;
+    const {emailOrUsername, password} = req.body;
     if (!emailOrUsername || !password) {
         return res.status(400).json({
             error: 'Email/Username and password are required'
@@ -27,11 +27,11 @@ const loginWithEmailOrUsernameAndPassword = async (req, res) => {
         });
     }
 
-    // if (!checkValidPassword(password)) {
-    //     return res.status(400).json({
-    //         error: 'Invalid password'
-    //     });
-    // }
+    if (!checkValidPassword(password)) {
+        return res.status(400).json({
+            error: 'Invalid password'
+        });
+    }
 
     try {
         const account = await Account.findOne({
@@ -45,12 +45,6 @@ const loginWithEmailOrUsernameAndPassword = async (req, res) => {
         if (!account) {
             return res.status(400).json({
                 error: 'Invalid email/username or password'
-            });
-        }
-
-        if (account.role !== role) {
-            return res.status(400).json({
-                error: 'Invalid role'
             });
         }
 

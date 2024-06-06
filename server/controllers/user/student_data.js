@@ -62,10 +62,12 @@ const createStudent = async (req, res) => {
         // convert parent id sang object id nếu parent id rỗng
         if (req.body.student.parent == "") {
             req.body.student.parent = null;
+        } else {
+            // Chuyển parent id từ string sang ObjectId
+            req.body.student.parent = new mongoose.Types.ObjectId.createFromHexString(req.body.student.parent);
         }
 
-        // Chuyển parent id từ string sang ObjectId
-        req.body.student.parent = new mongoose.Types.ObjectId.createFromHexString(req.body.student.parent);
+        
 
         // Tạo student mới
         const student = await Student.create(req.body.student);

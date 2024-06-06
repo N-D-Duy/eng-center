@@ -1,6 +1,8 @@
 const Parent = require('../../../models/parent.js');
 const Account = require('../../../models/account.js');
 const mongoose = require('mongoose');
+const account = require('../../../models/account.js');
+const Student = require('../../../models/student.js');
 
 const getParentInfor = async (req, res) => {
     try {
@@ -29,15 +31,45 @@ const getAllParents = async (req, res) => {
 };
 
 const createParent = async (req, res) => {
+    //account and invite code from req.body
+    const { account, parent } = req.body;
+    const invite_code = parent.invite_code;
+    console.log(invite_code)
+    
+    //check if invite code is valid
+    //query students to find the student match with the invite code
+    const student = await Student.findOne({ _id: invite_code });
+    if (!student) {
+        return res.status(400).json({
+            error: 'Invalid invite code'
+        });
+    }
     try {
-        const account = new Account(req.body.account);
-        await account.save();
-        const account_id = account._id;
+        //create new account
+        const accountSchema = new Account(account);
+        await accountSchema.save();
+
+        //get account id to assign to parent
+        const account_id = accountSchema._id;
         req.body.parent.account = account_id;
-        const parent = await Parent.create(req.body.parent);
+        
+
+        try{
+            //create new parent
+            const parent = await Parent.create(req.body.parent);
+            //update student (parent field) if invite code
+            student.parent = parent._id;
+            await student.save();
+        } catch (error) {
+            return res.status(400).json({
+                error: error.message
+            });
+        }
         return res.status(201).json({
             data: parent
         });
+
+        
     } catch (error) {
         return res.status(400).json({
             error: error.message

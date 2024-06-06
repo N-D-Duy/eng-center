@@ -9,7 +9,7 @@ require('./server/config/router')(app);
 const mongoose = require('mongoose');
 // Connect to MongoDB
 mongoose.connect(setting.db).then(() => {
-  console.log('Connected to MongoDB');
+  console.log('Connected to MongoDB');  
 });
 
 app.get('/', (req, res) => {
