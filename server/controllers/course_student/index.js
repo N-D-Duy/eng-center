@@ -6,11 +6,11 @@ const CourseStudent = require('../../../models/course_student');
 //trigger when a student join a course
 const triggerCourseStudentJoin = async (req, res) => {
     try {
-        const {courseId, studentId} = req.body;
+        const {course, student} = req.body;
         //check if course and student exist
-        const course = await Course.findById(courseId);
-        const student = await Student.findById(studentId);
-        if (!course || !student) {
+        const courseData = await Course.findById(course);
+        const studentData = await Student.findById(student);
+        if (!courseData || !studentData) {
             return res.status(404).json({
                 message: 'Course or student not found'
             });
@@ -18,12 +18,13 @@ const triggerCourseStudentJoin = async (req, res) => {
 
         //if yes, create a new courseStudent
         const courseStudent = new CourseStudent({
-            student: studentId,
-            course: courseId
+            student: student,
+            course: course
         });
         await courseStudent.save();
         return res.status(200).json({
-            data: courseStudent
+            data: courseStudent,
+            message: 'student join course successfully'
         });
     } catch (err) {
         return res.status(400).json({
@@ -36,11 +37,11 @@ const triggerCourseStudentJoin = async (req, res) => {
 //trigger when a student leave a course
 const triggerCourseStudentLeave = async (req, res) => {
     try {
-        const {courseId, studentId} = req.body;
+        const {course, student} = req.body;
         //check if course and student exist
-        const course = await Course.findById(courseId);
-        const student = await Student.findById(studentId);
-        if (!course || !student) {
+        const courseData = await Course.findById(course);
+        const studentData = await Student.findById(student);
+        if (!courseData || !studentData) {
             return res.status(404).json({
                 message: 'Course or student not found'
             });
@@ -48,8 +49,8 @@ const triggerCourseStudentLeave = async (req, res) => {
 
         //if yes, delete the courseStudent
         const courseStudent = await CourseStudent.findOneAndDelete({
-            student: studentId,
-            course: courseId
+            student: student,
+            course: course
         });
         if (!courseStudent) {
             return res.status(404).json({
@@ -57,7 +58,8 @@ const triggerCourseStudentLeave = async (req, res) => {
             });
         }
         return res.status(200).json({
-            data: courseStudent
+            data: courseStudent,
+            message: 'student leave course successfully'
         });
     } catch (err) {
         return res.status(400).json({

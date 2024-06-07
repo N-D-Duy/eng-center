@@ -2,7 +2,8 @@ const { default: mongoose } = require('mongoose');
 const Course = require('../../../models/course.js');
 const CourseStudent = require('../../../models/course_student.js');
 const teacher = require('../../../models/teacher.js');
-const { triggerCourseStudentJoin } = require('../course_student/index.js');
+const { triggerCourseStudentJoin, triggerCourseStudentLeave } = require('../course_student/index.js');
+const Student = require('../../../models/student.js');
 
 const joinCourse = async (req, res) => {
   try {
@@ -155,16 +156,28 @@ const findCourse = async (req, res) => {
   }
 };
 
+
+
 const getAllStudentsInCourse = async (req, res) => {
   try {
-    const { id } = req.params;
-    const course = await CourseStudent.findById(id);
-    if (!course) {
+    // Lấy Course ID từ body
+    console.log(req.body);
+    const { course } = req.body;
+    console.log(course);
+
+    // Tìm tất cả các course_student với Course ID đã cho
+    const courseData = await CourseStudent.find({ course: course }).populate('student');
+    
+    // Kiểm tra nếu không tìm thấy dữ liệu nào
+    if (!courseData.length) {
       return res.status(404).json({
-        message: 'Course not found'
+        message: 'Course not found or no students enrolled'
       });
     }
-    const students = course.students;
+
+    // Trích xuất danh sách sinh viên từ kết quả truy vấn
+    const students = courseData.map(cs => cs.student);
+
     return res.status(200).json({
       data: students
     });
@@ -175,6 +188,7 @@ const getAllStudentsInCourse = async (req, res) => {
   }
 };
 
+
 module.exports = {
   getAllCourses,
   getCourseById,
@@ -182,5 +196,8 @@ module.exports = {
   updateCourse,
   deleteCourse,
   findCourse,
-  getNewCourses
+  getNewCourses,
+  joinCourse,
+  leaveCourse,
+  getAllStudentsInCourse
 }

@@ -23,9 +23,10 @@ const paymentSchema = new mongoose.Schema({
         type: String,
         required: 'Payment method is required'
     },
-    payment_date: {
-        type: Date,
-        default: Date.now
+    parent: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Parent',
+        required: 'Parent id is required'
     }
 }, {
     timestamps: true

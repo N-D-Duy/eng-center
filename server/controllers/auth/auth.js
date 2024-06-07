@@ -58,6 +58,61 @@ const loginWithEmailOrUsernameAndPassword = async (req, res) => {
     }
 };
 
+const changePassword= async(req, res) => {
+    const {emailOrUsername, password} = req.body;
+    if (!emailOrUsername || !password) {
+        return res.status(400).json({
+            error: 'Email/Username and password are required'
+        });
+    }
+
+    if (typeof emailOrUsername !== 'string') {
+        return res.status(400).json({
+            error: 'Email/Username must be a string'
+        });
+    }
+
+    if (emailOrUsername.includes("@") && !checkValidEmail(emailOrUsername)) {
+        return res.status(400).json({
+            error: 'Invalid email'
+        });
+    }
+
+    //check new password is valid
+    if (!checkValidPassword(password)) {
+        return res.status(400).json({
+            error: 'Invalid password'
+        });
+    }
+
+    try {
+        const account = await Account.findOne({
+            $or: [
+                { email: emailOrUsername },
+                { user_name: emailOrUsername }
+            ]
+        });
+
+        if (!account) {
+            return res.status(400).json({
+                error: 'Invalid email/username'
+            });
+        }
+
+        account.password = password;
+        await account.save();
+
+        return res.status(200).json({
+            data: account,
+            message: 'Password changed successfully'
+        });
+    } catch (err) {
+        return res.status(400).json({
+            error: err.message
+        });
+    }
+}
 
 
-module.exports = { loginWithEmailAndPassword: loginWithEmailOrUsernameAndPassword };
+
+module.exports = { loginWithEmailAndPassword: loginWithEmailOrUsernameAndPassword, changePassword };

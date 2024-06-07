@@ -14,6 +14,7 @@ module.exports = (app) => {
 
     //account
     app.get('/api/accounts', controller.userData.getAccounts);
+    app.post('/api/account/change-password', controller.auth.changePassword);
     
     //auth
     app.post('/api/login', controller.auth.loginWithEmailAndPassword);
