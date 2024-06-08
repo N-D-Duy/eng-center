@@ -7,6 +7,10 @@ const teacherSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         default: () => new mongoose.Types.ObjectId()
     },
+    name: {
+        type: String,
+        required: 'Name is required'
+    },
     account: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Account',

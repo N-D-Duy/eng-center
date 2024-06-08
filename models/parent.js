@@ -1,11 +1,15 @@
 const mongoose = require('mongoose');
 const account = require('./account');
-const uuid = require('uuid');
+
 
 const parentSchema = new mongoose.Schema({
     _id: {
         type: mongoose.Schema.Types.ObjectId,
         default: () => new mongoose.Types.ObjectId()
+    },
+    name: {
+        type: String,
+        required: 'Name is required'
     },
     account: {
         type: mongoose.Schema.Types.ObjectId,

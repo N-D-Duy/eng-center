@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
-const uuid = require('uuid');
 
-//
+// Define the course schema
 const courseSchema = new mongoose.Schema({
     _id: {
         type: mongoose.Schema.Types.ObjectId,
@@ -31,11 +30,19 @@ const courseSchema = new mongoose.Schema({
         type: Number,
         required: 'Grade is required'
     },
+    status: {
+        type: String,
+        default: 'inactive'
+    },
     teacher: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Teacher',
-        required: 'Teacher id is required'
+        default: null
     },
+    // capacity: {
+    //     type: Number,
+    //     required: 'Capacity is required'
+    // },
 }, {
     timestamps: true
 });

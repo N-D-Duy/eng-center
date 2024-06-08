@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const uuid = require('uuid');
+
 
 const scheduleSchema = new mongoose.Schema({
     _id: {
@@ -11,8 +11,8 @@ const scheduleSchema = new mongoose.Schema({
         ref: 'Course',
         required: 'Course is required'
     },
-    date: {
-        type: Date,
+    day: {
+        type: String,
         required: 'Date is required'
     },
     start_time: {
@@ -30,7 +30,7 @@ const scheduleSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        required: 'Status is required'
+        default: 'active'
     }
 }, {
     timestamps: true
