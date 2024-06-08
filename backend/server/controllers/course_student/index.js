@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
-const Student = require('../../../models/student');
-const Course = require('../../../models/course');
-const CourseStudent = require('../../../models/course_student');
+const Student = require('../../models/student');
+const Course = require('../../models/course');
+const CourseStudent = require('../../models/course_student');
 
 //trigger when a student join a course
 const triggerCourseStudentJoin = async (req, res) => {

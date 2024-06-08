@@ -1,5 +1,5 @@
-const Teacher = require('../../../models/teacher');
-const Account = require('../../../models/account');
+const Teacher = require('../../models/teacher');
+const Account = require('../../models/account');
 const mongoose = require('mongoose');
 
 const getTeacherInfor = async (req, res) => {

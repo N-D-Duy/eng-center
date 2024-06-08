@@ -1,5 +1,5 @@
 const { default: mongoose } = require('mongoose');
-const Payment = require('../../../models/payment.js');
+const Payment = require('../../models/payment.js');
 
 const getPayments = async (req, res) => {
     try {

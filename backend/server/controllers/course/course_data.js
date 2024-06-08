@@ -1,9 +1,9 @@
 const { default: mongoose } = require('mongoose');
-const Course = require('../../../models/course.js');
-const CourseStudent = require('../../../models/course_student.js');
-const teacher = require('../../../models/teacher.js');
+const Course = require('../../models/course.js');
+const CourseStudent = require('../../models/course_student.js');
+const teacher = require('../../models/teacher.js');
 const { triggerCourseStudentJoin, triggerCourseStudentLeave } = require('../course_student/index.js');
-const Student = require('../../../models/student.js');
+const Student = require('../../models/student.js');
 
 const joinCourse = async (req, res) => {
   try {

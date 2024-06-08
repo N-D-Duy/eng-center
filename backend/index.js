@@ -12,11 +12,6 @@ mongoose.connect(setting.db).then(() => {
   console.log('Connected to MongoDB');  
 });
 
-app.get('/', (req, res) => {
-    //home page home.html 
-    res.sendFile(__dirname + '/presentation/home.html');
-});
-
 app.listen(setting.port, () => {
     console.log('Server is running on http://localhost:8000');
 }); 
