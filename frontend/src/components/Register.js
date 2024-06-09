@@ -1,4 +1,6 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 export const Register = (prop) => {
     return (
@@ -7,6 +9,27 @@ export const Register = (prop) => {
 }
 
 const RegisterView = () => {
+    const [email, setUserEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [username, setUsername] = useState('');
+    const [userInvitedCode, setInvitedCode] = useState('');
+    const [role, setRole] = useState('teacher');
+    const [agreePolicy, setAgreePolicy] = useState(false);
+
+    const handleRegister = async (e) => {
+        e.preventDefault();
+        console.log(`AgreePolicy ${agreePolicy}`);
+        if(!agreePolicy) return;
+        console.log(`Email ${email}`);
+        console.log(`Pass ${password}`);
+        console.log(`Name ${username}`);
+        console.log(`UserInvitedCode ${userInvitedCode}`);
+        console.log(`Role ${role}`);
+    };
+
+
+
+
     return (
         <div class="container">
 
@@ -34,14 +57,14 @@ const RegisterView = () => {
                     <form class="row g-3 needs-validation" novalidate>
                       <div class="col-12">
                         <label for="yourName" class="form-label">Your Name</label>
-                        <input type="text" name="name" class="form-control" id="yourName" required />
+                        <input type="text" name="name" class="form-control" onChange={(e) => setUsername(e.target.value)} required />
                         <div class="invalid-feedback">Please, enter your name!</div>
                       </div>
   
                       <div class="col-12">
                         <label for="yourName" class="form-label">Select</label>
                         <div class="col-12">
-                          <select class="form-select" aria-label="Default select example" onChange = {onClickRole}>
+                          <select class="form-select" aria-label="Default select example" onChange = {(e) => setRole(onClickRole(e))}>
                             <option value="teacher">Teacher</option>
                             <option value="student">Student</option>
                             <option value="parent">Parent</option>
@@ -51,34 +74,34 @@ const RegisterView = () => {
   
                       <div class="col-12 d-none" id = "register-studentID-div">
                         <label for="yourName" class="form-label">Invited Code</label>
-                        <input type="text" name="name" class="form-control" id="yourName" required />
+                        <input type="text" name="name" class="form-control" onChange={(e) => setInvitedCode(e.target.value)} required />
                         <div class="invalid-feedback">Please, enter your name!</div>
                       </div>
   
                       <div class="col-12">
                         <label for="yourEmail" class="form-label">Your Email</label>
-                        <input type="email" name="email" class="form-control" id="yourEmail" required />
+                        <input type="email" name="email" class="form-control" onChange={(e) => setUserEmail(e.target.value)} required />
                         <div class="invalid-feedback">Please enter a valid Email adddress!</div>
                       </div>
   
                       <div class="col-12">
                         <label for="yourPassword" class="form-label">Password</label>
-                        <input type="password" name="password" class="form-control" id="yourPassword" required />
+                        <input type="password" name="password" class="form-control" onChange={(e) => setPassword(e.target.value)} required />
                         <div class="invalid-feedback">Please enter your password!</div>
                       </div>
   
                       <div class="col-12">
                         <div class="form-check">
-                          <input class="form-check-input" name="terms" type="checkbox" value="" id="acceptTerms" required />
-                          <label class="form-check-label" for="acceptTerms">I agree and accept the <a href="#policy">terms and conditions</a></label>
+                          <input class="form-check-input" name="terms" type="checkbox" value="" onChange={(e) => setAgreePolicy(e.target.checked)} required />
+                          <label class="form-check-label" for="acceptTerms">I agree and accept the <Link to="/policy">terms and conditions</Link></label>
                           <div class="invalid-feedback">You must agree before submitting.</div>
                         </div>
                       </div>
                       <div class="col-12" id = "btn-submit-register">   
-                        <div class="btn btn-primary w-100">Create Account</div>
+                        <div class="btn btn-primary w-100" onClick={handleRegister}>Create Account</div>
                       </div>
                       <div class="col-12">
-                        <p class="small mb-0">Already have an account? <a href="#login">Log in</a></p>
+                        <p class="small mb-0">Already have an account? <Link to="/login">Log in</Link></p>
                       </div>
                     </form>
   
@@ -101,5 +124,5 @@ function onClickRole(event){
     } else {
         studentIdDiv.classList.add('d-none');
     }
-    console.log(studentIdDiv.classList);
+    return selectedRole;
 }

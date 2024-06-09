@@ -1,7 +1,11 @@
-import 'bootstrap/dist/js/bootstrap.bundle.min.js';
-import 'bootstrap/dist/js/bootstrap.bundle.min.js';
-import '../style.css'
-export const Sidebar = ({prop: role}) => {
+import { Link } from "react-router-dom"
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap-icons/font/bootstrap-icons.min.css';
+import { AuthProvider, useAuth } from "../Context/AuthContext";
+export const Sidebar = () => {
+
+    const {role} = useAuth(AuthProvider);
+
     const renderView = (role) => {
         switch(role) {
             case 'admin':
@@ -25,10 +29,12 @@ export const Sidebar = ({prop: role}) => {
                 <aside id="sidebar" class = "sidebar">
                     <ul class="sidebar-nav" id="sidebar-nav">
                         <li class="nav-item">
-                            <a class="nav-link collapsed" href="#slidebar-dashboard">
-                            <i class="bi bi-grid"></i>
-                            <span>Dashboard</span>
-                            </a>
+                            <Link to={`/${role}`}>
+                                <a class="nav-link collapsed" href="#a">
+                                <i class="bi bi-grid"></i>
+                                <span>Dashboard</span>
+                                </a>
+                            </Link>
                         </li>
                         {renderView(role)}
                     </ul>
@@ -42,47 +48,46 @@ export const Sidebar = ({prop: role}) => {
 const AdminSlidebar = () =>{
     return (
         <div class="sidebar-nav" id="sidebar-nav">
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="#slidebar-dashboard">
-            <i class="bi bi-grid"></i>
-            <span>Dashboard</span>
-            </a>
-        </li>
               <li class="nav-item">
-                <a class="nav-link collapsed" href="#slidebar-course-manager">
-                  <i class="bi bi-grid"></i>
-                  <span>Course Manager</span>
-                </a>
+                <Link to ="/admin/coursemanager"> 
+                    <a class="nav-link collapsed" href="#a">
+                        <i class="bi bi-grid"></i>
+                        <span>Course Manager</span>
+                    </a>
+                </Link>
+                
               </li>
         
               <li class="nav-item">
                 <a class="nav-link collapsed" data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#slidebar-user-manager">
-                  <i class="bi bi-layout-text-window-reverse"></i><span>User Manager</span><i class="bi bi-chevron-down ms-auto"></i>
+                    <i class="bi bi-layout-text-window-reverse"></i><span>User Manager</span><i class="bi bi-chevron-down ms-auto"></i>
                 </a>
                 <ul id="tables-nav" class="nav-content collapse show" data-bs-parent="#sidebar-nav">
                   <li>
-                    <a href="#slidebar-teacher-manager" class="active">
-                      <i class="bi bi-circle"></i><span>Teacher Manager</span>
-                    </a>
+                        <Link to ="/admin/teachermanager"> 
+                            <i class="bi bi-circle"></i><span>Teacher Manager</span>
+                        </Link>
                   </li>
                   <li>
-                    <a href="#slidebar-student-manager">
-                      <i class="bi bi-circle"></i><span>Student Manager</span>
-                    </a>
+                        <Link to ="/admin/studentmanager"> 
+                        <i class="bi bi-circle"></i><span>Student Manager</span>
+                        </Link>
                   </li>
                   <li>
-                    <a href="#slidebar-parent-manager">
-                      <i class="bi bi-circle"></i><span>Parent Manager</span>
-                    </a>
+                        <Link to ="/admin/parentmanager"> 
+                             <i class="bi bi-circle"></i><span>Parent Manager</span>
+                        </Link>
                   </li>
                 </ul>
               </li>
         
               <li class="nav-item">
-                <a class="nav-link collapsed" href="#slidebar-payment-manager">
-                  <i class="bi bi-person"></i>
-                  <span>Payment Manager</span>
-                </a>
+                <Link to = "/admin/paymentmanager">
+                    <a class="nav-link collapsed" href="#a">
+                    <i class="bi bi-person"></i>
+                    <span>Payment Manager</span>
+                    </a>
+                </Link>
               </li>
         </div>
     )

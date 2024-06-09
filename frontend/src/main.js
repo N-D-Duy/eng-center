@@ -47,7 +47,8 @@ import * as echarts from 'echarts';
    * Sidebar toggle
    */
   if (select('.toggle-sidebar-btn')) {
-    on('click', '.toggle-sidebar-btn', function(e) {
+    on('click', '.toggle-sidebar-btn', function(e) { 
+
       select('body').classList.toggle('toggle-sidebar')
     })
   }
@@ -56,7 +57,7 @@ import * as echarts from 'echarts';
    * Search bar toggle
    */
   if (select('.search-bar-toggle')) {
-    on('click', '.search-bar-toggle', function(e) {
+    on('click', '.search-bar-toggle', function() {
       select('.search-bar').classList.toggle('search-bar-show')
     })
   }
@@ -68,7 +69,7 @@ import * as echarts from 'echarts';
   const navbarlinksActive = () => {
     let position = window.scrollY + 200
     navbarlinks.forEach(navbarlink => {
-      if (!navbarlink.hash) return
+      if (!navbarlink.hash) return 
       let section = select(navbarlink.hash)
       if (!section) return
       if (position >= section.offsetTop && position <= (section.offsetTop + section.offsetHeight)) {

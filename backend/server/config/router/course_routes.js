@@ -1,6 +1,6 @@
 const controller = require('../../controllers')
-
 module.exports = (app) => {
+
     app.get('/api/courses', controller.courseData.getAllCourses);
     app.get('/api/course/:id', controller.courseData.getCourseById);
     app.get('/api/courses/search', controller.courseData.findCourse);

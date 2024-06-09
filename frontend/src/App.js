@@ -1,52 +1,28 @@
 import './App.css';
-import { Sidebar } from './components/Sidebar.js';
-import { CourseManager } from './components/CourseManager.js';
-import Header from './components/Header.js';
-import React, { useState, useEffect } from 'react';
-import './main.js'
+import { Routes, Route } from 'react-router-dom';
+import { Login } from './components/Login';
+import { Register } from './components/Register';
+import { Dashboard } from './components/DashBoard';
+import { HeaderSlideBar } from './components/HeaderSlideBar';
+import { CourseManager } from './components/CourseManager';
+
+
 function App() {
-  const [courses, setCourses] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  useEffect(() => {
-    const fetchData = () => {
-      //Get all course
-      const fetchData = async () => {
-        try {
-          const response = await fetch('./data/course.json');
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
-          }
-          const jsonData = await response.json();
-          setCourses(jsonData);
-        } catch (error) {
-          setError(error);
-        } finally {
-          setLoading(false);
-        }
-      };
-  
-    };
-
-    fetchData(); // Gọi hàm fetchData khi component được mount
-  }, []);
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  }
-
-  return (
-      <div>
-        <Header />
-        <Sidebar prop = {'admin'} />
-        <CourseManager prop = {courses}/>
-      </div>
-  );
+  return (<div>
+    <Routes>
+      <Route path='/' element = {<Login />}/>
+      <Route path='/admin' element = {<HeaderSlideBar />}>
+          <Route path='/admin/coursemanager' element = {<CourseManager />}/>
+          <Route path='/admin/paymentmanager' element = {<CourseManager />}/>
+          <Route path='/admin/teachermanager' element = {<CourseManager />}/>
+          <Route path='/admin/studentmanager' element = {<CourseManager />}/>
+          <Route path='/admin/parentmanager' element = {<CourseManager />}/>
+          <Route index element = {<Dashboard />}/>
+      </Route>
+      <Route path='/login' element = {<Login />}/>
+      <Route path='/policy' element = {<Login />}/>
+      <Route path='/register' element = {<Register />}/>
+    </Routes>
+  </div>)
 }
-
-
-
 export default App;

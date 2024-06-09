@@ -1,14 +1,15 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.min.css';
 import logo from '../img/logo192.png'
+import { Link } from "react-router-dom"
 const Header = (prop) => {
     return (
         <header id="header" class="header fixed-top d-flex align-items-center">
         <div class="d-flex align-items-center justify-content-between">
-          <a href="index.html" class="logo d-flex align-items-center">
-            <img src= {logo} alt= {logo} />
-            <span class="d-none d-lg-block">NiceAdmin</span>
-          </a>
+            <a href="#none" class="logo d-flex align-items-center">
+                <img src= {logo} alt= {logo} />
+                <span class="d-none d-lg-block">NiceAdmin</span>
+            </a>
           <i class="bi bi-list toggle-sidebar-btn"></i>
         </div>
     
