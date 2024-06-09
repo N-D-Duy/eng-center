@@ -6,21 +6,37 @@ import React, { useState, useEffect } from 'react';
 import './main.js'
 function App() {
   const [courses, setCourses] = useState([]);
-
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   useEffect(() => {
     const fetchData = () => {
-      fetch('./data/course.json')
-      .then(response => response.json())
-      .then(data => {
-        // Xử lý dữ liệu ở đây
-        console.log(data);  
-        setCourses(data);
-      })
-      .catch(error => console.error('Error fetching data:', error));
+      //Get all course
+      const fetchData = async () => {
+        try {
+          const response = await fetch('./data/course.json');
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          const jsonData = await response.json();
+          setCourses(jsonData);
+        } catch (error) {
+          setError(error);
+        } finally {
+          setLoading(false);
+        }
+      };
+  
     };
 
     fetchData(); // Gọi hàm fetchData khi component được mount
   }, []);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
 
   return (
       <div>
