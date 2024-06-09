@@ -1,8 +1,8 @@
-const Parent = require('../../../models/parent.js');
-const Account = require('../../../models/account.js');
+const Parent = require('../../models/parent.js');
+const Account = require('../../models/account.js');
 const mongoose = require('mongoose');
-const account = require('../../../models/account.js');
-const Student = require('../../../models/student.js');
+const account = require('../../models/account.js');
+const Student = require('../../models/student.js');
 
 const getParentInfor = async (req, res) => {
     try {

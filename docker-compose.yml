@@ -1,0 +1,32 @@
+services:
+  backend:
+    build:
+      context: ./backend
+    container_name: backend
+    ports:
+      - "8000:8000"  # Sửa cổng thành 8000:8000
+    networks:
+      - my-network
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: frontend
+    ports:
+      - "3000:3000"  # Sửa cổng thành 3000:3000
+    networks:
+      - my-network
+
+  nginx:
+    build:
+      context: ./nginx
+    container_name: nginx
+    ports:
+      - "80:80"
+    networks:
+      - my-network
+
+networks:
+  my-network:
+    driver: bridge
+

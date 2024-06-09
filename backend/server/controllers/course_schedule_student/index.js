@@ -1,5 +1,5 @@
-const CourseSchedule = require('../../../models/course_schedule');
-const CourseStudent = require('../../../models/course_student');
+const CourseSchedule = require('../../models/course_schedule');
+const CourseStudent = require('../../models/course_student');
 const setAsync = require('../../controllers/redis/cachedApi').setAsync;
 
 const getSchedule = async (req, res) => {

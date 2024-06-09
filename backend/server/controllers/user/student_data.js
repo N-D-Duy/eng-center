@@ -1,6 +1,6 @@
-const Student = require('../../../models/student.js');
-const CourseStudent = require('../../../models/course_student.js');
-const Account = require('../../../models/account.js');
+const Student = require('../../models/student.js');
+const CourseStudent = require('../../models/course_student.js');
+const Account = require('../../models/account.js');
 const mongoose = require('mongoose');
 const { checkValidPassword } = require('../../utils/auth_check.js');
 
