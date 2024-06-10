@@ -5,11 +5,13 @@ import { Register } from './components/Register';
 import { Dashboard } from './components/DashBoard';
 import { HeaderSlideBar } from './components/HeaderSlideBar';
 import { CourseManager } from './components/CourseManager';
+import { CardProfile } from './components/CardProfile';
 
 
 function App() {
   return (<div>
-    <Routes>
+    <CardProfile />
+    {/* <Routes>
       <Route path='/' element = {<Login />}/>
       <Route path='/admin' element = {<HeaderSlideBar />}>
           <Route path='/admin/coursemanager' element = {<CourseManager />}/>
@@ -22,7 +24,7 @@ function App() {
       <Route path='/login' element = {<Login />}/>
       <Route path='/policy' element = {<Login />}/>
       <Route path='/register' element = {<Register />}/>
-    </Routes>
+    </Routes> */}
   </div>)
 }
 export default App;

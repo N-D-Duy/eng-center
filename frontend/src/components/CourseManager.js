@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { convertTime } from "./Time";
+import { convertTime } from "./Controller/Time";
 import axios from "axios";
 import convertCourseDataToModels from "./ConvertData";
 
