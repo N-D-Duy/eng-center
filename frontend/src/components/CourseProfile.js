@@ -1,52 +1,28 @@
-import { CardProfile } from "./CardProfile";
+import { NavButton } from "./Buttons/NavButton"
+import { CardProfile } from "./Form/CardProfile"
+import OverviewCourse from "./Form/FormOverview"
 
 
-export const CourseDetails = () => {
-    const data = null;
+export const CourseProfile = () => {
     return (<>
-        <main id="main" class="main">
+       <CardProfile />  
+        <div class="card">
+                <div class="card-body pt-3">
+                <ul class="nav nav-tabs nav-tabs-bordered">
 
-        <div class="pagetitle">
-        <h1>Course Detail</h1>
-        </div>
+                    <li class="nav-item">
+                        <NavButton prop={{ value: "Overview", target: "#profile-overview" }} active={ true } />
+                    </li>
 
-        <section class="section profile">
-        <div class="row">
-            <CardProfile prop = {null} />
-
-            <div class="col-xl-8">
-
+                    <li class="nav-item">
+                        <NavButton prop={{ value: "Edit", target: "#profile-edit" }} active={ false } />
+                    </li>
+                </ul>
+                <div class="tab-content pt-2">
+                    <OverviewCourse />
+                </div>
+                </div>
             </div>
-        </div>
-
-        <div class="row">
-            <div class="col-xl-16">
-                <div class="card">
-                    <div class="card-body pt-3">
-                        <h5 class="card-title">Attendance</h5>
-                    </div>
-                    <table id="studentTable" border="1">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <script>
-                                const totalSessions = 15; // Total number of sessions
-                                for (let i = 1; i <= totalSessions; i++) {
-                                    document.write('<th>Session ' + i + '</th>');
-                                }
-                            </script>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-
-                </div>  
-            </div>
-        </div>
-        </section>
-
-        </main>
-        
+       
     </>)
-}
+} 

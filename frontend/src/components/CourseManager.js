@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import { convertTime } from "./Controller/Time";
 import axios from "axios";
 import { convertCourseDataToModels } from "./Controller/ConvertData";
+import { Link, useNavigate } from "react-router-dom";
 
 export const CourseManager = () => {
-
+    const navigate = useNavigate();
     const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -68,18 +69,18 @@ export const CourseManager = () => {
 
 const GenerateCourseTr = ({data}) =>{
     const bgActive = (data.status === 'active') ? "badge bg-success" : "badge bg-warning";
-    return(<tr>
-        <td class="text-center"><a href="#allcourse"><img src={data.image} alt=""/></a></td>
-        <td><a href="#allcourse" class="text-primary fw-bold"> {data.name}</a></td>
-        <td>{data.teacher._id}</td>
-        <td>14/25</td>
-        <td>{convertTime(data.createdAt)}</td>
-        <td><span class= {bgActive}>{data.status}</span></td>
-    </tr>);
+    return(
+        <tr onClick={clickCourse(data)}>
+            <td class="text-center"><a href="#allcourse"><img src={data.image} alt=""/></a></td>
+            <td><a href="#allcourse" class="text-primary fw-bold"> {data.name}</a></td>
+            <td>{data.teacher._id}</td>
+            <td>14/25</td>
+            <td>{convertTime(data.createdAt)}</td>
+            <td><span class= {bgActive}>{data.status}</span></td>
+        </tr>
+        );
 }
 
-// const GenerateAllCourse= (data) =>{
-//     return (<div>
-
-//     </div>)
-// }
+const clickCourse = (data, navigate) => {
+    navigate('/admin/couseprofile');
+}

@@ -36,7 +36,7 @@ const RegisterView = () => {
         return;
       }
       try {
-          const response = await axios.post(`http://localhost:8000/api/teacher`, {
+          const response = await axios.post(`https://165.232.161.56:8000/api/teacher`, {
               "account":{
                   "user_name": "tranvietbao",
                   "password": password,
@@ -50,7 +50,6 @@ const RegisterView = () => {
                   "session_count": 0,
                   "account": ""
               }
-          
           });
             if (response.status === 200) {
               alert('Đăng nhập thành công!');

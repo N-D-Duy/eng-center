@@ -1,9 +1,8 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.min.css';
-import logo from '../img/logo192.png'
+import logo from '../../img/logo192.png'
 
 export const CardProfile = (prop) => { 
-
 
     return (<>
         <div class="col-xl-4">

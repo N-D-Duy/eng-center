@@ -23,16 +23,17 @@ const LoginView = () => {
             return;
         }
         try {
-            const response = await axios.post('http://165.232.161.56:8000/api/login', {
+            const response = await axios.post('https://165.232.161.56:8000/api/login', {
                 "emailOrUsername": email,
-                "password": password,
+                "password": password
             });
             console.log(response);
               if (response.status === 200) {
                 const account = convertAccountDataToModels(response.data.data);
                 handleLogin(account.role);
                 alert('Đăng nhập thành công!');
-                navigate(`/${account.role}`);
+                // navigate(`/${account.role}`);
+                navigate(`/admin`);
               } else {
                 alert("email: " +  email + " pass: " + password);
                 alert('Đăng nhập không thành công. Vui lòng kiểm tra lại tên đăng nhập và mật khẩu.');

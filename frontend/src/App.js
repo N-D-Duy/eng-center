@@ -5,12 +5,14 @@ import { Register } from './components/Register';
 import { Dashboard } from './components/DashBoard';
 import { HeaderSlideBar } from './components/Form/HeaderSlideBar';
 import { CourseManager } from './components/CourseManager';
+import { CourseProfile } from './components/CourseProfile';
+import { CardProfile } from './components/Form/CardProfile';
 
 
 function App() {
   return (<div>
-    {/* <CardProfile /> */}
-    <Routes>
+    <CourseProfile />
+    {/* { <Routes>
       <Route path='/' element = {<Login />}/>
       <Route path='/admin' element = {<HeaderSlideBar />}>
           <Route path='/admin/coursemanager' element = {<CourseManager />}/>
@@ -18,12 +20,13 @@ function App() {
           <Route path='/admin/teachermanager' element = {<CourseManager />}/>
           <Route path='/admin/studentmanager' element = {<CourseManager />}/>
           <Route path='/admin/parentmanager' element = {<CourseManager />}/>
+          <Route path='/admin/courseprofile' element = {<CourseProfile />}/>
           <Route index element = {<Dashboard />}/>
       </Route>
       <Route path='/login' element = {<Login />}/>
       <Route path='/policy' element = {<Login />}/>
       <Route path='/register' element = {<Register />}/>
-    </Routes>
+    </Routes>} */}
   </div>)
 }
 export default App;

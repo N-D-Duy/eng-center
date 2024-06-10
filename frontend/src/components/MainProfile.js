@@ -7,11 +7,11 @@ export const MainProfile = (prop) => {
                 <ul class="nav nav-tabs nav-tabs-bordered">
 
                     <li class="nav-item">
-                        <NavButton prop={value = "Overview", target = "#profile-overview"} active= { true } />
+                        {/* <NavButton prop={value = "Overview", target = "#profile-overview"} active= { true } /> */}
                     </li>
 
                     <li class="nav-item">
-                        <NavButton prop={value = "Edit", target = "#profile-edit"} active= { false } />
+                        {/* <NavButton prop={value = "Edit", target = "#profile-edit"} active= { false } /> */}
                     </li>
                 </ul>
                 <div class="tab-content pt-2">
