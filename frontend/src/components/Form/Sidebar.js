@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom"
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.min.css';
-import { AuthProvider, useAuth } from "../Context/AuthContext";
+import { AuthProvider, useAuth } from "../../Context/AuthContext";
 export const Sidebar = () => {
 
     const {role} = useAuth(AuthProvider);

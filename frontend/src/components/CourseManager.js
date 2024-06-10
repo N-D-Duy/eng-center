@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { convertTime } from "./Controller/Time";
 import axios from "axios";
-import convertCourseDataToModels from "./ConvertData";
+import { convertCourseDataToModels } from "./Controller/ConvertData";
 
 export const CourseManager = () => {
 

@@ -1,6 +1,6 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.min.css';
-import logo from '../img/logo192.png'
+import logo from '../../img/logo192.png'
 const Header = (prop) => {
     return (
         <header id="header" class="header fixed-top d-flex align-items-center">

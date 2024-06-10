@@ -2,7 +2,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from '../Context/AuthContext';
-
+import axios from "axios";
+import { convertAccountDataToModels } from './Controller/ConvertData';
 export const Login = (prop) => {
     return (
         <LoginView />
@@ -16,25 +17,30 @@ const LoginView = () => {
     const {handleLogin} = useAuth(AuthProvider);
     const handleEvent = async (e) => {
         e.preventDefault();
-        handleLogin('admin');
         console.log(`${email} : ${password}`);
-        navigate('/admin');
-        // try {
-        //     const response = await axios.post('http://165.232.161.56:8000/api/login', {
-        //         email: email,
-        //         password: password
-        //       });
-        //       if (response.status === 200) {
-        //         alert('Đăng nhập thành công!');
-        //       } else {
-        //         alert("email: " +  email + " pass: " + password);
-        //         alert('Đăng nhập không thành công. Vui lòng kiểm tra lại tên đăng nhập và mật khẩu.');
-        //       }
-        // } catch (error) {
-        //     console.error('Đăng nhập không thành công:', error);
-        //     alert('Đăng nhập không thành công. Vui lòng thử lại sau.');
-        //     navigate('/');
-        // }
+        if (!email || !password) {
+            alert('Vui lòng nhập email và mật khẩu.');
+            return;
+        }
+        try {
+            const response = await axios.post('http://165.232.161.56:8000/api/login', {
+                "emailOrUsername": email,
+                "password": password,
+            });
+            console.log(response);
+              if (response.status === 200) {
+                const account = convertAccountDataToModels(response.data.data);
+                handleLogin(account.role);
+                alert('Đăng nhập thành công!');
+                navigate(`/${account.role}`);
+              } else {
+                alert("email: " +  email + " pass: " + password);
+                alert('Đăng nhập không thành công. Vui lòng kiểm tra lại tên đăng nhập và mật khẩu.');
+              }
+        } catch (error) {
+            console.error('Đăng nhập không thành công:', error);
+            alert('Đăng nhập không thành công. Vui lòng thử lại sau.');
+        }
     };
 
 

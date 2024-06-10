@@ -1,6 +1,7 @@
+import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export const Register = (prop) => {
     return (
@@ -9,6 +10,9 @@ export const Register = (prop) => {
 }
 
 const RegisterView = () => {
+
+    const navigate = useNavigate();
+
     const [email, setUserEmail] = useState('');
     const [password, setPassword] = useState('');
     const [username, setUsername] = useState('');
@@ -18,21 +22,53 @@ const RegisterView = () => {
 
     const handleRegister = async (e) => {
         e.preventDefault();
-        console.log(`AgreePolicy ${agreePolicy}`);
         if(!agreePolicy) return;
-        console.log(`Email ${email}`);
-        console.log(`Pass ${password}`);
-        console.log(`Name ${username}`);
-        console.log(`UserInvitedCode ${userInvitedCode}`);
-        console.log(`Role ${role}`);
+        if(!email || !password) {
+          alert('Vui lòng nhập email và password');
+          return;
+        }
+        register(role);
     };
 
-
+    const register = async (role) => {
+      if(role ==='parent' && !userInvitedCode) {
+        alert('Vui lòng nhập mã giới thiệu');
+        return;
+      }
+      try {
+          const response = await axios.post(`http://localhost:8000/api/teacher`, {
+              "account":{
+                  "user_name": "tranvietbao",
+                  "password": password,
+                  "role": "teacher",
+                  "status": "actived",
+                  "email": email,
+                  "phone": "0213232"
+              },
+              "teacher": {
+                  "name": username,
+                  "session_count": 0,
+                  "account": ""
+              }
+          
+          });
+            if (response.status === 200) {
+              alert('Đăng nhập thành công!');
+              navigate(`/login`);
+            } else {
+              alert("email: " +  email + " pass: " + password);
+              alert('Đăng ký không thành công. Vui lòng kiểm tra lại tên đăng nhập và mật khẩu.');
+            }
+        } catch (error) {
+            console.error('Đăng ký không thành công:', error);
+            alert('Đăng ký không thành công. Vui lòng thử lại sau.');
+        }
+      
+    }
 
 
     return (
         <div class="container">
-
         <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
           <div class="container">
             <div class="row justify-content-center">
@@ -55,12 +91,14 @@ const RegisterView = () => {
                     </div>
   
                     <form class="row g-3 needs-validation" novalidate>
-                      <div class="col-12">
-                        <label for="yourName" class="form-label">Your Name</label>
-                        <input type="text" name="name" class="form-control" onChange={(e) => setUsername(e.target.value)} required />
-                        <div class="invalid-feedback">Please, enter your name!</div>
-                      </div>
+                      
   
+                    <div class="col-12">
+                        <label for="yourEmail" class="form-label">Your Email</label>
+                        <input type="email" name="email" class="form-control" onChange={(e) => setUserEmail(e.target.value)} required />
+                        <div class="invalid-feedback">Please enter a valid Email adddress!</div>
+                      </div>
+
                       <div class="col-12">
                         <label for="yourName" class="form-label">Select</label>
                         <div class="col-12">
@@ -71,18 +109,20 @@ const RegisterView = () => {
                           </select>
                         </div>
                       </div>
-  
+
+                      
                       <div class="col-12 d-none" id = "register-studentID-div">
                         <label for="yourName" class="form-label">Invited Code</label>
                         <input type="text" name="name" class="form-control" onChange={(e) => setInvitedCode(e.target.value)} required />
                         <div class="invalid-feedback">Please, enter your name!</div>
                       </div>
-  
+
                       <div class="col-12">
-                        <label for="yourEmail" class="form-label">Your Email</label>
-                        <input type="email" name="email" class="form-control" onChange={(e) => setUserEmail(e.target.value)} required />
-                        <div class="invalid-feedback">Please enter a valid Email adddress!</div>
+                        <label for="yourName" class="form-label">Your Name</label>
+                        <input type="text" name="name" class="form-control" onChange={(e) => setUsername(e.target.value)} required />
+                        <div class="invalid-feedback">Please, enter your name!</div>
                       </div>
+  
   
                       <div class="col-12">
                         <label for="yourPassword" class="form-label">Password</label>
