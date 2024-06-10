@@ -39,10 +39,14 @@ const courseSchema = new mongoose.Schema({
         ref: 'Teacher',
         default: null
     },
-    // capacity: {
-    //     type: Number,
-    //     required: 'Capacity is required'
-    // },
+    capacity: {
+        type: Number,
+        required: 'Capacity is required'
+    },
+    current_joined:{
+        type: Number,
+        default: 0
+    },
 }, {
     timestamps: true
 });

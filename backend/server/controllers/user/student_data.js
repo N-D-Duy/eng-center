@@ -6,7 +6,7 @@ const { checkValidPassword } = require('../../utils/auth_check.js');
 
 const getStudentInfor = async (req, res) => {
     try {
-        const student = await Student.findById(req.params.id);
+        const student = await Student.findById(req.params.id).populate('account').exec();
         return res.status(200).json({
             data: student
         });
@@ -43,6 +43,12 @@ const createStudent = async (req, res) => {
             });
         }
 
+        if(account.role !== "student") {
+            return res.status(400).json({
+                error: 'Invalid role'
+            });
+        }
+
         //check email đã sử dụng
         const emailExist = await Account.findOne({ email  : account.email });
         if(emailExist){
@@ -72,7 +78,8 @@ const createStudent = async (req, res) => {
         // Tạo student mới
         const student = await Student.create(req.body.student);
         return res.status(201).json({
-            data: student
+            data: student,
+            message: 'Student created successfully'
         });
     } catch (err) {
         return res.status(400).json({
@@ -107,7 +114,8 @@ const updateStudent = async (req, res) => {
         }
         const updatedStudent = await Student.findById(req.params.id);
         return res.status(200).json({
-            data: updatedStudent
+            data: updatedStudent,
+            message: 'Student updated successfully'
         });
     } catch (err) {
         return res.status(400).json({

@@ -47,6 +47,20 @@ const createParent = async (req, res) => {
     try {
         //create new account
         const accountSchema = new Account(account);
+        if(account.role != 'parent'){
+            return res.status(400).json({
+                error: 'Invalid role'
+            });
+        }
+
+        //check email already exists
+        const emailExist = await Account.findOne({ email: accountSchema.email });
+        if(emailExist){
+            return res.status(400).json({
+                error: 'Email already exists'
+            });
+        }
+
         await accountSchema.save();
 
         //get account id to assign to parent
@@ -66,7 +80,8 @@ const createParent = async (req, res) => {
             });
         }
         return res.status(201).json({
-            data: parent
+            data: parent,
+            message: 'Parent created successfully'
         });
 
         

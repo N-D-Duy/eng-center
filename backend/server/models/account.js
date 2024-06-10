@@ -8,7 +8,7 @@ const accountSchema = new mongoose.Schema({
     },
     user_name: {
         type: String,
-        required: 'User name is required'
+        default: ""
     },
     password: {
         type: String,
@@ -28,7 +28,7 @@ const accountSchema = new mongoose.Schema({
     },
     phone: {
         type: String,
-        required: 'Phone is required'
+        default: ""
     },
 }, {
     timestamps: true

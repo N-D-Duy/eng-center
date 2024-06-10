@@ -22,4 +22,7 @@ module.exports = (app) => {
     //releate to course
     app.get('/api/student/:id/courses', controller.userData.StudentData.getAllCoursesJoined);
 
+    //admin
+    app.post('/api/admin', controller.userData.AdminData.createAdmin);
+
 };

@@ -34,6 +34,18 @@ const createTeacher = async (req, res) => {
     try {
         //create a new account first
         const account = new Account(req.body.account);
+        if (account.role !== "teacher") {
+            return res.status(400).json({
+                error: 'Invalid role'
+            });
+        }
+
+        const emailExist = await Account.findOne({ email: account.email });
+        if (emailExist) {
+            return res.status(400).json({
+                error: 'Email already exists'
+            });
+        }
         await account.save();
         //then get the account id
         const account_id = account._id;
@@ -41,13 +53,14 @@ const createTeacher = async (req, res) => {
         req.body.teacher.account = account_id;
         const teacher = await Teacher.create(req.body.teacher);
         return res.status(201).json({
-          data: teacher
+            data: teacher,
+            message: 'Teacher created successfully'
         });
-      } catch (err) {
+    } catch (err) {
         return res.status(400).json({
-          error: err.message
+            error: err.message
         });
-      }
+    }
 };
 
 module.exports = {

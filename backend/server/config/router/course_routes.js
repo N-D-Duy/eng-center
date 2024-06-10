@@ -5,8 +5,8 @@ module.exports = (app) => {
     app.get('/api/course/:id', controller.courseData.getCourseById);
     app.get('/api/courses/search', controller.courseData.findCourse);
     app.get('/api/courses/new', controller.courseData.getNewCourses);
+    app.get('/api/course/students/:grade', controller.courseData.getAllStudentsInGrade);
     app.post('/api/course/students', controller.courseData.getAllStudentsInCourse);
-    
 
     //for admin role
     app.put('/api/course/:id', controller.courseData.updateCourse);

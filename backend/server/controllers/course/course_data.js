@@ -1,4 +1,4 @@
-const { default: mongoose } = require('mongoose');
+const { default: mongoose, get } = require('mongoose');
 const Course = require('../../models/course.js');
 const CourseStudent = require('../../models/course_student.js');
 const teacher = require('../../models/teacher.js');
@@ -24,6 +24,28 @@ const leaveCourse = async (req, res) => {
     });
   }
 };
+
+const getAllStudentsInGrade = async (req, res) => {
+  try {
+    const { grade } = req.query;
+    //get all course with grade
+    const courses = await Course.find({ grade: grade });
+    if (!courses) {
+      return res.status(404).json({
+        message: 'No courses found'
+      });
+    }
+    //join couse_student with course to get students
+    const students = await CourseStudent.find({ course: { $in: courses.map(c => c._id) } }).populate('student').exec();
+    return res.status(200).json({
+      data: students
+    });
+  } catch (err) {
+    return res.status(400).json({
+      error: err.message
+    });
+  }
+}
 
 const getAllCourses = async (req, res) => {
   try {
@@ -199,5 +221,6 @@ module.exports = {
   getNewCourses,
   joinCourse,
   leaveCourse,
-  getAllStudentsInCourse
+  getAllStudentsInCourse,
+  getAllStudentsInGrade
 }

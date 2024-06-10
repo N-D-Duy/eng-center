@@ -6,9 +6,15 @@ const CourseStudent = require('../../models/course_student');
 //trigger when a student join a course
 const triggerCourseStudentJoin = async (req, res) => {
     try {
-        const {course, student} = req.body;
+        const { course, student } = req.body;
         //check if course and student exist
         const courseData = await Course.findById(course);
+        if(courseData.current_joined >= courseData.capacity){
+            return res.status(400).json({
+                message: 'Course is full'
+            });
+        }
+
         const studentData = await Student.findById(student);
         if (!courseData || !studentData) {
             return res.status(404).json({
@@ -22,6 +28,8 @@ const triggerCourseStudentJoin = async (req, res) => {
             course: course
         });
         await courseStudent.save();
+        //joined increase by 1
+        await Course.findByIdAndUpdate(course, { current_joined: courseData.current_joined + 1 });
         return res.status(200).json({
             data: courseStudent,
             message: 'student join course successfully'
@@ -37,7 +45,7 @@ const triggerCourseStudentJoin = async (req, res) => {
 //trigger when a student leave a course
 const triggerCourseStudentLeave = async (req, res) => {
     try {
-        const {course, student} = req.body;
+        const { course, student } = req.body;
         //check if course and student exist
         const courseData = await Course.findById(course);
         const studentData = await Student.findById(student);
@@ -57,6 +65,10 @@ const triggerCourseStudentLeave = async (req, res) => {
                 message: 'Course student not found'
             });
         }
+
+        //joined decrease by 1
+        await Course.findByIdAndUpdate(course, { current_joined: courseData.current_joined - 1 });
+        
         return res.status(200).json({
             data: courseStudent,
             message: 'student leave course successfully'
