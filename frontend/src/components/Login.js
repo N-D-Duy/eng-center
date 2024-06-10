@@ -25,7 +25,7 @@ const LoginView = () => {
         try {
             const response = await axios.post('http://165.232.161.56:8000/api/login', {
                 "emailOrUsername": email,
-                "password": password,
+                "password": password
             });
             console.log(response);
               if (response.status === 200) {
