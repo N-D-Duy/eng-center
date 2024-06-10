@@ -1,25 +1,29 @@
-import logo from './logo.svg';
 import './App.css';
+import { Routes, Route } from 'react-router-dom';
+import { Login } from './components/Login';
+import { Register } from './components/Register';
+import { Dashboard } from './components/DashBoard';
+import { HeaderSlideBar } from './components/Form/HeaderSlideBar';
+import { CourseManager } from './components/CourseManager';
+
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+  return (<div>
+    {/* <CardProfile /> */}
+    <Routes>
+      <Route path='/' element = {<Login />}/>
+      <Route path='/admin' element = {<HeaderSlideBar />}>
+          <Route path='/admin/coursemanager' element = {<CourseManager />}/>
+          <Route path='/admin/paymentmanager' element = {<CourseManager />}/>
+          <Route path='/admin/teachermanager' element = {<CourseManager />}/>
+          <Route path='/admin/studentmanager' element = {<CourseManager />}/>
+          <Route path='/admin/parentmanager' element = {<CourseManager />}/>
+          <Route index element = {<Dashboard />}/>
+      </Route>
+      <Route path='/login' element = {<Login />}/>
+      <Route path='/policy' element = {<Login />}/>
+      <Route path='/register' element = {<Register />}/>
+    </Routes>
+  </div>)
 }
-
 export default App;

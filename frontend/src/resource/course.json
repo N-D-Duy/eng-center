@@ -1,0 +1,27 @@
+{
+    "data": [
+        {
+        "_id": "6662756d20827319bcfee99c",
+        "name": "english advanced",
+        "description": "second course",
+        "category": "advanced",
+        "price": 4,
+        "image": "https://google.com",
+        "grade": 3,
+        "status": "active",
+        "teacher": {
+            "_id": "666273a520827319bcfee99a",
+            "name": "trần việt bảo",
+            "account": "666273a520827319bcfee998",
+            "session_count": 0,
+            "status": "pending",
+            "createdAt": "2024-06-07T02:42:45.632Z",
+            "updatedAt": "2024-06-07T02:42:45.632Z",
+            "__v": 0
+        },
+        "createdAt": "2024-06-07T02:50:21.358Z",
+        "updatedAt": "2024-06-07T02:50:21.358Z",
+        "__v": 0
+        }
+    ]
+}
