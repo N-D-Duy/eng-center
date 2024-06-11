@@ -46,9 +46,9 @@ export const FormEditCourse = (prop)=>{
                         <textarea name="about" class="form-control" onChange={setDescription}>{course.description}</textarea>
                       </div>
                 </div>
-                <EditFormText label="Course Name" defaultValue={convertTime(name)} onChange={setName} />
+                <EditFormText label="Course Name" defaultValue={name} onChange={setName} />
 
-                <EditFormText label="Grade" defaultValue={convertTime(grade)} onChange={setGrade} />
+                <EditFormText label="Grade" defaultValue={grade} onChange={setGrade} />
 
                 <SelectOption keys={teachers} values={allTeacherName} title={'Teacher'} onChange={setTeacher}/>
                 
