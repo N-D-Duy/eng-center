@@ -1,5 +1,6 @@
 const Admin = require('../../models/admin');
 const Account = require('../../models/account');
+const hashPassword = require('../../utils/hash_password');
 
 
 const createAdmin = async (req, res) => {
@@ -12,6 +13,9 @@ const createAdmin = async (req, res) => {
     if(account.role !== "admin") {
         return res.status(400).send("Invalid role");
     }
+
+    //hash password before save to database
+    account.password = await hashPassword(account.password);
     
     const accountData = new Account(account);
     const emailExist = await Account.findOne({ email: accountData.email });

@@ -2,12 +2,22 @@ const { default: mongoose, get } = require('mongoose');
 const Course = require('../../models/course.js');
 const CourseStudent = require('../../models/course_student.js');
 const teacher = require('../../models/teacher.js');
-const { triggerCourseStudentJoin, triggerCourseStudentLeave } = require('../course_student/index.js');
+const { triggerCourseStudentJoin, triggerCourseStudentLeave, attendanceHandler, getAttendance } = require('../course_student/index.js');
 const Student = require('../../models/student.js');
 
 const joinCourse = async (req, res) => {
   try {
     triggerCourseStudentJoin(req, res);
+  } catch (err) {
+    return res.status(400).json({
+      error: err.message
+    });
+  }
+};
+
+const studentAttendance = async (req, res) => {
+  try{
+    attendanceHandler(req, res);
   } catch (err) {
     return res.status(400).json({
       error: err.message
@@ -161,8 +171,8 @@ const deleteCourse = async (req, res) => {
 
 const findCourse = async (req, res) => {
   try {
-    const { name } = req.query;
-    const course = await Course.find({ name: name });
+    const name  = req.query.name;
+    const course = await Course.find({ name: { $regex: name, $options: 'i' }}).exec();
     if (!course) {
       return res.status(404).json({
         message: 'Course not found'
@@ -183,12 +193,11 @@ const findCourse = async (req, res) => {
 const getAllStudentsInCourse = async (req, res) => {
   try {
     // Lấy Course ID từ body
-    console.log(req.body);
-    const { course } = req.body;
-    console.log(course);
+    const id = req.params.id;
+    console.log(id);
 
     // Tìm tất cả các course_student với Course ID đã cho
-    const courseData = await CourseStudent.find({ course: course }).populate('student');
+    const courseData = await CourseStudent.find({ course: id }).populate('student');
     
     // Kiểm tra nếu không tìm thấy dữ liệu nào
     if (!courseData.length) {
@@ -211,6 +220,17 @@ const getAllStudentsInCourse = async (req, res) => {
 };
 
 
+const getStudentAttendance = async (req, res) => {
+  try {
+    getAttendance(req, res);
+  } catch (err) {
+    return res.status(400).json({
+      error: err.message
+    });
+  }
+}
+
+
 module.exports = {
   getAllCourses,
   getCourseById,
@@ -222,5 +242,7 @@ module.exports = {
   joinCourse,
   leaveCourse,
   getAllStudentsInCourse,
-  getAllStudentsInGrade
+  getAllStudentsInGrade,
+  studentAttendance,
+  getStudentAttendance
 }

@@ -3,10 +3,11 @@ const Account = require('../../models/account.js');
 const mongoose = require('mongoose');
 const account = require('../../models/account.js');
 const Student = require('../../models/student.js');
+const hashPassword = require('../../utils/hash_password.js');
 
 const getParentInfor = async (req, res) => {
     try {
-        const parent = await Parent.findById(req.params.id);
+        const parent = await Parent.findById(req.params.id).populate('account').exec();
         return res.status(200).json({
             data: parent
         });
@@ -19,7 +20,7 @@ const getParentInfor = async (req, res) => {
 
 const getAllParents = async (req, res) => {
     try {
-        const parents = await Parent.find();
+        const parents = await Parent.find().populate('account').exec();
         return res.status(200).json({
             data: parents
         });
@@ -45,6 +46,8 @@ const createParent = async (req, res) => {
         });
     }
     try {
+        //hash password before save to database
+        account.password = await hashPassword(account.password);
         //create new account
         const accountSchema = new Account(account);
         if(account.role != 'parent'){

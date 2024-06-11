@@ -5,9 +5,9 @@ const setAsync = require('../../controllers/redis/cachedApi').setAsync;
 const getSchedule = async (req, res) => {
     // with course id as input, return the schedule of the course
     try {
-        const { id } = req.params;
+        const id = req.params.id;
         const schedules = await CourseSchedule.find({ course: id }).exec();
-        if (!schedule) {
+        if (!schedules) {
             return res.status(404).json({
                 message: 'Schedule not found'
             });
@@ -80,9 +80,9 @@ const createCourseSchedulesAuto = async (course, teacher, startDate, numberOfWee
 
 const getStudentSchedule = async (req, res) => {
     try {
-        const { student } = req.params;
+        const id = req.params.id;
         //join course_student to get all joined course id
-        const courseStudent = await CourseStudent.find({ student }).populate('course');
+        const courseStudent = await CourseStudent.find({ student: id }).populate('course');
         const courses = courseStudent.map(cs => cs.course._id);
         //get all schedule of the courses
         const schedules = await CourseSchedule.find({ course: { $in: courses } }).populate({
@@ -102,8 +102,8 @@ const getStudentSchedule = async (req, res) => {
 };
 const getTeacherSchedule = async (req, res) => {
     try {
-        const { teacher } = req.params;
-        const schedule = await CourseSchedule.find({ teacher });
+        const id = req.params.id;
+        const schedule = await CourseSchedule.find({ teacher: id });
         return res.status(200).json({
             data: schedule,
             message: 'Teacher schedule retrieved successfully'

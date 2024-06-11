@@ -1,10 +1,11 @@
 const Teacher = require('../../models/teacher');
 const Account = require('../../models/account');
 const mongoose = require('mongoose');
+const hashPassword = require('../../utils/hash_password');
 
 const getTeacherInfor = async (req, res) => {
     try {
-        const teacher = await Teacher.findById(req.params.id);
+        const teacher = await Teacher.findById(req.params.id).populate('account').exec();
         return res.status(200).json({
             data: teacher
         });
@@ -18,7 +19,7 @@ const getTeacherInfor = async (req, res) => {
 
 const getAllTeachers = async (req, res) => {
     try {
-        const teachers = await Teacher.find();
+        const teachers = await Teacher.find().populate('account').exec();
         return res.status(200).json({
             data: teachers
         });
@@ -32,6 +33,9 @@ const getAllTeachers = async (req, res) => {
 
 const createTeacher = async (req, res) => {
     try {
+        const accountData = req.body.account;
+        //hash password before save to database
+        accountData.password = await hashPassword(accountData.password);
         //create a new account first
         const account = new Account(req.body.account);
         if (account.role !== "teacher") {
