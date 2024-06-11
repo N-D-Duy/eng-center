@@ -1,17 +1,23 @@
 import './App.css';
-import { Routes, Route } from 'react-router-dom';
-import { Login } from './components/Login';
-import { Register } from './components/Register';
-import { Dashboard } from './components/DashBoard';
-import { HeaderSlideBar } from './components/Form/HeaderSlideBar';
-import { CourseManager } from './components/CourseManager';
+import { CourseProvider } from './Context/CourseContext';
+import { TeacherProvider } from './Context/TeacherContext';
+// import { Routes, Route } from 'react-router-dom';
+// import { Login } from './components/Login';
+// import { Register } from './components/Register';
+// import { Dashboard } from './components/DashBoard';
+// import { HeaderSlideBar } from './components/Form/HeaderSlideBar';
+// import { CourseProfile } from './components/CourseProfile';
+// import { CardProfile } from './components/Form/CardProfile';
 import { CourseProfile } from './components/CourseProfile';
-import { CardProfile } from './components/Form/CardProfile';
 
 
 function App() {
   return (<div>
-    <CourseProfile />
+    <CourseProvider>
+      <TeacherProvider>
+        <CourseProfile />
+      </TeacherProvider>
+    </CourseProvider>
     {/* { <Routes>
       <Route path='/' element = {<Login />}/>
       <Route path='/admin' element = {<HeaderSlideBar />}>

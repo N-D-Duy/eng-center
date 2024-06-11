@@ -1,48 +1,28 @@
-import React, { useState } from 'react';
-import { useAppContext } from '../../Context/AppContext';
+import { useCourseContext } from '../../Context/CourseContext';
 
-const OverviewCourse = () => {
-    const {course} = useAppContext();
-    const [description, setDescription] = useState(course.description);
-    const [name, setName] = useState(course.name);
-    const [teacher, setTeacher] = useState(course.teacher.name);
-    const [grade, setGrade] = useState(course.grade);
-    const [status, setStatus] = useState(course.status);
-    const [capacity, setCapacity] = useState(course.capacity);
-    const [startCourse, setStartCourse] = useState(convertTime(course.startCourse));
-
+export const OverviewCourse = () => {
+    const {course} = useCourseContext();
     return (
-        <div className="tab-pane fade show active profile-overview" id="profile-overview">
-            <h5 className="card-title">Description</h5>
-            <textarea
-                className="small fst-italic form-control"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-            />
+        <div class="tab-pane fade show active profile-overview" id="profile-overview">
+                <h5 class="card-title">About</h5>
+                <p class="small fst-italic">{course.description}</p>
 
-            <h5 className="card-title">Course Details</h5>
-            <OverviewField label="Course" value={name} onChange={(e) => setName(e.target.value)} />
-            <OverviewField label="Teacher" value={teacher} onChange={(e) => setTeacher(e.target.value)} />
-            <OverviewField label="Grade" value={grade} onChange={(e) => setGrade(e.target.value)} />
-            <OverviewField label="Status" value={status} onChange={(e) => setStatus(e.target.value)} />
-            <OverviewField label="Capacity" value={capacity} onChange={(e) => setCapacity(e.target.value)} />
-            <OverviewField label="Start-Course" value={startCourse} onChange={(e) => setStartCourse(e.target.value)} />
+                <h5 class="card-title">Profile Details</h5>
+
+                <OverviewField label="Course Name" value={course.name} />
+                <OverviewField label="Grade" value={`${course.name}.${course.grade}`} />
+                <OverviewField label="Teacher" value={course.teacher.name} />
+                <OverviewField label="Status" value={course.status} />
+                <OverviewField label="Start" value={convertTime(course.createAt)} />
         </div>
     );
 };
 
-const OverviewField = ({ label, value, onChange }) => {
+const OverviewField = ({ label, value }) => {
     return (
-        <div className="row mb-3">
-            <div className="col-lg-3 col-md-4 label">{label}</div>
-            <div className="col-lg-9 col-md-8">
-                <input
-                    type="text"
-                    className="form-control"
-                    value={value}
-                    onChange={onChange}
-                />
-            </div>
+        <div class="row">
+            <div class="col-lg-3 col-md-4 label">{label}</div>
+            <div class="col-lg-9 col-md-8">{value}</div>
         </div>
     );
 };
