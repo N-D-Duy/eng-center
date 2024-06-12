@@ -3,8 +3,8 @@
 * URL: https://bootstrapmade.com/php-email-form/
 * Author: BootstrapMade.com
 */
+import grecaptcha from 'react-google-recaptcha';
 (function () {
-  "use strict";
 
   let forms = document.querySelectorAll('.php-email-form');
 

@@ -6,8 +6,8 @@ export const HeaderSlideBar = () => {
     return (<>
         <Header />
         <Sidebar />
-        <div>
+        <div> 
             <Outlet />
         </div>
     </>)
-}
+} 
