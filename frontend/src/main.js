@@ -6,8 +6,13 @@
 * License: https://bootstrapmade.com/license/
 */
 
+import 'echarts-for-react';
+import 'simple-datatables';
+import tinymce from '@tinymce/tinymce-react';
+import Quill from 'react-quill';
+import bootstrap from 'bootstrap';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 (function() {
-  "use strict";
 
   /**
    * Easy selector helper function
