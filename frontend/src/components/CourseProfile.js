@@ -1,5 +1,6 @@
 import { useCourseContext } from "../Context/CourseContext"
 import { NavButton } from "./Buttons/NavButton"
+import { CourseAttendance } from "./Form/Attendance"
 import { CardProfile } from "./Form/CardProfile"
 import { FormEditCourse } from "./Form/FormEdit"
 import OverviewCourse from "./Form/FormOverview"
@@ -24,6 +25,14 @@ export const CourseProfile = () => {
                     </div>
                 </div>
             </div>
+            </div>
+
+
+            <div class = "card">
+                <div class="card-body">
+                <h1 class="card-title">Attendance</h1>
+                    <CourseAttendance />
+                </div>
             </div>
         </section>
     </>)

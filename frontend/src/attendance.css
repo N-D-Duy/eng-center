@@ -1,0 +1,43 @@
+/* Đảm bảo container cuộn ngang */
+.containerScroll {
+    overflow-x: auto;
+    width: 100%;
+}
+
+#attendanceTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#attendanceTable th, #attendanceTable td {
+    padding: 8px;
+    text-align: center; /* Căn giữa nội dung */
+    white-space: nowrap; /* Ngăn ngắt dòng văn bản */
+}
+
+#attendanceTable th {
+    background-color: #f2f2f2;
+}
+
+/* Định nghĩa cột đầu tiên cố định */
+#attendanceTable th.sticky, #attendanceTable td.sticky {
+    position: -webkit-sticky; /* Safari */
+    position: sticky;
+    left: 0;
+    background-color: #fff; /* Nền trắng */
+    z-index: 2; /* Đảm bảo trên các ô khác */
+    box-shadow: 4px 0px 5px -3px rgba(0,0,0,0.15); /* Đường viền bên trái */
+    background-color: #f8f9fa; /* Thêm nền cho cột đầu tiên */
+    margin-right: 10px; /* Thêm margin bên phải */
+}
+
+/* Định nghĩa box-shadow khi sticky */
+#attendanceTable th.sticky {
+    z-index: 3; /* Đảm bảo tiêu đề trên cùng */
+}
+
+/* Định nghĩa checkbox */
+#attendanceTable td.sticky input[type="checkbox"] {
+    margin: 0; /* Xóa margin mặc định của checkbox */
+    transform: translateY(50%); /* Dịch chuyển checkbox xuống 50% chiều cao */
+}

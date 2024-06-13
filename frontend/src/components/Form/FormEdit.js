@@ -2,6 +2,7 @@ import { useState } from "react";
 import { convertTime } from "../Controller/Time";
 import { useCourseContext } from "../../Context/CourseContext";
 import { useTeacherContext } from "../../Context/TeacherContext";
+import { ButtonSave } from "../Buttons/ButtonSave";
 
 export const FormEditCourse = (prop)=>{
     const {course, updateCourse} = useCourseContext();
@@ -46,9 +47,9 @@ export const FormEditCourse = (prop)=>{
                         <textarea name="about" class="form-control" onChange={setDescription}>{course.description}</textarea>
                       </div>
                 </div>
-                <EditFormText label="Course Name" defaultValue={convertTime(name)} onChange={setName} />
+                <EditFormText label="Course Name" defaultValue={name} onChange={setName} />
 
-                <EditFormText label="Grade" defaultValue={convertTime(grade)} onChange={setGrade} />
+                <EditFormText label="Grade" defaultValue={grade} onChange={setGrade} />
 
                 <SelectOption keys={teachers} values={allTeacherName} title={'Teacher'} onChange={setTeacher}/>
                 
@@ -56,13 +57,31 @@ export const FormEditCourse = (prop)=>{
                
                 <EditFormText label="Start" defaultValue={convertTime(startCourse)} onChange={setStartCourse} />
                
-                <div class="text-center">
-                      <button type="submit" class="btn btn-primary" onClick={handleEvenetClick}>Save Changes</button>
-                </div>
+                <ButtonSave onClick={handleEvenetClick} title={'Save'}/>
                 </form>
             </div>
     </>)
 }
+
+
+export const FormEditTeacher = (prop)=>{
+    return (<>
+    
+    </>)
+}
+
+export const FormEditStudent = (prop)=>{
+    return (<>
+    
+    </>)
+}
+
+export const FormEditParent = (prop)=>{
+    return (<> 
+    
+    </>)
+}
+
 
 
 const EditFormText  = ({label, defaultValue, onChange}) => {
