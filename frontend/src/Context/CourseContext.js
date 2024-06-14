@@ -33,17 +33,9 @@ export const CourseProvider = ({ children }) => {
     const [course, setCourse] = useState(initialCourse);
     const [courses, setCourses] = useState([course]);
 
-    // Hàm để cập nhật khóa học
-    const updateCourse = (key, value) => {
-            setCourse((prevCourse) => {
-                    const updatedCourse = new Course({ ...prevCourse, [key]: value });
-                    return updatedCourse;
-            });
-    };
-
 
     return (
-        <CourseContext.Provider value={{ course, courses, updateCourse}}>
+        <CourseContext.Provider value={{ course, courses, setCourse, setCourses}}>
                {children}
         </CourseContext.Provider>
     );

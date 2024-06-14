@@ -1,7 +1,10 @@
 import { convertTime } from "./Controller/Time";
 import { useCourseContext } from "../Context/CourseContext";
+import { useNavigate } from "react-router-dom";
+
 export const CourseManager = () => {
-    var {courses} = useCourseContext();
+    var {courses, setCourse} = useCourseContext();
+    const navigate = useNavigate();
     return (
         <section class="section">
             <div class="row">
@@ -22,7 +25,7 @@ export const CourseManager = () => {
                         </thead>
                             <tbody>
                                 {courses.map(c => {
-                                    return <GenerateCourseTr data={c} />;
+                                    return <GenerateCourseTr data={c} navigation={navigate} setCourse={setCourse} />;
                                 })}
                             </tbody>
                         </table>
@@ -35,11 +38,11 @@ export const CourseManager = () => {
 }
 
 
-const GenerateCourseTr = ({data}) =>{
+const GenerateCourseTr = ({data, navigation, setCourse}) =>{
     const bgActive = (data.status === 'active') ? "badge bg-success" : "badge bg-warning";
     return(
-        <tr onClick={clickCourse(data)}>
-            <td class="text-center"><a href="#courseDetail"><img src={data.image} alt=""/></a></td>
+        <tr onClick={() => clickCourse(data, navigation, setCourse)}>
+            <td class="text-center"><img src={data.image} alt=""/></td>
             <td><a href="#courseDetail" class="text-primary fw-bold"> {data.name}</a></td>
             <td>{data.teacher.name}</td>
             <td>{convertTime(data.createdAt)}</td>
@@ -49,6 +52,7 @@ const GenerateCourseTr = ({data}) =>{
         );
 }
 
-const clickCourse = (data, navigate) => {
-    
+const clickCourse = (data, navigate, setCourse) => {
+    setCourse(data);
+    navigate('/admin/courseprofile');
 }

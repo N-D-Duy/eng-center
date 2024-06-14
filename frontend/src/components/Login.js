@@ -1,9 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { AuthProvider, useAuth } from '../Context/AuthContext';
-import axios from "axios";
-import { convertAccountDataToModels } from './Controller/ConvertData';
+import { Link } from 'react-router-dom';
+import { useAuthContext } from '../Context/AuthContext';
 export const Login = (prop) => {
     return (
         <LoginView />
@@ -11,37 +9,13 @@ export const Login = (prop) => {
 }
 
 const LoginView = () => {
-    const navigate = useNavigate();
     const [email, setUserEmail] = useState('');
     const [password, setPassword] = useState('');
-    const {handleLogin} = useAuth(AuthProvider);
+    const { loginHandler } = useAuthContext();
     const handleEvent = async (e) => {
         e.preventDefault();
         console.log(`${email} : ${password}`);
-        if (!email || !password) {
-            alert('Vui lòng nhập email và mật khẩu.');
-            return;
-        }
-        try {
-            const response = await axios.post('https://165.232.161.56:8000/api/login', {
-                "emailOrUsername": email,
-                "password": password
-            });
-            console.log(response);
-              if (response.status === 200) {
-                const account = convertAccountDataToModels(response.data.data);
-                handleLogin(account.role);
-                alert('Đăng nhập thành công!');
-                // navigate(`/${account.role}`);
-                navigate(`/admin`);
-              } else {
-                alert("email: " +  email + " pass: " + password);
-                alert('Đăng nhập không thành công. Vui lòng kiểm tra lại tên đăng nhập và mật khẩu.');
-              }
-        } catch (error) {
-            console.error('Đăng nhập không thành công:', error);
-            alert('Đăng nhập không thành công. Vui lòng thử lại sau.');
-        }
+        loginHandler(email, password);
     };
 
 

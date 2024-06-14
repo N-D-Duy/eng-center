@@ -1,5 +1,4 @@
 import React, { createContext, useState } from 'react';
-import { Course } from "../model/course.ts";
 import { Parent } from '../model/parent.ts';
 
 const ParentContext = createContext();
@@ -22,7 +21,7 @@ export const ParentProvider = ({ children }) => {
     // Hàm để cập nhật khóa học
     const updateParent = (key, value) => {
             setParent((prevParent) => {
-                    const updateParent = new Course({ ...prevParent, [key]: value });
+                    const updateParent = new Parent({ ...prevParent, [key]: value });
                     return updateParent;
             });
     };

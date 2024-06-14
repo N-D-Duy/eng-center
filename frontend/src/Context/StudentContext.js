@@ -1,5 +1,5 @@
 import React, { createContext, useState } from 'react';
-import { Student } from '../model/student';
+import { Student } from '../model/student.ts';
 const StudentContext = createContext();
 
 export const StudentProvider = ({ children }) => {
@@ -20,7 +20,7 @@ export const StudentProvider = ({ children }) => {
     // Hàm để cập nhật khóa học
     const updateStudent = (key, value) => {
             setStudent((prev) => {
-                    const updateStudent = new Course({ ...prev, [key]: value });
+                    const updateStudent = new Student({ ...prev, [key]: value });
                     return updateStudent;
             });
     };
@@ -33,6 +33,6 @@ export const StudentProvider = ({ children }) => {
     );
 };
 
-const useParentContext = () => React.useContext(StudentContext);
+const useStudentContext = () => React.useContext(StudentContext);
 
-export { useParentContext };
+export { useStudentContext as useParentContext };
