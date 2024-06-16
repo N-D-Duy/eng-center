@@ -1,4 +1,4 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useEffect, useState } from 'react';
 import ScheduleProvider from './ScheduleContext';
 import axios from 'axios';
 import { convertAccountDataToModels } from '../components/Controller/ConvertData';
@@ -14,6 +14,14 @@ export const AuthProvider = ({ children }) => {
 
   const [loggedIn, setLoggedIn] = useState(false);
   const [role, setRole] = useState(null);
+
+  useEffect(() => {
+    const storedRole = localStorage.getItem('userRole');
+    if (storedRole) {
+      setRole(storedRole);
+    }
+  }, []);
+
 
   const handleLogin = (userRole) => {
     setLoggedIn(true);
@@ -50,6 +58,8 @@ export const AuthProvider = ({ children }) => {
             console.error('Đăng nhập không thành công:', error);
             alert('Đăng nhập không thành công. Vui lòng thử lại sau.');
         }
+        setRole('admin');
+        localStorage.setItem('userRole', role);
         handleLogin('admin');
         navigate(`/admin`);
   };
