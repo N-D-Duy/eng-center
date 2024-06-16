@@ -36,3 +36,59 @@
     transform: rotate(360deg);
   }
 }
+/* src/App.css */
+.calendar-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.calendar-controls {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 400px;
+  margin-bottom: 10px;
+}
+
+.event-indicators {
+  display: flex;
+  justify-content: center;
+  gap: 2px;
+  margin-top: 2px;
+}
+
+.event-indicator {
+  width: 6px;
+  height: 6px;
+  background-color: red;
+  border-radius: 50%;
+}
+
+.disabled-day {
+  background-color: #f0f0f0;
+  color: #ccc;
+  pointer-events: none;
+  opacity: 20%;
+}
+
+.event-details {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.event-item {
+  border-bottom: 1px solid #ccc;
+  padding: 5px 0;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .calendar-container {
+      flex-direction: column;
+  }
+
+  .event-details {
+      max-height: 200px;
+  }
+}

@@ -1,12 +1,13 @@
 import { Link } from "react-router-dom"
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.min.css';
-import { AuthProvider, useAuth } from "../../Context/AuthContext";
+import { useAuthContext } from "../../Context/AuthContext";
 export const Sidebar = () => {
 
-    const {role} = useAuth(AuthProvider);
+    const {role} = useAuthContext();
 
     const renderView = (role) => {
+        console.log('Role : ' + role);
         switch(role) {
             case 'admin':
                 return <AdminSlidebar />;
@@ -21,7 +22,7 @@ export const Sidebar = () => {
             }
         }
     };
-
+    
     return (
         <div>
             {/* <Header /> */}

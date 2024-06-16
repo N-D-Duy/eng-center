@@ -2,6 +2,7 @@ import { useState } from "react";
 import { convertTime } from "../Controller/Time";
 import { useCourseContext } from "../../Context/CourseContext";
 import { useTeacherContext } from "../../Context/TeacherContext";
+import { ButtonSave } from "../Buttons/ButtonSave";
 
 export const FormEditCourse = (prop)=>{
     const {course, updateCourse} = useCourseContext();
@@ -56,13 +57,31 @@ export const FormEditCourse = (prop)=>{
                
                 <EditFormText label="Start" defaultValue={convertTime(startCourse)} onChange={setStartCourse} />
                
-                <div class="text-center">
-                      <button type="submit" class="btn btn-primary" onClick={handleEvenetClick}>Save Changes</button>
-                </div>
+                <ButtonSave onClick={handleEvenetClick} title={'Save'}/>
                 </form>
             </div>
     </>)
 }
+
+
+export const FormEditTeacher = (prop)=>{
+    return (<>
+    
+    </>)
+}
+
+export const FormEditStudent = (prop)=>{
+    return (<>
+    
+    </>)
+}
+
+export const FormEditParent = (prop)=>{
+    return (<> 
+    
+    </>)
+}
+
 
 
 const EditFormText  = ({label, defaultValue, onChange}) => {

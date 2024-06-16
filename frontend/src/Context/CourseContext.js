@@ -33,36 +33,9 @@ export const CourseProvider = ({ children }) => {
     const [course, setCourse] = useState(initialCourse);
     const [courses, setCourses] = useState([course]);
 
-    // Hàm để cập nhật khóa học
-    const updateCourse = (key, value) => {
-            setCourse((prevCourse) => {
-                    const updatedCourse = new Course({ ...prevCourse, [key]: value });
-                    return updatedCourse;
-            });
-    };
-
-    // useEffect (() => {
-    //     fetchAllCourseData();
-    // }, []);
-
-    // const fetchAllCourseData = async () => {
-    //     //Get all course
-    //         try {
-    //             const response = await axios.get('http://165.232.161.56:8000/api/courses');
-    //             if (response.status === 200) {
-    //                     const courses = convertCourseDataToModels(response.data.data);
-    //                     setCourses(courses);
-    //                     console.log(courses);
-    //             } else {
-    //                     console.error('Error:', `Unexpected response status: ${response.status}`);
-    //             }
-    //     } catch (error) {
-    //             console.error('Error:', error);
-    //     }
-    // };
 
     return (
-        <CourseContext.Provider value={{ course, courses, updateCourse}}>
+        <CourseContext.Provider value={{ course, courses, setCourse, setCourses}}>
                {children}
         </CourseContext.Provider>
     );
