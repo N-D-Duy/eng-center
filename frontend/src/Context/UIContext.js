@@ -8,7 +8,6 @@ export const UIProvider = ({ children }) => {
   return (
     <UIContext.Provider value={{}}>
         <AuthProvider>
-
       {children}
         </AuthProvider>
     </UIContext.Provider>

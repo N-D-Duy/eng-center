@@ -3,11 +3,14 @@ import Header from "./Header"
 import { Sidebar } from "./Sidebar"
 
 export const HeaderSlideBar = () => {
-    return (<>
+    return (<div>
         <Header />
         <Sidebar />
-        <div>
-            <Outlet />
-        </div>
-    </>)
-}
+        
+        <main id="main" class="main">
+            <div> 
+                <Outlet />
+            </div>
+        </main>
+    </div>)
+} 

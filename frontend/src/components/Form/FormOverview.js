@@ -1,26 +1,56 @@
-import { convertTime } from "../Controller/Time"
+import { useEffect, useState } from 'react';
+import { useCourseContext } from '../../Context/CourseContext';
+import { convertTime } from '../Controller/Time';
 
-export const OverviewCourse = (prop) => {
+export const OverviewCourse = () => {
+    const {course} = useCourseContext();
+    const [date, setDate] = useState();
+
+    useEffect(() => {
+        setDate(convertTime(course.createdAt));
+    }, [course]);
+
     return (
         <div class="tab-pane fade show active profile-overview" id="profile-overview">
-            <h5 class="card-title">Description</h5>
-            <p class="small fst-italic">{prop.description}</p>
-
-            <h5 class="card-title">Course Details</h5> 
-            <OverviewField key = "Course" value = {prop.name}/>
-            <OverviewField key = "Teacher" value = {prop.teacher.name}/>
-            <OverviewField key = "Grade" value = {prop.grade}/>
-            <OverviewField key = "Status" value = {prop.status}/>
-            <OverviewField key = "Capacity" value = {prop.capacity}/>
-            <OverviewField key = "Start-Course" value = {convertTime(prop.startCourse)}/>
+                <h5 class="card-title">About</h5>
+                <p class="small fst-italic">{course.description}</p>
+                <h5 class="card-title">Profile Details</h5>
+                <OverviewField label="Course Name" value={course.name} />
+                <OverviewField label="Grade" value={`${course.name}.${course.grade}`} />
+                <OverviewField label="Teacher" value={course.teacher.name} />
+                <OverviewField label="Status" value={course.status} />
+                <OverviewField label="Start" value={date} />
         </div>
-    )
+    );
+};
+
+
+export const OverviewTeacher = () => {
+    return (<>
+    
+    </>)
+}
+
+export const OverviewStudent = () => {
+    return (<>
+    
+    </>)
+}
+
+export const OverviewParent = () => {
+    return (<>
+    
+    </>)
 }
 
 
-const OverviewField = ({key ,value}) => {
-    return (<div class="row">
-                <div class="col-lg-3 col-md-4 label">key</div>
-                <div class="col-lg-9 col-md-8">value</div>
-        </div>)
-}
+const OverviewField = ({ label, value }) => {
+    return (
+        <div class="row">
+            <div class="col-lg-3 col-md-4 label">{label}</div>
+            <div class="col-lg-9 col-md-8">{value}</div>
+        </div>
+    );
+};
+
+export default OverviewCourse;

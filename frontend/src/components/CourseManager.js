@@ -1,59 +1,31 @@
-import { useEffect, useState } from "react";
 import { convertTime } from "./Controller/Time";
-import axios from "axios";
-import { convertCourseDataToModels } from "./Controller/ConvertData";
+import { useCourseContext } from "../Context/CourseContext";
+import { useNavigate } from "react-router-dom";
 
 export const CourseManager = () => {
-
-    const [courses, setCourses] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    useEffect(() => {
-    const fetchData = () => {
-      //Get all course
-      axios.get('http://165.232.161.56:8000/api/courses')
-            .then(response => {
-              const courses = convertCourseDataToModels(response.data.data);
-              setCourses(courses);
-              setLoading(false);
-            })
-            .catch(error => {
-                setError(error);
-                setLoading(false);
-            });
-    };
-
-    fetchData(); 
-    });
-
-    if (loading) {
-        return <div>Loading...</div>;
-    } 
-    if (error) {
-        return <div>Error: {error.message}</div>;
-    }
-
+    var {courses, setCourse} = useCourseContext();
+    const navigate = useNavigate();
     return (
         <section class="section">
-        <div class="row">
-            <div class="col-lg-12">
+            <div class="row">
+                <div class="col-lg-12">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">All Courses</h5>
-                        <table class="table datatable" id="table-allCourse">
-                            <thead>
-                                <tr>
-                                    <th>Image</th>
-                                    <th>Name</th>
-                                    <th>Teacher</th>
-                                    <th>Capacity</th>
-                                    <th data-type="date" data-format="YYYY/DD/MM">Start Date</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
+                    <h5 class="card-title">Datatables</h5>
+                    <table class="table datatable">
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Name</th>
+                                <th>Teacher</th>
+                                <th data-type="date" data-format="YYYY/DD/MM">Start Date</th>
+                                <th>Status</th>
+                                <th>Capacity</th>
+                            </tr>
+                        </thead>
                             <tbody>
                                 {courses.map(c => {
-                                    return <GenerateCourseTr data={c} />;
+                                    return <GenerateCourseTr data={c} navigation={navigate} setCourse={setCourse} />;
                                 })}
                             </tbody>
                         </table>
@@ -66,20 +38,21 @@ export const CourseManager = () => {
 }
 
 
-const GenerateCourseTr = ({data}) =>{
+const GenerateCourseTr = ({data, navigation, setCourse}) =>{
     const bgActive = (data.status === 'active') ? "badge bg-success" : "badge bg-warning";
-    return(<tr>
-        <td class="text-center"><a href="#allcourse"><img src={data.image} alt=""/></a></td>
-        <td><a href="#allcourse" class="text-primary fw-bold"> {data.name}</a></td>
-        <td>{data.teacher._id}</td>
-        <td>14/25</td>
-        <td>{convertTime(data.createdAt)}</td>
-        <td><span class= {bgActive}>{data.status}</span></td>
-    </tr>);
+    return(
+        <tr onClick={() => clickCourse(data, navigation, setCourse)}>
+            <td class="text-center"><img src={data.image} alt=""/></td>
+            <td><a href="#courseDetail" class="text-primary fw-bold"> {data.name}</a></td>
+            <td>{data.teacher.name}</td>
+            <td>{convertTime(data.createdAt)}</td>
+            <td><span class= {bgActive}>{data.status}</span></td>
+            <td>{data.current_joined}/{data.capacity}</td>
+        </tr>
+        );
 }
 
-// const GenerateAllCourse= (data) =>{
-//     return (<div>
-
-//     </div>)
-// }
+const clickCourse = (data, navigate, setCourse) => {
+    setCourse(data);
+    navigate('/admin/courseprofile');
+}

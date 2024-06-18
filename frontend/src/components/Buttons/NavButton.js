@@ -1,6 +1,7 @@
+
+
 export const NavButton = ({value, target, active}) => {
-    const activeStatus = active ? "nav-link active" : "nav-link";
-    return ( <div>
-        <button class = {activeStatus} data-bs-toggle="tab" data-bs-target= {target}>prop.value</button>
-    </div>)
+    return (<li class="nav-item">
+                <button class = {active ? "nav-link active" : "nav-link"} data-bs-toggle="tab" data-bs-target= {target}>{value}</button>
+             </li>)
 }

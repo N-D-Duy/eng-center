@@ -36,7 +36,7 @@ const RegisterView = () => {
         return;
       }
       try {
-          const response = await axios.post(`http://165.232.161.56:8000/api/teacher`, {
+          const response = await axios.post(`https://165.232.161.56:8000/api/teacher`, {
               "account":{
                   "user_name": "tranvietbao",
                   "password": password,
@@ -50,12 +50,12 @@ const RegisterView = () => {
                   "session_count": 0,
                   "account": ""
               }
-          
           });
             if (response.status === 200) {
               alert('Đăng nhập thành công!');
               navigate(`/login`);
             } else {
+              alert("email: " +  email + " pass: " + password);
               alert('Đăng ký không thành công. Vui lòng kiểm tra lại tên đăng nhập và mật khẩu.');
             }
         } catch (error) {

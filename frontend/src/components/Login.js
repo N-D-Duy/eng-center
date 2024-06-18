@@ -1,9 +1,8 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { AuthProvider, useAuth } from '../Context/AuthContext';
-import axios from "axios";
-import { convertAccountDataToModels } from './Controller/ConvertData';
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useAuthContext } from '../Context/AuthContext';
+import { useNavigate } from "react-router-dom";
 export const Login = (prop) => {
     return (
         <LoginView />
@@ -14,34 +13,32 @@ const LoginView = () => {
     const navigate = useNavigate();
     const [email, setUserEmail] = useState('');
     const [password, setPassword] = useState('');
-    const {handleLogin} = useAuth(AuthProvider);
+    const { loginHandler } = useAuthContext();
     const handleEvent = async (e) => {
         e.preventDefault();
         console.log(`${email} : ${password}`);
-        if (!email || !password) {
-            alert('Vui lòng nhập email và mật khẩu.');
-            return;
-        }
-        try {
-            const response = await axios.post('http://165.232.161.56:8000/api/login', {
-                "emailOrUsername": email,
-                "password": password
-            });
-            console.log(response);
-              if (response.status === 200) {
-                const account = convertAccountDataToModels(response.data.data);
-                handleLogin(account.role);
-                alert('Đăng nhập thành công!');
-                navigate(`/${account.role}`);
-              } else {
-                alert("email: " +  email + " pass: " + password);
-                alert('Đăng nhập không thành công. Vui lòng kiểm tra lại tên đăng nhập và mật khẩu.');
-              }
-        } catch (error) {
-            console.error('Đăng nhập không thành công:', error);
-            alert('Đăng nhập không thành công. Vui lòng thử lại sau.');
-        }
+        loginHandler(email, password);
     };
+
+    useEffect(() => {
+        const role = localStorage.getItem('userRole');
+        switch(role) {
+            case 'admin':
+                navigate('/admin');
+                break;
+            case 'teacher':
+                navigate('/teacher');
+                break;
+            case 'student':
+                navigate('/student');
+                break;
+            case 'parent':
+                navigate('/parent');
+                break;
+            default:
+                    break;
+        }
+    });
 
 
 

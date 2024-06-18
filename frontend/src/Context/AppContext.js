@@ -1,12 +1,9 @@
-import React, { createContext } from 'react';
-import { UIProvider } from './UIContext';
+import React, { createContext} from 'react';
 const AppContext = createContext();
 export const AppProvider = ({ children }) => {
   return (
-    <AppContext.Provider value={{ }}>
-        <UIProvider>
-            {children}
-        </UIProvider>
+    <AppContext.Provider value={{}}>
+      {children}
     </AppContext.Provider>
   );
 };

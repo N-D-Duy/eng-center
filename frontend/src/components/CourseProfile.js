@@ -1,52 +1,39 @@
-import { CardProfile } from "./CardProfile";
+import { useCourseContext } from "../Context/CourseContext"
+import { NavButton } from "./Buttons/NavButton"
+import { CourseAttendance } from "./Form/Attendance"
+import { CardProfile } from "./Form/CardProfile"
+import { FormEditCourse } from "./Form/FormEdit"
+import OverviewCourse from "./Form/FormOverview"
 
-
-export const CourseDetails = () => {
-    const data = null;
+export const CourseProfile = () => {
+    const {course} = useCourseContext();
     return (<>
-        <main id="main" class="main">
-
-        <div class="pagetitle">
-        <h1>Course Detail</h1>
-        </div>
-
         <section class="section profile">
         <div class="row">
-            <CardProfile prop = {null} />
-
+            <CardProfile lable= {course.name} image={course.image} />  
             <div class="col-xl-8">
-
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-xl-16">
-                <div class="card">
-                    <div class="card-body pt-3">
-                        <h5 class="card-title">Attendance</h5>
+            <div class="card">
+                <div class="card-body pt-3">
+                    <ul class="nav nav-tabs nav-tabs-bordered">
+                        <NavButton value="Overview" target="#profile-overview" active={true} />
+                        <NavButton value="Edit" target="#profile-edit" active={false} />
+                    </ul>
+                    <div class="tab-content pt-2">
+                        <OverviewCourse />
+                        <FormEditCourse />
                     </div>
-                    <table id="studentTable" border="1">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <script>
-                                const totalSessions = 15; // Total number of sessions
-                                for (let i = 1; i <= totalSessions; i++) {
-                                    document.write('<th>Session ' + i + '</th>');
-                                }
-                            </script>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-
-                </div>  
+                    </div>
+                </div>
             </div>
-        </div>
-        </section>
+            </div>
 
-        </main>
-        
+
+            <div class = "card">
+                <div class="card-body">
+                <h1 class="card-title">Attendance</h1>
+                    <CourseAttendance />
+                </div>
+            </div>
+        </section>
     </>)
-}
+} 

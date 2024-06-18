@@ -1,7 +1,29 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.min.css';
 import logo from '../../img/logo192.png'
+import { useEffect, useState } from 'react';
 const Header = (prop) => {
+
+  const [isSidebarToggled, setIsSidebarToggled] = useState(false);
+
+    const toggleSidebar = () => {
+      setIsSidebarToggled(!isSidebarToggled);
+    };
+
+    useEffect(() => {
+      // Thêm hoặc xóa class cho thẻ <body>
+      if (isSidebarToggled) {
+        document.body.classList.add('toggle-sidebar')
+      } else {
+        document.body.classList.remove('toggle-sidebar');
+      }
+
+      // Cleanup function để xóa class khi component unmount
+      return () => {
+        document.body.classList.remove('toggle-sidebar');
+      };
+    }, [isSidebarToggled]);
+    
     return (
         <header id="header" class="header fixed-top d-flex align-items-center">
         <div class="d-flex align-items-center justify-content-between">
@@ -9,7 +31,7 @@ const Header = (prop) => {
                 <img src= {logo} alt= {logo} />
                 <span class="d-none d-lg-block">NiceAdmin</span>
             </a>
-          <i class="bi bi-list toggle-sidebar-btn"></i>
+          <i class="bi bi-list toggle-sidebar-btn" onClick={toggleSidebar}></i>
         </div>
     
     
