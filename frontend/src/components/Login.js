@@ -1,7 +1,8 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuthContext } from '../Context/AuthContext';
+import { useNavigate } from "react-router-dom";
 export const Login = (prop) => {
     return (
         <LoginView />
@@ -9,6 +10,7 @@ export const Login = (prop) => {
 }
 
 const LoginView = () => {
+    const navigate = useNavigate();
     const [email, setUserEmail] = useState('');
     const [password, setPassword] = useState('');
     const { loginHandler } = useAuthContext();
@@ -17,6 +19,26 @@ const LoginView = () => {
         console.log(`${email} : ${password}`);
         loginHandler(email, password);
     };
+
+    useEffect(() => {
+        const role = localStorage.getItem('userRole');
+        switch(role) {
+            case 'admin':
+                navigate('/admin');
+                break;
+            case 'teacher':
+                navigate('/teacher');
+                break;
+            case 'student':
+                navigate('/student');
+                break;
+            case 'parent':
+                navigate('/parent');
+                break;
+            default:
+                    break;
+        }
+    });
 
 
 

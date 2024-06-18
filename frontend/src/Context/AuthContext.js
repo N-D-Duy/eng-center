@@ -1,7 +1,7 @@
 import React, { createContext, useEffect, useState } from 'react';
 import ScheduleProvider from './ScheduleContext';
 import axios from 'axios';
-import { convertAccountDataToModels } from '../components/Controller/ConvertData';
+import { convertAccountDataToModel } from '../components/Controller/ConvertData';
 import { useNavigate } from 'react-router-dom';
 import { TeacherProvider } from './TeacherContext';
 import { StudentProvider } from './StudentContext';
@@ -26,6 +26,7 @@ export const AuthProvider = ({ children }) => {
   const handleLogin = (userRole) => {
     setLoggedIn(true);
     setRole(userRole);
+    localStorage.setItem('userRole', userRole);
   };
 
   const handleLogout = () => {
@@ -40,28 +41,27 @@ export const AuthProvider = ({ children }) => {
             return;
         }
         try {
-            const response = await axios.post('https://165.232.161.56:8000/api/login', {
+            const response = await axios.post('http://165.232.161.56:8000/api/login', {
                 "emailOrUsername": email,
                 "password": password
             });
             console.log(response);
               if (response.status === 200) {
-                const account = convertAccountDataToModels(response.data.data);
+                
+                const account = convertAccountDataToModel(response.data.data);
                 handleLogin(account.role);
+                console.log(account);
+                console.log(response.data.data);
                 alert('Đăng nhập thành công!');
-                // navigate(`/${account.role}`);
+                navigate(`/${account.role}`);
               } else {
                 alert("email: " +  email + " pass: " + password);
                 alert('Đăng nhập không thành công. Vui lòng kiểm tra lại tên đăng nhập và mật khẩu.');
               }
         } catch (error) {
-            console.error('Đăng nhập không thành công:', error);
+            console.error('Đăng nhập khô0ng thành công:', error);
             alert('Đăng nhập không thành công. Vui lòng thử lại sau.');
         }
-        setRole('admin');
-        localStorage.setItem('userRole', role);
-        handleLogin('admin');
-        navigate(`/admin`);
   };
 
   return (

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { convertTime } from "../Controller/Time";
 import { useCourseContext } from "../../Context/CourseContext";
 import { useTeacherContext } from "../../Context/TeacherContext";
@@ -14,6 +14,10 @@ export const FormEditCourse = (prop)=>{
     const [grade, setGrade] = useState(course.grade);
     const [status, setStatus] = useState(course.status);
     const [startCourse, setStartCourse] = useState(convertTime(course.startCourse));
+
+    useEffect(() => {
+        setStartCourse(convertTime(course.createdAt));
+    }, [course]);
 
 
     const handleEvenetClick = (e) => {

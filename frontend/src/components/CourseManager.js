@@ -47,7 +47,7 @@ const GenerateCourseTr = ({data, navigation, setCourse}) =>{
             <td>{data.teacher.name}</td>
             <td>{convertTime(data.createdAt)}</td>
             <td><span class= {bgActive}>{data.status}</span></td>
-            <td>14/25</td>
+            <td>{data.current_joined}/{data.capacity}</td>
         </tr>
         );
 }

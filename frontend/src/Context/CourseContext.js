@@ -1,38 +1,27 @@
-import React, { createContext, useState } from 'react';
-import { Course } from "../model/course.ts";
-import { Teacher } from "../model/teacher.ts";
-import logo from "../img/logo192.png";
-
+import React, { createContext, useEffect, useState } from 'react';
+import axios from 'axios';
+import { convertCourseDataToModels } from '../components/Controller/ConvertData.js';
 const CourseContext = createContext();
 
 export const CourseProvider = ({ children }) => {
-    const initialCourse = new Course({
-            _id: "6666fd50e78ce63ab2b6ebe6",
-            name: "english advanced",
-            description: "second course",
-            category: "advanced",
-            price: 4,
-            image: logo,
-            grade: 3, 
-            status: "active",
-            teacher: new Teacher( {
-                _id: "6666fcdce78ce63ab2b6ebdd",
-                name: "trần việt bảo",
-                account: "6666fcdbe78ce63ab2b6ebdb",
-                session_count: 0,
-                status: "pending",
-                createdAt: "2024-06-10T13:17:16.041Z",
-                updatedAt: "2024-06-10T13:17:16.041Z",
-                __v: 0
-            }),
-            createdAt: "2024-06-10T13:19:12.422Z",
-            updatedAt: "2024-06-11T00:26:30.253Z",
-            __v: 0,
-    });
-
-    const [course, setCourse] = useState(initialCourse);
+    const [course, setCourse] = useState();
     const [courses, setCourses] = useState([course]);
-
+    const fetchAllCourse = async () => {
+        try {
+            const response = await axios.get('http://165.232.161.56:8000/api/courses');
+            console.log(response);
+              if (response.status === 200) {
+                const data = convertCourseDataToModels(response.data.data);
+                setCourses(data);
+                console.log(courses);
+              } 
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+    useEffect(() => {
+        fetchAllCourse();
+    }, []);
 
     return (
         <CourseContext.Provider value={{ course, courses, setCourse, setCourses}}>
