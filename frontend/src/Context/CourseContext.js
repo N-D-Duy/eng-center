@@ -23,8 +23,20 @@ export const CourseProvider = ({ children }) => {
         fetchAllCourse();
     }, []);
 
+    const SetCourse = (course) => {
+        setCourse(course);
+        localStorage.setItem('course', JSON.stringify(course));
+    };
+
+    useEffect(() => {
+        const course = JSON.parse(localStorage.getItem('course'));
+        if (course) {
+            setCourse(course);
+        }
+    }, []);
+
     return (
-        <CourseContext.Provider value={{ course, courses, setCourse, setCourses}}>
+        <CourseContext.Provider value={{ course, courses, SetCourse , setCourse, setCourses}}>
                {children}
         </CourseContext.Provider>
     );

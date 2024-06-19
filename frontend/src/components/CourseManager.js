@@ -1,10 +1,17 @@
 import { convertTime } from "./Controller/Time";
 import { useCourseContext } from "../Context/CourseContext";
 import { useNavigate } from "react-router-dom";
+import { useContext, useEffect } from "react";
 
 export const CourseManager = () => {
     var {courses, setCourse} = useCourseContext();
+    var [ allCourse, setCourses] = useContext([]);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        setCourses(courses);
+    }, [courses, setCourses]);
+
     return (
         <section class="section">
             <div class="row">
@@ -24,7 +31,7 @@ export const CourseManager = () => {
                             </tr>
                         </thead>
                             <tbody>
-                                {courses.map(c => {
+                                {allCourse.map(c => {
                                     return <GenerateCourseTr data={c} navigation={navigate} setCourse={setCourse} />;
                                 })}
                             </tbody>

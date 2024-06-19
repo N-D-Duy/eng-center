@@ -40,8 +40,8 @@ export const FormEditCourse = (prop)=>{
                 <div class="col-md-8 col-lg-9">
                     <img src= {course.image} alt="Profile" />
                     <div class="pt-2">
-                    <a href="#none" class="btn btn-primary btn-sm" title="Upload new profile image"><i class="bi bi-upload"></i></a>
-                    <a href="#none" class="btn btn-danger btn-sm" title="Remove my profile image"><i class="bi bi-trash"></i></a>
+                    <div class="btn btn-primary btn-sm" title="Upload new profile image"><i class="bi bi-upload"></i></div>
+                    <div class="btn btn-danger btn-sm" title="Remove my profile image"><i class="bi bi-trash"></i></div>
                     </div>
                 </div>
                 </div>
