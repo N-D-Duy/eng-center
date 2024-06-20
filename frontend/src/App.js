@@ -13,6 +13,8 @@ import { EventCalendar, TeacherSchedule } from './components/Form/Schedule/Sched
 import { CourseManager } from './components/CourseManager';
 import { StudentProvider } from './Context/StudentContext';
 import { ParentProvider } from './Context/ParentContext';
+import AddUserForm from './components/AddUser';
+import UserProfile from './components/UserProfile';
 
 
 function App() {
@@ -28,9 +30,11 @@ function App() {
               <Route path='/admin/studentmanager' element = {<CourseManager />}/>
               <Route path='/admin/parentmanager' element = {<CourseManager />}/>
               <Route path='/admin/courseprofile' element = {<CourseProfile />}/>
+              <Route path='/admin/add_user' element = {<AddUserForm />}/>
               <Route index element = {<Dashboard />}/>
           </Route>
           <Route path='/login' element = {<Login />}/>
+          <Route path='/profile' element = {<UserProfile />}/>
           <Route path='/policy' element = {<Login />}/>
           <Route path='/register' element = {<Register />}/>
         </Routes>

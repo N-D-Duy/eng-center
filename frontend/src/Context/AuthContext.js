@@ -31,6 +31,7 @@ export const AuthProvider = ({ children }) => {
 
   const handleLogout = () => {
     setLoggedIn(false);
+    localStorage.setItem('userRole', null);
     setRole(null);
   };
 

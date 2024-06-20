@@ -1,65 +1,65 @@
-import { convertTime } from "./Controller/Time";
 import { useCourseContext } from "../Context/CourseContext";
 import { useNavigate } from "react-router-dom";
-import { useContext, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { convertTime } from "./Controller/Time";
 
 export const CourseManager = () => {
-    var {courses, setCourse} = useCourseContext();
-    var [ allCourse, setCourses] = useContext([]);
+    const { courses, SetCourse } = useCourseContext();
     const navigate = useNavigate();
+    const [allCourses, setAllCourses] = useState([]);
 
     useEffect(() => {
-        setCourses(courses);
-    }, [courses, setCourses]);
+        setAllCourses(courses);
+    }, [courses]);
 
     return (
-        <section class="section">
-            <div class="row">
-                <div class="col-lg-12">
-                <div class="card">
-                    <div class="card-body">
-                    <h5 class="card-title">Datatables</h5>
-                    <table class="table datatable">
-                        <thead>
-                            <tr>
-                                <th>Image</th>
-                                <th>Name</th>
-                                <th>Teacher</th>
-                                <th data-type="date" data-format="YYYY/DD/MM">Start Date</th>
-                                <th>Status</th>
-                                <th>Capacity</th>
-                            </tr>
-                        </thead>
-                            <tbody>
-                                {allCourse.map(c => {
-                                    return <GenerateCourseTr data={c} navigation={navigate} setCourse={setCourse} />;
-                                })}
-                            </tbody>
-                        </table>
+        <section className="section">
+            <div className="row">
+                <div className="col-lg-12">
+                    <div className="card">
+                        
+                        <div className="card-body">
+                            <h5 className="card-title">Datatables</h5>
+                            <table className="table datatable">
+                                <thead>
+                                    <tr>
+                                        <th>Image</th>
+                                        <th>Name</th>
+                                        <th>Teacher</th>
+                                        <th data-type="date" data-format="YYYY/DD/MM">Start Date</th>
+                                        <th>Status</th>
+                                        <th>Capacity</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {allCourses.map(c => (
+                                        <GenerateCourseTr key={c.id} data={c} navigate={navigate} setCourse={SetCourse} />
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                    </div>
+                </div>
             </div>
-        </div>
         </section>
     );
-}
+};
 
-
-const GenerateCourseTr = ({data, navigation, setCourse}) =>{
-    const bgActive = (data.status === 'active') ? "badge bg-success" : "badge bg-warning";
-    return(
-        <tr onClick={() => clickCourse(data, navigation, setCourse)}>
-            <td class="text-center"><img src={data.image} alt=""/></td>
-            <td><a href="#courseDetail" class="text-primary fw-bold"> {data.name}</a></td>
+const GenerateCourseTr = ({ data, navigate, setCourse }) => {
+    const bgActive = data.status === 'active' ? "badge bg-success" : "badge bg-warning";
+    return (
+        <tr onClick={() => clickCourse(data, navigate, setCourse)}>
+            <td className="text-center"><img src={data.image} alt="" /></td>
+            <td><a href="#courseDetail" className="text-primary fw-bold">{data.name}</a></td>
             <td>{data.teacher.name}</td>
             <td>{convertTime(data.createdAt)}</td>
-            <td><span class= {bgActive}>{data.status}</span></td>
+            <td><span className={bgActive}>{data.status}</span></td>
             <td>{data.current_joined}/{data.capacity}</td>
         </tr>
-        );
-}
+    );
+};
 
 const clickCourse = (data, navigate, setCourse) => {
     setCourse(data);
     navigate('/admin/courseprofile');
-}
+};

@@ -1,100 +1,92 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.min.css';
-import logo from '../../img/logo192.png'
+import logo from '../../img/logo192.png';
 import { useEffect, useState } from 'react';
-const Header = (prop) => {
+import { Dropdown } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
+import { useAuthContext } from '../../Context/AuthContext';
 
+const Header = () => {
   const [isSidebarToggled, setIsSidebarToggled] = useState(false);
+  const navigate = useNavigate();
+  const toggleSidebar = () => {
+    setIsSidebarToggled(!isSidebarToggled);
+  };
 
-    const toggleSidebar = () => {
-      setIsSidebarToggled(!isSidebarToggled);
+
+  const {handleLogout} = useAuthContext();
+
+
+  useEffect(() => {
+    if (isSidebarToggled) {
+      document.body.classList.add('toggle-sidebar');
+    } else {
+      document.body.classList.remove('toggle-sidebar');
+    }
+
+    return () => {
+      document.body.classList.remove('toggle-sidebar');
     };
+  }, [isSidebarToggled]);
 
-    useEffect(() => {
-      // Thêm hoặc xóa class cho thẻ <body>
-      if (isSidebarToggled) {
-        document.body.classList.add('toggle-sidebar')
-      } else {
-        document.body.classList.remove('toggle-sidebar');
-      }
+  return (
+    <header id="header" className="header fixed-top d-flex align-items-center">
+      <div className="d-flex align-items-center justify-content-between">
+        <a href="#none" className="logo d-flex align-items-center">
+          <img src={logo} alt="Logo" />
+          <span className="d-none d-lg-block">NiceAdmin</span>
+        </a>
+        <i className="bi bi-list toggle-sidebar-btn" onClick={toggleSidebar}></i>
+      </div>
 
-      // Cleanup function để xóa class khi component unmount
-      return () => {
-        document.body.classList.remove('toggle-sidebar');
-      };
-    }, [isSidebarToggled]);
-    
-    return (
-        <header id="header" class="header fixed-top d-flex align-items-center">
-        <div class="d-flex align-items-center justify-content-between">
-            <a href="#none" class="logo d-flex align-items-center">
-                <img src= {logo} alt= {logo} />
-                <span class="d-none d-lg-block">NiceAdmin</span>
-            </a>
-          <i class="bi bi-list toggle-sidebar-btn" onClick={toggleSidebar}></i>
-        </div>
-    
-    
-        <nav class="header-nav ms-auto">
-          <ul class="d-flex align-items-center">
-            <li class="nav-item dropdown pe-3">
-    
-              <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#null" data-bs-toggle="dropdown">
-                <img src= {logo} alt="Profile" class="rounded-circle" />
-                <span class="d-none d-md-block dropdown-toggle ps-2">K. Anderson</span>
-              </a>
-    
-              <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
-                <li class="dropdown-header">
+      <nav className="header-nav ms-auto">
+        <ul className="d-flex align-items-center">
+          <li className="nav-item dropdown pe-3">
+            <Dropdown>
+              <Dropdown.Toggle as="a" className="nav-link nav-profile d-flex align-items-center pe-0" href="#null">
+                <img src={logo} alt="Profile" className="rounded-circle" />
+                <span className="d-none d-md-block ps-2">K. Anderson</span>
+              </Dropdown.Toggle>
+
+              <Dropdown.Menu className="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+                <li className="dropdown-header">
                   <h6>Kevin Anderson</h6>
                   <span>Web Designer</span>
                 </li>
                 <li>
-                  <hr class="dropdown-divider" />
+                  <hr className="dropdown-divider" />
                 </li>
-    
+
+                <Dropdown.Item onClick={() => navigate('/profile')}>
+                  <i className="bi bi-person"></i>
+                  <span>My Profile</span>
+                </Dropdown.Item>
                 <li>
-                  <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
-                    <i class="bi bi-person"></i>
-                    <span>My Profile</span>
-                  </a>
+                  <hr className="dropdown-divider" />
                 </li>
+
+                <Dropdown.Item onClick={() => navigate('/profile')}>
+                  <i className="bi bi-gear"></i>
+                  <span>Account Settings</span>
+                </Dropdown.Item>
                 <li>
-                  <hr class="dropdown-divider" />
+                  <hr className="dropdown-divider" />
                 </li>
-    
-                <li>
-                  <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
-                    <i class="bi bi-gear"></i>
-                    <span>Account Settings</span>
-                  </a>
-                </li>
-                <li>
-                  <hr class="dropdown-divider" />
-                </li>
-    
-                <li>
-                  <a class="dropdown-item d-flex align-items-center" href="pages-faq.html">
-                    <i class="bi bi-question-circle"></i>
-                    <span>Need Help?</span>
-                  </a>
-                </li>
-                <li>
-                  <hr class="dropdown-divider" />
-                </li>
-    
-                <li>
-                  <a class="dropdown-item d-flex align-items-center" href="#null">
-                    <i class="bi bi-box-arrow-right"></i>
-                    <span>Sign Out</span>
-                  </a>
-                </li>
-              </ul>
-            </li>
-          </ul>
-        </nav>
-    
-      </header>
-    )
-}
+
+                <Dropdown.Item onClick={() => {
+                  handleLogout();
+                  navigate('/login');
+                 }}>
+                  <i className="bi bi-box-arrow-right"></i>
+                  <span>Sign Out</span>
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+          </li>
+        </ul>
+      </nav>
+    </header>
+  );
+};
+
 export default Header;

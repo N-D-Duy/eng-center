@@ -1,12 +1,8 @@
-import { useCourseContext } from "../Context/CourseContext";
-import { NavButton } from "./Buttons/NavButton";
-import { CourseAttendance } from "./Form/Attendance";
-import { CardProfile } from "./Form/CardProfile";
-import { FormEditCourse } from "./Form/FormEdit";
-import OverviewCourse from "./Form/FormOverview";
-import { useEffect, useState } from "react";
+import React, { useContext } from 'react';
+import { Link } from 'react-router-dom'; // Sử dụng Link thay thế cho thẻ a trong React Router
+import { useAuthContext } from '../Context/AuthContext';
 
-export const CourseProfile = () => {
+const UserProfile = () => {
     const { course, setCourse } = useCourseContext();
     const [loading, setLoading] = useState(true);
 
@@ -60,3 +56,5 @@ export const CourseProfile = () => {
         </>
     );
 };
+
+export default UserProfile;
