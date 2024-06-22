@@ -95,8 +95,24 @@ const createParent = async (req, res) => {
     }
 };
 
+
+const updateParent = async (req, res) => {
+    try {
+        const parent = await Parent.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        return res.status(200).json({
+            data: parent,
+            message: 'Parent updated'
+        });
+    } catch (error) {
+        return res.status(400).json({
+            error: error.message
+        });
+    }
+};
+
 module.exports = {
     getParentInfor,
     getAllParents,
-    createParent
+    createParent,
+    updateParent
 };

@@ -1,3 +1,4 @@
+const attendance = require('../../models/attendance');
 const CourseSchedule = require('../../models/course_schedule');
 const CourseStudent = require('../../models/course_student');
 const setAsync = require('../../controllers/redis/cachedApi').setAsync;
@@ -12,8 +13,6 @@ const getSchedule = async (req, res) => {
                 message: 'Schedule not found'
             });
         }
-        /* const cacheKey = `course_schedules_${courseId}`;
-        await setAsync(cacheKey, JSON.stringify(schedules), 'EX', 3600); // Cache data for 1 hour */
         return res.status(200).json({
             data: schedules,
             message: 'Schedule retrieved successfully'
@@ -115,11 +114,28 @@ const getTeacherSchedule = async (req, res) => {
     }
 };
 
+const getStudentAttendanceInCourse = async (req, res) => {
+    try{
+        const course = req.params.course;
+        //get attendance of all students in a course
+        const Attendance = await Attendance.find({ course: course });
+        return res.status(200).json({
+            data: Attendance,
+            message: 'Attendance retrieved successfully'
+        });
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        });
+    }
+}
+
 module.exports = {
     getSchedule,
     createSchedule,
     getStudentSchedule,
-    getTeacherSchedule
+    getTeacherSchedule,
+    getStudentAttendanceInCourse
 };
 
 

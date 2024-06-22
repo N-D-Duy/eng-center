@@ -1,7 +1,7 @@
 const Account = require('../../models/account');
 const { checkValidEmail, checkValidPassword } = require('../../utils/auth_check');
 const hashPassword = require('../../utils/hash_password');
-
+const bcrypt = require('bcrypt');
 /**
  * Logs in a user with the provided email/username and password.
  * @param {string} emailOrUsername - The email or username of the user.
@@ -74,8 +74,8 @@ const loginWithEmailOrUsernameAndPassword = async (req, res) => {
 };
 
 const changePassword = async (req, res) => {
-    const { emailOrUsername, password } = req.body;
-    if (!emailOrUsername || !password) {
+    const { emailOrUsername, oldPassword, newPassword } = req.body;
+    if (!emailOrUsername || !oldPassword || !newPassword) {
         return res.status(400).json({
             error: 'Email/Username and password are required'
         });
@@ -94,7 +94,7 @@ const changePassword = async (req, res) => {
     }
 
     //check new password is valid
-    if (!checkValidPassword(password)) {
+    if (!checkValidPassword(newPassword)) {
         return res.status(400).json({
             error: 'Invalid password'
         });
@@ -114,7 +114,16 @@ const changePassword = async (req, res) => {
             });
         }
 
-        account.password = password;
+        //check old password
+        const isMatch = await bcrypt.compare(oldPassword, account.password);
+
+        if (!isMatch) {
+            return res.status(400).json({
+                error: 'Old password is incorrect'
+            });
+        }
+
+        account.password = newPassword;
         await account.save();
 
         return res.status(200).json({

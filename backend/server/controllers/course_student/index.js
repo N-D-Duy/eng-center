@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const Student = require('../../models/student');
 const Course = require('../../models/course');
 const CourseStudent = require('../../models/course_student');
+const Attendance = require('../../models/attendance');
 
 //trigger when a student join a course
 const triggerCourseStudentJoin = async (req, res) => {
@@ -30,6 +31,21 @@ const triggerCourseStudentJoin = async (req, res) => {
         await courseStudent.save();
         //joined increase by 1
         await Course.findByIdAndUpdate(course, { current_joined: courseData.current_joined + 1 });
+
+
+        //get schedule of the course
+        const schedule = await CourseSchedule.find({ course}).map(cs => cs.day);
+        //create attendance schedule for student
+        for(let day in schedule){
+            await Attendance.create({
+                student: student,
+                course: course,
+                date: day,
+                status: 'no reason'
+            })
+        }
+
+
         return res.status(200).json({
             data: courseStudent,
             message: 'student join course successfully'
@@ -123,6 +139,16 @@ const attendanceHandler = async (req, res) => {
             return res.status(404).json({
                 message: 'No course-student records updated'
             });
+        }
+
+        //update attendance of each student
+        for(let student in students){
+            await Attendance.create({
+                student: student.id,
+                course: course,
+                date: student.date,
+                status: student.is_attended ? 'no reason' : student.reasons
+            })
         }
 
         return res.status(200).json({

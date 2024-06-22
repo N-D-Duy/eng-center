@@ -11,13 +11,13 @@ const attendanceSchema = new mongoose.Schema({
         ref: 'Course',
         required: 'Course ID is required'
     },
-    date: {
-        type: Date,
-        required: 'Date is required'
+    day: {
+        type: String,
+        required: 'day is required'
     },
     status: {
         type: String,
-        required: 'Status is required'
+        default: 'no reason'
     }
 }, {
     timestamps: true
