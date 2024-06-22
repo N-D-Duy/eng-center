@@ -5,11 +5,12 @@ import { CourseAttendance } from "../Form/Attendance";
 import { CardProfile } from "../Form/CardProfile";
 import { FormEditCourse } from "../Form/FormEdit";
 import { useEffect, useState } from "react";
+import { useAuthContext } from "../../Context/AuthContext";
 
 export const CourseProfile = () => {
     const { course, setCourse } = useCourseContext();
     const [loading, setLoading] = useState(true);
-
+    const { role } = useAuthContext();
     useEffect(() => {
         if (!course) {
             const savedCourse = localStorage.getItem('course');
@@ -34,17 +35,17 @@ export const CourseProfile = () => {
         <>
             <section className="section profile">
                 <div className="row">
-                    <CardProfile label={course?.name} image={course?.image} />  
+                    <CardProfile label={course.name} image={course.image} />  
                     <div className="col-xl-8">
                         <div className="card">
                             <div className="card-body pt-3">
                                 <ul className="nav nav-tabs nav-tabs-bordered">
                                     <NavButton value="Overview" target="#profile-overview" active={true} />
-                                    <NavButton value="Edit" target="#profile-edit" active={false} />
+                                    {role === 'admin' && <NavButton value="Edit" target="#profile-edit" active={false} />}
                                 </ul>
                                 <div className="tab-content pt-2">
                                     <OverviewCourse />
-                                    <FormEditCourse />
+                                    {role === 'admin' && <FormEditCourse />}
                                 </div>
                             </div>
                         </div>

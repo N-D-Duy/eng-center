@@ -4,8 +4,9 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { convertTime } from "../Controller/Time";
 import TableComponent from "./TableComponent";
+import { useUserContext } from "../../Context/UserContext";
 export const TeacherManager = () => {
-    const { teachers, SetTeacher } = useTeacherContext();
+    const { teachers } = useTeacherContext();
     const navigate = useNavigate();
     const [allTeachers, setAllTeachers] = useState([]);
 
@@ -22,7 +23,7 @@ export const TeacherManager = () => {
     ];
 
     const generateRow = (teacher, index) => (
-        <GenerateTeacherTr key={index} data={teacher} navigate={navigate} setTeacher={SetTeacher} />
+        <GenerateTeacherTr key={index} data={teacher} navigate={navigate} />
     );
 
     return (
@@ -40,11 +41,17 @@ export const TeacherManager = () => {
         </section>
     );
 };
-
-const GenerateTeacherTr = ({ data, navigate, setTeacher }) => {
+const GenerateTeacherTr = ({ data, navigate }) => {
     const bgActive = data.status === 'active' ? "badge bg-success" : "badge bg-warning";
+    const { setOtherUser } = useUserContext();
+
+    const clickTeacher = () => {
+        setOtherUser(data);
+        navigate('/admin/otherprofile');
+    };
+
     return (
-        <tr onClick={() => clickTeacher(data, navigate, setTeacher)}>
+        <tr onClick={clickTeacher}>
             <td className="text-center"><img src={data.image} alt="" /></td>
             <td><div className="text-primary fw-bold">{data.name}</div></td>
             <td>{data.email}</td>
@@ -52,9 +59,4 @@ const GenerateTeacherTr = ({ data, navigate, setTeacher }) => {
             <td><span className={bgActive}>{data.status}</span></td>
         </tr>
     );
-};
-
-const clickTeacher = (data, navigate, setTeacher) => {
-    setTeacher(data);
-    navigate('/admin/teacherprofile');
 };

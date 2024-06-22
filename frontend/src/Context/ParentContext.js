@@ -5,10 +5,6 @@ import { convertParentDataToModels } from '../components/Controller/ConvertData.
 const ParentContext = createContext();
 
 export const ParentProvider = ({ children }) => {
-    const [parent, setParent] = useState(() => {
-        const savedParent = localStorage.getItem('parent');
-        return savedParent ? JSON.parse(savedParent) : null;
-    });
 
     const [parents, setParents] = useState(() => {
         const savedParents = localStorage.getItem('parents');
@@ -34,13 +30,10 @@ export const ParentProvider = ({ children }) => {
         }
     }, []);
 
-    const SetParent = (parent) => {
-        setParent(parent);
-        localStorage.setItem('parent', JSON.stringify(parent));
-    };
+  
 
     return (
-        <ParentContext.Provider value={{ parent, parents, SetParent, setParent, setParents }}>
+        <ParentContext.Provider value={{ parents }}>
             {children}
         </ParentContext.Provider>
     );

@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { Dropdown } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../Context/AuthContext';
+import { useUserContext } from '../../Context/UserContext';
 
 const Header = () => {
   const [isSidebarToggled, setIsSidebarToggled] = useState(false);
@@ -15,6 +16,33 @@ const Header = () => {
 
 
   const {handleLogout} = useAuthContext();
+  const [user, setUser] = useState(() => {
+    const storedUser = localStorage.getItem('user');
+    try {
+      if (storedUser) {
+        const parsedUser = JSON.parse(storedUser);
+        console.log('Stored User:', parsedUser);
+        return parsedUser;
+      }
+    } catch (error) {
+      console.error('Error parsing stored user:', error);
+    }
+    return null; // Return null if no valid user found
+  });
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    try {
+      if (storedUser) {
+        const parsedUser = JSON.parse(storedUser);
+        console.log('Stored User:', parsedUser);
+        setUser(parsedUser);
+      }
+    } catch (error) {
+      console.error('Error parsing stored user:', error);
+    }
+  }, []); // Empty dependency array to run effect only once on mount
+
 
 
   useEffect(() => {
@@ -45,19 +73,19 @@ const Header = () => {
             <Dropdown>
               <Dropdown.Toggle as="a" className="nav-link nav-profile d-flex align-items-center pe-0" href="#null">
                 <img src={logo} alt="Profile" className="rounded-circle" />
-                <span className="d-none d-md-block ps-2">K. Anderson</span>
+                <span className="d-none d-md-block ps-2">{user?.name}</span>
               </Dropdown.Toggle>
 
               <Dropdown.Menu className="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
                 <li className="dropdown-header">
-                  <h6>Kevin Anderson</h6>
-                  <span>Web Designer</span>
+                  <h6>{user?.name}</h6>
+                  <span>{user?.role}</span>
                 </li>
                 <li>
                   <hr className="dropdown-divider" />
                 </li>
 
-                <Dropdown.Item onClick={() => navigate('/profile')}>
+                <Dropdown.Item onClick={() => navigate('/admin/profile')}>
                   <i className="bi bi-person"></i>
                   <span>My Profile</span>
                 </Dropdown.Item>
@@ -65,7 +93,7 @@ const Header = () => {
                   <hr className="dropdown-divider" />
                 </li>
 
-                <Dropdown.Item onClick={() => navigate('/profile')}>
+                <Dropdown.Item onClick={() => navigate('/admin/profile')}>
                   <i className="bi bi-gear"></i>
                   <span>Account Settings</span>
                 </Dropdown.Item>

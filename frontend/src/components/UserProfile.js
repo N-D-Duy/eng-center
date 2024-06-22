@@ -1,29 +1,30 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { useCourseContext } from '../Context/CourseContext';
-import { FormEditCourse } from './Form/FormEdit';
-import OverviewCourse from './Form/FormOverview';
+import { FormEditUser } from './Form/FormEdit';
+import { OverviewUser, OverviewUserOther } from './Form/FormOverview';
 import { NavButton } from './Buttons/NavButton';
 import { CardProfile } from './Form/CardProfile';
+import { useAuthContext } from '../Context/AuthContext';
+import { useUserContext } from '../Context/UserContext';
 
 const UserProfile = () => {
-    const { course, setCourse } = useCourseContext();
+    const { user , setUser } = useUserContext();
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        if (!course) {
-            const savedCourse = localStorage.getItem('course');
-            if (savedCourse) {
-                setCourse(JSON.parse(savedCourse));
+        if (!user) {
+            const saved = localStorage.getItem('user');
+            if (saved) {
+                setUser(JSON.parse(saved));
             }
         }
         setLoading(false);
     }, []);
 
     useEffect(() => {
-        if (course) {
+        if (user) {
             setLoading(false);
         }
-    }, [course]);
+    }, [user]);
 
     if (loading) {
         return <div>Loading...</div>; // Or any other loading indicator
@@ -33,7 +34,7 @@ const UserProfile = () => {
         <>
             <section className="section profile">
                 <div className="row">
-                    <CardProfile label={course?.name} image={course?.image} />  
+                    <CardProfile label={user?.name} image={user?.image} />  
                     <div className="col-xl-8">
                         <div className="card">
                             <div className="card-body pt-3">
@@ -42,8 +43,8 @@ const UserProfile = () => {
                                     <NavButton value="Edit" target="#profile-edit" active={false} />
                                 </ul>
                                 <div className="tab-content pt-2">
-                                    <OverviewCourse />
-                                    <FormEditCourse />
+                                    <OverviewUser />
+                                    <FormEditUser />
                                 </div>
                             </div>
                         </div>
@@ -53,5 +54,33 @@ const UserProfile = () => {
         </>
     );
 };
+
+
+export const UserOtherProfile = (prop) => {
+   
+    return (
+        <>
+            <section className="section profile">
+                <div className="row">
+                    <CardProfile label={prop?.name} image={prop?.image} />  
+                    <div className="col-xl-8">
+                        <div className="card">
+                            <div className="card-body pt-3">
+                                <ul className="nav nav-tabs nav-tabs-bordered">
+                                    <NavButton value="Overview" target="#profile-overview" active={true} />
+                                    <NavButton value="Edit" target="#profile-edit" active={false} />
+                                </ul>
+                                <div className="tab-content pt-2">
+                                    <OverviewUserOther prop = {prop} />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </>
+    );
+};
+
 
 export default UserProfile;

@@ -6,6 +6,7 @@ import { TeacherProvider } from './TeacherContext';
 import { StudentProvider } from './StudentContext';
 import { ParentProvider } from './ParentContext';
 import ScheduleProvider from './ScheduleContext';
+import { useUserContext } from './UserContext';
 
 const AuthContext = createContext();
 
@@ -13,27 +14,26 @@ export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
 
   const [loggedIn, setLoggedIn] = useState(false);
-  const [role, setRole] = useState(null);
-  const [user, setUser] = useState(null); // Thêm state để lưu thông tin người dùng
-
+  const [role, setRole] = useState(null); 
+  const {setUser} = useUserContext();
   useEffect(() => {
     const storedRole = localStorage.getItem('userRole');
-    const storedUser = JSON.parse(localStorage.getItem('user')); // Lấy thông tin người dùng từ local storage
+    const storedUser = JSON.parse(localStorage.getItem('user'));
     if (storedRole) {
       setRole(storedRole);
     }
     if (storedUser) {
       setUser(storedUser);
-      setLoggedIn(true); // Đánh dấu đã đăng nhập khi có thông tin người dùng từ local storage
+      setLoggedIn(true);
     }
   }, []);
 
   const handleLogin = (userRole, userData) => {
     setLoggedIn(true);
     setRole(userRole);
-    setUser(userData); // Lưu thông tin người dùng vào state
+    setUser(userData);
     localStorage.setItem('userRole', userRole);
-    localStorage.setItem('user', JSON.stringify(userData)); // Lưu thông tin người dùng vào local storage
+    localStorage.setItem('user', JSON.stringify(userData));
   };
 
   const handleLogout = () => {
@@ -56,7 +56,7 @@ export const AuthProvider = ({ children }) => {
       });
       if (response.status === 200) {
         const account = convertAccountDataToModel(response.data.data);
-        handleLogin(account.role, account); // Lưu thông tin người dùng khi đăng nhập thành công
+        handleLogin(account.role, account);
         alert('Đăng nhập thành công!');
         navigate(`/${account.role}`);
       } else {
@@ -69,7 +69,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ loggedIn, role, user, handleLogin, handleLogout, loginHandler }}>
+    <AuthContext.Provider value={{ loggedIn, role, handleLogin, handleLogout, loginHandler }}>
       <TeacherProvider>
         <StudentProvider>
           <ParentProvider>

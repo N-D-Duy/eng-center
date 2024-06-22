@@ -5,11 +5,6 @@ import { convertStudentDataToModels } from '../components/Controller/ConvertData
 const StudentContext = createContext();
 
 export const StudentProvider = ({ children }) => {
-    const [student, setStudent] = useState(() => {
-        const savedStudent = localStorage.getItem('student');
-        return savedStudent ? JSON.parse(savedStudent) : null;
-    });
-
     const [students, setStudents] = useState(() => {
         const savedStudents = localStorage.getItem('students');
         return savedStudents ? JSON.parse(savedStudents) : [];
@@ -34,13 +29,9 @@ export const StudentProvider = ({ children }) => {
         }
     }, []);
 
-    const SetStudent = (student) => {
-        setStudent(student);
-        localStorage.setItem('student', JSON.stringify(student));
-    };
-
+   
     return (
-        <StudentContext.Provider value={{ student, students, SetStudent, setStudent, setStudents }}>
+        <StudentContext.Provider value={{ students }}>
             {children}
         </StudentContext.Provider>
     );

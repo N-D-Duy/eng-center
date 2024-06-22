@@ -9,18 +9,16 @@ import { HeaderSlideBar } from './components/Form/HeaderSlideBar';
 import { CourseProfile } from './components/Profile/CourseProfile';
 import { CourseManager } from './components/Manager/CourseManager';
 import AddUserForm from './components/AddUser';
-import UserProfile from './components/UserProfile';
 import { TeacherManager } from './components/Manager/TeacherManager';
 import { StudentManager } from './components/Manager/StudentManager';
 import { ParentManager } from './components/Manager/ParentManager';
-import StudentProfile from './components/Profile/StudentProfile';
-import ParentProfile from './components/Profile/ParentProfile';
-import TeacherProfile from './components/Profile/TeacherProfile';
+import { UserOtherProfile, UserProfile } from './components/Profile/UserProfile';
+import { UserProvider } from './Context/UserContext';
 
 
 function App() {
   return (<div>
-    <AuthProvider>
+    <UserProvider>
       <CourseProvider>
         <Routes>
           <Route path='/' element = {<Login />}/>
@@ -31,9 +29,8 @@ function App() {
               <Route path='/admin/studentmanager' element = {<StudentManager />}/>
               <Route path='/admin/parentmanager' element = {<ParentManager />}/>
               <Route path='/admin/courseprofile' element = {<CourseProfile />}/>
-              <Route path='/admin/studentprofile' element = {<StudentProfile />}/>
-              <Route path='/admin/teacherprofile' element = {<TeacherProfile />}/>
-              <Route path='/admin/parentprofile' element = {<ParentProfile />}/>
+              <Route path='/admin/otherprofile' element = {<UserOtherProfile />}/>
+              <Route path='/admin/profile' element = {<UserProfile />}/>
               <Route path='/admin/add_user' element = {<AddUserForm />}/>
               <Route index element = {<Dashboard />}/>
           </Route>
@@ -43,7 +40,7 @@ function App() {
           <Route path='/register' element = {<Register />}/>
         </Routes>
       </CourseProvider>  
-    </AuthProvider>
+    </UserProvider>
   </div>)
 }
 export default App;

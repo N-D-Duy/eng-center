@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TableComponent from './TableComponent';
 import { useParentContext } from '../../Context/ParentContext';
+import { useUserContext } from '../../Context/UserContext';
 
 export const ParentManager = () => {
-    const { parents, SetParent } = useParentContext();
+    const { parents, } = useParentContext();
+    const { setUserOther } = useUserContext();
     const navigate = useNavigate();
     const [allParents, setAllParents] = useState([]);
 
@@ -21,7 +23,7 @@ export const ParentManager = () => {
     ];
 
     const generateRow = (parent, index) => (
-        <GenerateParentTr key={index} data={parent} navigate={navigate} setParent={SetParent} />
+        <GenerateParentTr key={index} data={parent} navigate={navigate} />
     );
 
     return (
@@ -42,8 +44,15 @@ export const ParentManager = () => {
 
 const GenerateParentTr = ({ data, navigate, setParent }) => {
     const bgActive = data.status === 'active' ? "badge bg-success" : "badge bg-warning";
+    const { setOtherUser } = useUserContext();
+
+    const clickOther = () => {
+        setOtherUser(data);
+        navigate('/admin/otherprofile');
+    };
+
     return (
-        <tr onClick={() => clickParent(data, navigate, setParent)}>
+        <tr onClick={clickOther}>
             <td className="text-center"><img src={data.image} alt="" /></td>
             <td><div className="text-primary fw-bold">{data.name}</div></td>
             <td>{data.email}</td>
@@ -53,7 +62,3 @@ const GenerateParentTr = ({ data, navigate, setParent }) => {
     );
 };
 
-const clickParent = (data, navigate, setParent) => {
-    setParent(data);
-    navigate('/admin/parentprofile');
-};

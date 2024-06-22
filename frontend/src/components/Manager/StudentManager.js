@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TableComponent from './TableComponent';
+import { useUserContext } from '../../Context/UserContext';
 import { useStudentContext } from '../../Context/StudentContext';
 
 export const StudentManager = () => {
-    const { students, SetStudent } = useStudentContext();
+    const { setUserOther } = useUserContext();
+    const { students } = useStudentContext();
     const navigate = useNavigate();
     const [allStudents, setAllStudents] = useState([]);
 
@@ -21,7 +23,7 @@ export const StudentManager = () => {
     ];
 
     const generateRow = (student, index) => (
-        <GenerateStudentTr key={index} data={student} navigate={navigate} setStudent={SetStudent} />
+        <GenerateStudentTr key={index} data={student} navigate={navigate} />
     );
 
     return (
@@ -40,10 +42,15 @@ export const StudentManager = () => {
     );
 };
 
-const GenerateStudentTr = ({ data, navigate, setStudent }) => {
+const GenerateStudentTr = ({ data, navigate }) => {
     const bgActive = data.status === 'active' ? "badge bg-success" : "badge bg-warning";
+    const { setOtherUser } = useUserContext();
+    const clickOther = () => {
+        setOtherUser(data);
+        navigate('/admin/otherprofile');
+    };
     return (
-        <tr onClick={() => clickStudent(data, navigate, setStudent)}>
+        <tr onClick={clickOther}>
             <td className="text-center"><img src={data.image} alt="" /></td>
             <td><div className="text-primary fw-bold">{data.name}</div></td>
             <td>{data.email}</td>
@@ -51,9 +58,4 @@ const GenerateStudentTr = ({ data, navigate, setStudent }) => {
             <td><span className={bgActive}>{data.status}</span></td>
         </tr>
     );
-};
-
-const clickStudent = (data, navigate, setStudent) => {
-    setStudent(data);
-    navigate('/admin/studentprofile');
 };

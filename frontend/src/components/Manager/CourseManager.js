@@ -23,7 +23,7 @@ export const CourseManager = () => {
     ];
 
     const generateRow = (course, index) => (
-        <GenerateCourseTr key={index} data={course} navigate={navigate} setCourse={SetCourse} />
+        <GenerateCourseTr key={index} data={course} navigate={navigate}/>
     );
 
     return (
@@ -45,8 +45,11 @@ export const CourseManager = () => {
 
 
 
-const GenerateCourseTr = ({ data, navigate, setCourse }) => {
+const GenerateCourseTr = ({ data, navigate }) => {
     const bgActive = data.status === 'active' ? "badge bg-success" : "badge bg-warning";
+
+    const { setCourse } = useCourseContext();
+
     return (
         <tr onClick={() => clickCourse(data, navigate, setCourse)}>
             <td className="text-center"><img src={data.image} alt="" /></td>

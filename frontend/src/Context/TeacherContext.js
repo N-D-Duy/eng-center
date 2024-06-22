@@ -5,14 +5,8 @@ import { convertTeacherDataToModels } from '../components/Controller/ConvertData
 const TeacherContext = createContext();
 
 export const TeacherProvider = ({ children }) => {
-    const [teacher, setTeacher] = useState(() => {
-        // Load initial teacher data from localStorage if it exists
-        const savedTeacher = localStorage.getItem('teacher');
-        return savedTeacher ? JSON.parse(savedTeacher) : null;
-    });
-
+    
     const [teachers, setTeachers] = useState(() => {
-        // Load initial teachers data from localStorage if it exists
         const savedTeachers = localStorage.getItem('teachers');
         return savedTeachers ? JSON.parse(savedTeachers) : [];
     });
@@ -37,13 +31,9 @@ export const TeacherProvider = ({ children }) => {
         }
     }, []);
 
-    const SetTeacher = (teacher) => {
-        setTeacher(teacher);
-        localStorage.setItem('teacher', JSON.stringify(teacher));
-    };
 
     return (
-        <TeacherContext.Provider value={{ teacher, teachers, SetTeacher, setTeacher, setTeachers }}>
+        <TeacherContext.Provider value={{teachers }}>
             {children}
         </TeacherContext.Provider>
     );

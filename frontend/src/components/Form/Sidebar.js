@@ -17,13 +17,7 @@ export const Sidebar = () => {
         return location.pathname === `/${role}`;
     };
 
-
-    useEffect(() => {
-        console.log('Role : ' + role);
-    }, [role]);
-
     const renderView = (role) => {
-        console.log('Role : ' + role);
         switch(role) {
             case 'admin':
                 return <AdminSlidebar />;
