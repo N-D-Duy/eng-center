@@ -1,29 +1,28 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { useCourseContext } from '../Context/CourseContext';
-import { FormEditCourse } from './Form/FormEdit';
-import OverviewCourse from './Form/FormOverview';
-import { NavButton } from './Buttons/NavButton';
-import { CardProfile } from './Form/CardProfile';
+import { NavButton } from "../Buttons/NavButton";
+import { CardProfile } from "../Form/CardProfile";
+import { useEffect, useState } from "react";
+import { OverviewUser } from "../Form/FormOverview";
 
-const UserProfile = () => {
-    const { course, setCourse } = useCourseContext();
+export const UserProfile = () => {
+    
+    const { user, setUser } = useAuthContext();
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        if (!course) {
-            const savedCourse = localStorage.getItem('course');
-            if (savedCourse) {
-                setCourse(JSON.parse(savedCourse));
+        if (!teacher) {
+            const savedUser = localStorage.getItem('user');
+            if (savedUser) {
+                setUser(JSON.parse(savedUser));
             }
         }
         setLoading(false);
     }, []);
 
     useEffect(() => {
-        if (course) {
+        if (user) {
             setLoading(false);
         }
-    }, [course]);
+    }, [user]);
 
     if (loading) {
         return <div>Loading...</div>; // Or any other loading indicator
@@ -33,7 +32,7 @@ const UserProfile = () => {
         <>
             <section className="section profile">
                 <div className="row">
-                    <CardProfile label={course?.name} image={course?.image} />  
+                    <CardProfile label={user?.name} image={user?.image} />  
                     <div className="col-xl-8">
                         <div className="card">
                             <div className="card-body pt-3">
@@ -42,8 +41,8 @@ const UserProfile = () => {
                                     <NavButton value="Edit" target="#profile-edit" active={false} />
                                 </ul>
                                 <div className="tab-content pt-2">
-                                    <OverviewCourse />
-                                    <FormEditCourse />
+                                    <OverviewUser />
+                                    <FormEditUser />
                                 </div>
                             </div>
                         </div>

@@ -1,11 +1,12 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { useCourseContext } from '../Context/CourseContext';
-import { FormEditCourse } from './Form/FormEdit';
-import OverviewCourse from './Form/FormOverview';
-import { NavButton } from './Buttons/NavButton';
-import { CardProfile } from './Form/CardProfile';
+import { useCourseContext } from "../../Context/CourseContext";
+import OverviewCourse from "../Form/FormOverview";
+import { NavButton } from "../Buttons/NavButton";
+import { CourseAttendance } from "../Form/Attendance";
+import { CardProfile } from "../Form/CardProfile";
+import { FormEditCourse } from "../Form/FormEdit";
+import { useEffect, useState } from "react";
 
-const UserProfile = () => {
+export const CourseProfile = () => {
     const { course, setCourse } = useCourseContext();
     const [loading, setLoading] = useState(true);
 
@@ -49,9 +50,13 @@ const UserProfile = () => {
                         </div>
                     </div>
                 </div>
+                <div className="card">
+                    <div className="card-body">
+                        <h1 className="card-title">Attendance</h1>
+                        <CourseAttendance />
+                    </div>
+                </div>
             </section>
         </>
     );
 };
-
-export default UserProfile;

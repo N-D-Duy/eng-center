@@ -1,30 +1,30 @@
-import { useCourseContext } from "../Context/CourseContext";
-import { NavButton } from "./Buttons/NavButton";
-import { CourseAttendance } from "./Form/Attendance";
-import { CardProfile } from "./Form/CardProfile";
-import { FormEditCourse } from "./Form/FormEdit";
-import OverviewCourse from "./Form/FormOverview";
+import { useTeacherContext } from "../../Context/TeacherContext";
+import { NavButton } from "../Buttons/NavButton";
+import { CardProfile } from "../Form/CardProfile";
 import { useEffect, useState } from "react";
+import { OverviewTeacher } from "../Form/FormOverview";
+import { FormEditTeacher } from "../Form/FormEdit";
 
-export const CourseProfile = () => {
-    const { course, setCourse } = useCourseContext();
+export const TeacherProfile = () => {
+    
+    const { teacher, setTeacher } = useTeacherContext();
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        if (!course) {
-            const savedCourse = localStorage.getItem('course');
-            if (savedCourse) {
-                setCourse(JSON.parse(savedCourse));
+        if (!teacher) {
+            const savedTeacher = localStorage.getItem('teacher');
+            if (savedTeacher) {
+                setTeacher(JSON.parse(savedTeacher));
             }
         }
         setLoading(false);
     }, []);
 
     useEffect(() => {
-        if (course) {
+        if (teacher) {
             setLoading(false);
         }
-    }, [course]);
+    }, [teacher]);
 
     if (loading) {
         return <div>Loading...</div>; // Or any other loading indicator
@@ -34,7 +34,7 @@ export const CourseProfile = () => {
         <>
             <section className="section profile">
                 <div className="row">
-                    <CardProfile label={course?.name} image={course?.image} />  
+                    <CardProfile label={teacher?.name} image={teacher?.image} />  
                     <div className="col-xl-8">
                         <div className="card">
                             <div className="card-body pt-3">
@@ -43,20 +43,16 @@ export const CourseProfile = () => {
                                     <NavButton value="Edit" target="#profile-edit" active={false} />
                                 </ul>
                                 <div className="tab-content pt-2">
-                                    <OverviewCourse />
-                                    <FormEditCourse />
+                                    <OverviewTeacher />
+                                    <FormEditTeacher />
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div className="card">
-                    <div className="card-body">
-                        <h1 className="card-title">Attendance</h1>
-                        <CourseAttendance />
                     </div>
                 </div>
             </section>
         </>
     );
 };
+
+export default TeacherProfile;

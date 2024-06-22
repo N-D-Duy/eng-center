@@ -1,38 +1,49 @@
-import React, { createContext, useState } from 'react';
-import { Student } from '../model/student.ts';
+import React, { createContext, useEffect, useState } from 'react';
+import axios from 'axios';
+import { convertStudentDataToModels } from '../components/Controller/ConvertData.js';
+
 const StudentContext = createContext();
 
 export const StudentProvider = ({ children }) => {
-    const initialStudent = new Student({
-        _id: "6666fcdce78ce63ab2b6ebdd",
-        name: "trần việt bảo",
-        account: "6666fcdbe78ce63ab2b6ebdb",
-        session_count: 0,
-        status: "pending",
-        createdAt: "2024-06-10T13:17:16.041Z",
-        updatedAt: "2024-06-10T13:17:16.041Z",
-        __v: 0
+    const [student, setStudent] = useState(() => {
+        const savedStudent = localStorage.getItem('student');
+        return savedStudent ? JSON.parse(savedStudent) : null;
     });
 
-    const [student, setStudent] = useState(initialStudent);
-    const [students, setStudents] = useState([student]);
+    const [students, setStudents] = useState(() => {
+        const savedStudents = localStorage.getItem('students');
+        return savedStudents ? JSON.parse(savedStudents) : [];
+    });
 
-    // Hàm để cập nhật khóa học
-    const updateStudent = (key, value) => {
-            setStudent((prev) => {
-                    const updateStudent = new Student({ ...prev, [key]: value });
-                    return updateStudent;
-            });
+    const fetchAllStudents = async () => {
+        try {
+            const response = await axios.get('http://165.232.161.56:8000/api/students');
+            if (response.status === 200) {
+                const data = convertStudentDataToModels(response.data.data);
+                setStudents(data);
+                localStorage.setItem('students', JSON.stringify(data));
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
     };
 
+    useEffect(() => {
+        if (students.length === 0) {
+            fetchAllStudents();
+        }
+    }, []);
+
+    const SetStudent = (student) => {
+        setStudent(student);
+        localStorage.setItem('student', JSON.stringify(student));
+    };
 
     return (
-        <StudentContext.Provider value={{ student, students, updateStudent}}>
-               {children}
+        <StudentContext.Provider value={{ student, students, SetStudent, setStudent, setStudents }}>
+            {children}
         </StudentContext.Provider>
     );
 };
 
-const useStudentContext = () => React.useContext(StudentContext);
-
-export { useStudentContext as useParentContext };
+export const useStudentContext = () => React.useContext(StudentContext);

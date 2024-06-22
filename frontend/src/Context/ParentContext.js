@@ -1,39 +1,49 @@
-import React, { createContext, useState } from 'react';
-import { Parent } from '../model/parent.ts';
+import React, { createContext, useEffect, useState } from 'react';
+import axios from 'axios';
+import { convertParentDataToModels } from '../components/Controller/ConvertData.js';
 
 const ParentContext = createContext();
 
 export const ParentProvider = ({ children }) => {
-    const initialParent = new Parent({
-        _id: "6666fcdce78ce63ab2b6ebdd",
-        name: "trần việt bảo",
-        account: "6666fcdbe78ce63ab2b6ebdb",
-        session_count: 0,
-        status: "pending",
-        createdAt: "2024-06-10T13:17:16.041Z",
-        updatedAt: "2024-06-10T13:17:16.041Z",
-        __v: 0
+    const [parent, setParent] = useState(() => {
+        const savedParent = localStorage.getItem('parent');
+        return savedParent ? JSON.parse(savedParent) : null;
     });
 
-    const [parent, setParent] = useState(initialParent);
-    const [parents, setParents] = useState([parent]);
+    const [parents, setParents] = useState(() => {
+        const savedParents = localStorage.getItem('parents');
+        return savedParents ? JSON.parse(savedParents) : [];
+    });
 
-    // Hàm để cập nhật khóa học
-    const updateParent = (key, value) => {
-            setParent((prevParent) => {
-                    const updateParent = new Parent({ ...prevParent, [key]: value });
-                    return updateParent;
-            });
+    const fetchAllParents = async () => {
+        try {
+            const response = await axios.get('http://165.232.161.56:8000/api/parents');
+            if (response.status === 200) {
+                const data = convertParentDataToModels(response.data.data);
+                setParents(data);
+                localStorage.setItem('parents', JSON.stringify(data));
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
     };
 
+    useEffect(() => {
+        if (parents.length === 0) {
+            fetchAllParents();
+        }
+    }, []);
+
+    const SetParent = (parent) => {
+        setParent(parent);
+        localStorage.setItem('parent', JSON.stringify(parent));
+    };
 
     return (
-        <ParentContext.Provider value={{ parent, parents, updateParent}}>
-               {children}
+        <ParentContext.Provider value={{ parent, parents, SetParent, setParent, setParents }}>
+            {children}
         </ParentContext.Provider>
     );
 };
 
-const useParentContext = () => React.useContext(ParentContext);
-
-export { useParentContext };
+export const useParentContext = () => React.useContext(ParentContext);
