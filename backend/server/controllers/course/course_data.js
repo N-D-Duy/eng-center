@@ -16,7 +16,7 @@ const joinCourse = async (req, res) => {
 };
 
 const studentAttendance = async (req, res) => {
-  try{
+  try {
     attendanceHandler(req, res);
   } catch (err) {
     return res.status(400).json({
@@ -118,7 +118,7 @@ const getCourseById = async (req, res) => {
 
 
 const createCourse = async (req, res) => {
-  try { 
+  try {
     const course = await Course.create(req.body);
     return res.status(201).json({
       data: course
@@ -171,8 +171,8 @@ const deleteCourse = async (req, res) => {
 
 const findCourse = async (req, res) => {
   try {
-    const name  = req.query.name;
-    const course = await Course.find({ name: { $regex: name, $options: 'i' }}).exec();
+    const name = req.query.name;
+    const course = await Course.find({ name: { $regex: name, $options: 'i' } }).exec();
     if (!course) {
       return res.status(404).json({
         message: 'Course not found'
@@ -198,7 +198,7 @@ const getAllStudentsInCourse = async (req, res) => {
 
     // Tìm tất cả các course_student với Course ID đã cho
     const courseData = await CourseStudent.find({ course: id }).populate('student');
-    
+
     // Kiểm tra nếu không tìm thấy dữ liệu nào
     if (!courseData.length) {
       return res.status(404).json({
@@ -230,6 +230,31 @@ const getStudentAttendance = async (req, res) => {
   }
 }
 
+//get all course student joined
+const getStudentCourses = async (req, res) => {
+  try {
+    const student = req.params.student;
+    const courseStudents = await CourseStudent.find({ student: student }).populate('course').exec();
+    
+    if (!courseStudents || courseStudents.length === 0) {
+      return res.status(404).json({
+        message: 'No courses found'
+      });
+    }
+
+    const courses = courseStudents.map(cs => cs.course);
+
+    return res.status(200).json({
+      data: courses
+    });
+  } catch (err) {
+    return res.status(400).json({
+      error: err.message
+    });
+  }
+};
+
+
 
 module.exports = {
   getAllCourses,
@@ -244,5 +269,6 @@ module.exports = {
   getAllStudentsInCourse,
   getAllStudentsInGrade,
   studentAttendance,
-  getStudentAttendance
+  getStudentAttendance,
+  getStudentCourses
 }

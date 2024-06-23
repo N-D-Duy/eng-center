@@ -2,6 +2,10 @@ const Account = require('../../models/account');
 const { checkValidEmail, checkValidPassword } = require('../../utils/auth_check');
 const hashPassword = require('../../utils/hash_password');
 const bcrypt = require('bcrypt');
+const Admin = require('../../models/admin');
+const Student = require('../../models/student');
+const Teacher = require('../../models/teacher');
+const Parent = require('../../models/parent');
 /**
  * Logs in a user with the provided email/username and password.
  * @param {string} emailOrUsername - The email or username of the user.
@@ -53,6 +57,7 @@ const loginWithEmailOrUsernameAndPassword = async (req, res) => {
             });
         }
 
+
         // So sánh mật khẩu người dùng nhập vào với mật khẩu đã hash trong cơ sở dữ liệu
         const isMatch = await bcrypt.compare(password, account.password);
 
@@ -62,10 +67,44 @@ const loginWithEmailOrUsernameAndPassword = async (req, res) => {
             });
         }
 
-        return res.status(200).json({
-            data: account,
-            message: 'Login successful'
-        });
+        switch (account.role) {
+            case 'admin':
+                const admin = await Admin.findOne({ account: account._id }).populate({
+                    path: 'account',
+                    select: 'role'
+                }).lean().exec();
+                return res.status(200).json({
+                    data: admin
+                });
+            case 'student':
+                const student = await Student.findOne({ account: account._id }).populate({
+                    path: 'account',
+                    select: 'role'
+                });
+                return res.status(200).json({
+                    data: student
+                });
+            case 'teacher':
+                const teacher = await Teacher.findOne({ account: account._id }).populate({
+                    path: 'account',
+                    select: 'role'
+                });
+                return res.status(200).json({
+                    data: teacher
+                });
+            case 'parent':
+                const parent = await Parent.findOne({ account: account._id }).populate({
+                    path: 'account',
+                    select: 'role'
+                });
+                return res.status(200).json({
+                    data: parent
+                });
+            default:
+                return res.status(400).json({
+                    error: 'unknown error'
+                });
+        }
     }catch (err) {
         return res.status(400).json({
             error: err.message
