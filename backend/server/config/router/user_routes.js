@@ -310,7 +310,7 @@ module.exports = (app) => {
      *           schema:
      *             type: object
      *             properties:
-     *               emailorusername:
+     *               emailOrUsername:
      *                 type: string
      *               password:
      *                 type: string
