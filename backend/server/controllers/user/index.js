@@ -2,6 +2,7 @@ const ParentData = require('./parent_data');
 const StudentData = require('./student_data');
 const TeacherData = require('./teacher_data');
 const Account = require('../../models/account');
+const AdminData = require('./admin_data');
 
 
 const getAccounts = async (req, res) => {
@@ -21,5 +22,6 @@ module.exports = {
     ParentData,
     StudentData,
     TeacherData,
-    getAccounts
+    getAccounts,
+    AdminData
 };

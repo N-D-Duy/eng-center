@@ -3,10 +3,11 @@ const Account = require('../../models/account.js');
 const mongoose = require('mongoose');
 const account = require('../../models/account.js');
 const Student = require('../../models/student.js');
+const hashPassword = require('../../utils/hash_password.js');
 
 const getParentInfor = async (req, res) => {
     try {
-        const parent = await Parent.findById(req.params.id);
+        const parent = await Parent.findById(req.params.id).populate('account').exec();
         return res.status(200).json({
             data: parent
         });
@@ -19,7 +20,7 @@ const getParentInfor = async (req, res) => {
 
 const getAllParents = async (req, res) => {
     try {
-        const parents = await Parent.find();
+        const parents = await Parent.find().populate('account').exec();
         return res.status(200).json({
             data: parents
         });
@@ -45,8 +46,24 @@ const createParent = async (req, res) => {
         });
     }
     try {
+        //hash password before save to database
+        account.password = await hashPassword(account.password);
         //create new account
         const accountSchema = new Account(account);
+        if(account.role != 'parent'){
+            return res.status(400).json({
+                error: 'Invalid role'
+            });
+        }
+
+        //check email already exists
+        const emailExist = await Account.findOne({ email: accountSchema.email });
+        if(emailExist){
+            return res.status(400).json({
+                error: 'Email already exists'
+            });
+        }
+
         await accountSchema.save();
 
         //get account id to assign to parent
@@ -66,7 +83,8 @@ const createParent = async (req, res) => {
             });
         }
         return res.status(201).json({
-            data: parent
+            data: parent,
+            message: 'Parent created successfully'
         });
 
         
@@ -77,8 +95,24 @@ const createParent = async (req, res) => {
     }
 };
 
+
+const updateParent = async (req, res) => {
+    try {
+        const parent = await Parent.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        return res.status(200).json({
+            data: parent,
+            message: 'Parent updated'
+        });
+    } catch (error) {
+        return res.status(400).json({
+            error: error.message
+        });
+    }
+};
+
 module.exports = {
     getParentInfor,
     getAllParents,
-    createParent
+    createParent,
+    updateParent
 };

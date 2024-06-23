@@ -2,13 +2,20 @@ const mongoose = require('mongoose');
 const Student = require('../../models/student');
 const Course = require('../../models/course');
 const CourseStudent = require('../../models/course_student');
+const Attendance = require('../../models/attendance');
 
 //trigger when a student join a course
 const triggerCourseStudentJoin = async (req, res) => {
     try {
-        const {course, student} = req.body;
+        const { course, student } = req.body;
         //check if course and student exist
         const courseData = await Course.findById(course);
+        if (courseData.current_joined >= courseData.capacity) {
+            return res.status(400).json({
+                message: 'Course is full'
+            });
+        }
+
         const studentData = await Student.findById(student);
         if (!courseData || !studentData) {
             return res.status(404).json({
@@ -22,6 +29,23 @@ const triggerCourseStudentJoin = async (req, res) => {
             course: course
         });
         await courseStudent.save();
+        //joined increase by 1
+        await Course.findByIdAndUpdate(course, { current_joined: courseData.current_joined + 1 });
+
+
+        //get schedule of the course
+        const schedule = await CourseSchedule.find({ course}).map(cs => cs.day);
+        //create attendance schedule for student
+        for(let day in schedule){
+            await Attendance.create({
+                student: student,
+                course: course,
+                date: day,
+                status: 'no reason'
+            })
+        }
+
+
         return res.status(200).json({
             data: courseStudent,
             message: 'student join course successfully'
@@ -37,7 +61,7 @@ const triggerCourseStudentJoin = async (req, res) => {
 //trigger when a student leave a course
 const triggerCourseStudentLeave = async (req, res) => {
     try {
-        const {course, student} = req.body;
+        const { course, student } = req.body;
         //check if course and student exist
         const courseData = await Course.findById(course);
         const studentData = await Student.findById(student);
@@ -57,6 +81,10 @@ const triggerCourseStudentLeave = async (req, res) => {
                 message: 'Course student not found'
             });
         }
+
+        //joined decrease by 1
+        await Course.findByIdAndUpdate(course, { current_joined: courseData.current_joined - 1 });
+
         return res.status(200).json({
             data: courseStudent,
             message: 'student leave course successfully'
@@ -68,7 +96,93 @@ const triggerCourseStudentLeave = async (req, res) => {
     }
 };
 
+const attendanceHandler = async (req, res) => {
+    try {
+        const { course, students } = req.body;
+
+        // Check if course exists
+        const courseData = await Course.findById(course);
+        if (!courseData) {
+            return res.status(404).json({
+                message: 'Course not found'
+            });
+        }
+
+        // Extract student IDs
+        const studentIds = students.map(student => student.id);
+
+        // Check if all students exist
+        const studentData = await Student.find({ _id: { $in: studentIds } });
+        if (studentData.length !== studentIds.length) {
+            return res.status(404).json({
+                message: 'One or more students not found'
+            });
+        }
+
+        // Create bulk operations for updating attendance
+        const bulkOperations = students.map(student => ({
+            updateOne: {
+                filter: { student: student.id, course: course },
+                update: { 
+                    $inc: { 
+                        attendance_count: student.is_attended ? 1 : 0, 
+                        absent_count: student.is_attended ? 0 : 1 
+                    } 
+                }
+            }
+        }));
+
+        // Execute bulk operations
+        const bulkWriteResult = await CourseStudent.bulkWrite(bulkOperations);
+
+        if (bulkWriteResult.modifiedCount === 0) {
+            return res.status(404).json({
+                message: 'No course-student records updated'
+            });
+        }
+
+        //update attendance of each student
+        for(let student in students){
+            await Attendance.create({
+                student: student.id,
+                course: course,
+                date: student.date,
+                status: student.is_attended ? 'no reason' : student.reasons
+            })
+        }
+
+        return res.status(200).json({
+            data: bulkWriteResult,
+            message: 'Attendance updated successfully'
+        });
+    } catch (err) {
+        return res.status(400).json({
+            error: err.message
+        });
+    }
+};
+
+
+
+//get the attendance of a student in a course
+const getAttendance = async (req, res) => {
+    try {
+        const { student, course } = req.params;
+        //join course_student to get all joined course id
+        const courseStudent = await CourseStudent.find({ student: student, course: course });
+        return res.status(200).json({
+            data: courseStudent
+        });
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        });
+    }
+}
+
 module.exports = {
     triggerCourseStudentJoin,
-    triggerCourseStudentLeave
+    triggerCourseStudentLeave,
+    attendanceHandler,
+    getAttendance
 };

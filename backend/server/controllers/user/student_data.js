@@ -3,10 +3,11 @@ const CourseStudent = require('../../models/course_student.js');
 const Account = require('../../models/account.js');
 const mongoose = require('mongoose');
 const { checkValidPassword } = require('../../utils/auth_check.js');
+const hashPassword = require('../../utils/hash_password.js');
 
 const getStudentInfor = async (req, res) => {
     try {
-        const student = await Student.findById(req.params.id);
+        const student = await Student.findById(req.params.id).populate('account').exec();
         return res.status(200).json({
             data: student
         });
@@ -20,7 +21,7 @@ const getStudentInfor = async (req, res) => {
 
 const getAllStudents = async (req, res) => {
     try {
-        const students = await Student.find();
+        const students = await Student.find().populate('account').exec();
         return res.status(200).json({
             data: students
         });
@@ -34,27 +35,38 @@ const getAllStudents = async (req, res) => {
 
 const createStudent = async (req, res) => {
     try {
-        // Tạo một tài khoản mới
-        const account = new Account(req.body.account);
+        const account = req.body.account;
         //check nếu password không hợp lệ
-        if(!checkValidPassword(account.password)){
+        if (!checkValidPassword(account.password)) {
             return res.status(400).json({
                 error: 'Invalid password'
             });
         }
 
+
+        if (account.role !== "student") {
+            return res.status(400).json({
+                error: 'Invalid role'
+            });
+        }
+
         //check email đã sử dụng
-        const emailExist = await Account.findOne({ email  : account.email });
-        if(emailExist){
+        const emailExist = await Account.findOne({ email: account.email });
+        if (emailExist) {
             return res.status(400).json({
                 error: 'Email already exists'
             });
         }
-        
-        await account.save();
+
+        //hash password before save to database
+        account.password = await hashPassword(account.password);
+        // Tạo một tài khoản mới
+        const accountSchema = new Account(account);
+
+        await accountSchema.save();
 
         // Lấy account id
-        const account_id = account._id;
+        const account_id = accountSchema._id;
 
         // Gán account id cho đối tượng student
         req.body.student.account = account_id;
@@ -67,12 +79,13 @@ const createStudent = async (req, res) => {
             req.body.student.parent = new mongoose.Types.ObjectId.createFromHexString(req.body.student.parent);
         }
 
-        
+
 
         // Tạo student mới
         const student = await Student.create(req.body.student);
         return res.status(201).json({
-            data: student
+            data: student,
+            message: 'Student created successfully'
         });
     } catch (err) {
         return res.status(400).json({
@@ -85,7 +98,7 @@ const createStudent = async (req, res) => {
 const getAllCoursesJoined = async (req, res) => {
     try {
         //ref course_student schema, using student id to get all courses that student joined
-        const courses = await CourseStudent.find({ student_id: req.params.id });
+        const courses = await CourseStudent.find({ student: req.params.id });
         return res.status(200).json({
             data: courses
         });
@@ -107,7 +120,8 @@ const updateStudent = async (req, res) => {
         }
         const updatedStudent = await Student.findById(req.params.id);
         return res.status(200).json({
-            data: updatedStudent
+            data: updatedStudent,
+            message: 'Student updated successfully'
         });
     } catch (err) {
         return res.status(400).json({

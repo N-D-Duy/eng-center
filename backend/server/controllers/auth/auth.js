@@ -1,6 +1,7 @@
 const Account = require('../../models/account');
 const { checkValidEmail, checkValidPassword } = require('../../utils/auth_check');
-
+const hashPassword = require('../../utils/hash_password');
+const bcrypt = require('bcrypt');
 /**
  * Logs in a user with the provided email/username and password.
  * @param {string} emailOrUsername - The email or username of the user.
@@ -8,7 +9,9 @@ const { checkValidEmail, checkValidPassword } = require('../../utils/auth_check'
  * @returns {Promise<string|object>} - A promise that resolves to either an error message or the user account object.
  */
 const loginWithEmailOrUsernameAndPassword = async (req, res) => {
-    const {emailOrUsername, password} = req.body;
+    const { emailOrUsername, password } = req.body;
+
+
     if (!emailOrUsername || !password) {
         return res.status(400).json({
             error: 'Email/Username and password are required'
@@ -33,13 +36,15 @@ const loginWithEmailOrUsernameAndPassword = async (req, res) => {
         });
     }
 
+    const bcrypt = require('bcrypt');
+
     try {
+        // Tìm tài khoản dựa trên email hoặc username
         const account = await Account.findOne({
             $or: [
                 { email: emailOrUsername },
                 { user_name: emailOrUsername }
-            ],
-            password: password
+            ]
         });
 
         if (!account) {
@@ -48,19 +53,29 @@ const loginWithEmailOrUsernameAndPassword = async (req, res) => {
             });
         }
 
+        // So sánh mật khẩu người dùng nhập vào với mật khẩu đã hash trong cơ sở dữ liệu
+        const isMatch = await bcrypt.compare(password, account.password);
+
+        if (!isMatch) {
+            return res.status(400).json({
+                error: 'Invalid email/username or password'
+            });
+        }
+
         return res.status(200).json({
-            data: account
+            data: account,
+            message: 'Login successful'
         });
-    } catch (err) {
+    }catch (err) {
         return res.status(400).json({
             error: err.message
         });
     }
 };
 
-const changePassword= async(req, res) => {
-    const {emailOrUsername, password} = req.body;
-    if (!emailOrUsername || !password) {
+const changePassword = async (req, res) => {
+    const { emailOrUsername, oldPassword, newPassword } = req.body;
+    if (!emailOrUsername || !oldPassword || !newPassword) {
         return res.status(400).json({
             error: 'Email/Username and password are required'
         });
@@ -79,7 +94,7 @@ const changePassword= async(req, res) => {
     }
 
     //check new password is valid
-    if (!checkValidPassword(password)) {
+    if (!checkValidPassword(newPassword)) {
         return res.status(400).json({
             error: 'Invalid password'
         });
@@ -99,7 +114,16 @@ const changePassword= async(req, res) => {
             });
         }
 
-        account.password = password;
+        //check old password
+        const isMatch = await bcrypt.compare(oldPassword, account.password);
+
+        if (!isMatch) {
+            return res.status(400).json({
+                error: 'Old password is incorrect'
+            });
+        }
+
+        account.password = newPassword;
         await account.save();
 
         return res.status(200).json({

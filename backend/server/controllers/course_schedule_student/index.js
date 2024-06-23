@@ -1,3 +1,4 @@
+const attendance = require('../../models/attendance');
 const CourseSchedule = require('../../models/course_schedule');
 const CourseStudent = require('../../models/course_student');
 const setAsync = require('../../controllers/redis/cachedApi').setAsync;
@@ -5,15 +6,13 @@ const setAsync = require('../../controllers/redis/cachedApi').setAsync;
 const getSchedule = async (req, res) => {
     // with course id as input, return the schedule of the course
     try {
-        const { id } = req.params;
+        const id = req.params.id;
         const schedules = await CourseSchedule.find({ course: id }).exec();
-        if (!schedule) {
+        if (!schedules) {
             return res.status(404).json({
                 message: 'Schedule not found'
             });
         }
-        /* const cacheKey = `course_schedules_${courseId}`;
-        await setAsync(cacheKey, JSON.stringify(schedules), 'EX', 3600); // Cache data for 1 hour */
         return res.status(200).json({
             data: schedules,
             message: 'Schedule retrieved successfully'
@@ -80,9 +79,9 @@ const createCourseSchedulesAuto = async (course, teacher, startDate, numberOfWee
 
 const getStudentSchedule = async (req, res) => {
     try {
-        const { student } = req.params;
+        const id = req.params.id;
         //join course_student to get all joined course id
-        const courseStudent = await CourseStudent.find({ student }).populate('course');
+        const courseStudent = await CourseStudent.find({ student: id }).populate('course');
         const courses = courseStudent.map(cs => cs.course._id);
         //get all schedule of the courses
         const schedules = await CourseSchedule.find({ course: { $in: courses } }).populate({
@@ -102,8 +101,8 @@ const getStudentSchedule = async (req, res) => {
 };
 const getTeacherSchedule = async (req, res) => {
     try {
-        const { teacher } = req.params;
-        const schedule = await CourseSchedule.find({ teacher });
+        const id = req.params.id;
+        const schedule = await CourseSchedule.find({ teacher: id });
         return res.status(200).json({
             data: schedule,
             message: 'Teacher schedule retrieved successfully'
@@ -115,11 +114,28 @@ const getTeacherSchedule = async (req, res) => {
     }
 };
 
+const getStudentAttendanceInCourse = async (req, res) => {
+    try{
+        const course = req.params.course;
+        //get attendance of all students in a course
+        const Attendance = await Attendance.find({ course: course });
+        return res.status(200).json({
+            data: Attendance,
+            message: 'Attendance retrieved successfully'
+        });
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        });
+    }
+}
+
 module.exports = {
     getSchedule,
     createSchedule,
     getStudentSchedule,
-    getTeacherSchedule
+    getTeacherSchedule,
+    getStudentAttendanceInCourse
 };
 
 

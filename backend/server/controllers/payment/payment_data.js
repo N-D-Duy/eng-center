@@ -18,7 +18,7 @@ const getPayments = async (req, res) => {
 
 const getPaymentsByParentId = async (req, res) => {
     try {
-        const { id} = req.query;
+        const { id } = req.query;
         const payments = await Payment.find({ id });
         return res.status(200).json({
             data: payments,
@@ -48,7 +48,7 @@ const createPayment = async (req, res) => {
 
 const getTotalPaid = async (req, res) => {
     try {
-        const {id} = req.params;
+        const { id } = req.params;
         const payments = await Payment.find({ parent: id }).exec();
         let total = 0;
         payments.forEach(payment => {
@@ -62,6 +62,20 @@ const getTotalPaid = async (req, res) => {
     catch (err) {
         return res.status(500).json({
             message: err.message
+        });
+    }
+}
+
+const updatePayment = async (req, res) => {
+    try {
+        const payment = await Payment.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        return res.status(200).json({
+            data: payment,
+            message: 'Payment updated'
+        });
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
         });
     }
 }
