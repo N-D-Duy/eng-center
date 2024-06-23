@@ -1,6 +1,6 @@
 import React, { createContext, useEffect, useState } from 'react';
 import axios from 'axios';
-import { convertAccountDataToModel } from '../components/Controller/ConvertData';
+import { convertAccountDataToModel, convertParentDataToModels, convertStudentDataToModels, convertTeacherDataToModels } from '../components/Controller/ConvertData';
 import { useNavigate } from 'react-router-dom';
 import { TeacherProvider } from './TeacherContext';
 import { StudentProvider } from './StudentContext';
@@ -55,10 +55,36 @@ export const AuthProvider = ({ children }) => {
         "password": password
       });
       if (response.status === 200) {
-        const account = convertAccountDataToModel(response.data.data);
-        handleLogin(account.role, account);
+        var roleAccount = response.data.data.account.role;
+        console.log("ROle: ", roleAccount);
+        console.log("Data: ", response.data);
+        switch (roleAccount) {
+          case 'teacher':{
+            const TeacherData = convertTeacherDataToModels(response.data);
+            handleLogin(roleAccount, TeacherData);
+            break;
+          }
+          case 'student':{
+            const StudentData = convertStudentDataToModels(response.data);
+            handleLogin(roleAccount, StudentData);
+            break;
+          }
+          case 'parent':{
+            const ParentData = convertParentDataToModels(response.data);
+            handleLogin(roleAccount, ParentData);
+            break;
+          }
+          case 'admin':{
+            handleLogin(roleAccount, response.data);
+            break;
+          }
+          default :{
+            alert('Đăng nhập không thành công. Vui lòng kiểm tra lại tên đăng nhập và mật khẩu.');
+            return;
+          }
+        }
         alert('Đăng nhập thành công!');
-        navigate(`/${account.role}`);
+        navigate(`/${roleAccount}`);
       } else {
         alert('Đăng nhập không thành công. Vui lòng kiểm tra lại tên đăng nhập và mật khẩu.');
       }

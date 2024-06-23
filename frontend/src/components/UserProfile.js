@@ -3,7 +3,6 @@ import { FormEditUser } from './Form/FormEdit';
 import { OverviewUser, OverviewUserOther } from './Form/FormOverview';
 import { NavButton } from './Buttons/NavButton';
 import { CardProfile } from './Form/CardProfile';
-import { useAuthContext } from '../Context/AuthContext';
 import { useUserContext } from '../Context/UserContext';
 
 const UserProfile = () => {
@@ -34,6 +33,7 @@ const UserProfile = () => {
         <>
             <section className="section profile">
                 <div className="row">
+                    {console.log(user)}
                     <CardProfile label={user?.name} image={user?.image} />  
                     <div className="col-xl-8">
                         <div className="card">
@@ -62,6 +62,7 @@ export const UserOtherProfile = (prop) => {
         <>
             <section className="section profile">
                 <div className="row">
+                    {console.log(prop)}
                     <CardProfile label={prop?.name} image={prop?.image} />  
                     <div className="col-xl-8">
                         <div className="card">

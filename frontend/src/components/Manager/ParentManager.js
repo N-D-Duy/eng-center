@@ -3,10 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import TableComponent from './TableComponent';
 import { useParentContext } from '../../Context/ParentContext';
 import { useUserContext } from '../../Context/UserContext';
+import { useAuthContext } from '../../Context/AuthContext';
 
 export const ParentManager = () => {
-    const { parents, } = useParentContext();
-    const { setUserOther } = useUserContext();
+    const { parents } = useParentContext();
     const navigate = useNavigate();
     const [allParents, setAllParents] = useState([]);
 
@@ -46,13 +46,15 @@ const GenerateParentTr = ({ data, navigate, setParent }) => {
     const bgActive = data.status === 'active' ? "badge bg-success" : "badge bg-warning";
     const { setOtherUser } = useUserContext();
 
-    const clickOther = () => {
+    const {role} = useAuthContext();
+    
+    const ClickOther = () => {
         setOtherUser(data);
-        navigate('/admin/otherprofile');
+        navigate(`/${role}/otherprofile`);
     };
 
     return (
-        <tr onClick={clickOther}>
+        <tr onClick={ClickOther}>
             <td className="text-center"><img src={data.image} alt="" /></td>
             <td><div className="text-primary fw-bold">{data.name}</div></td>
             <td>{data.email}</td>

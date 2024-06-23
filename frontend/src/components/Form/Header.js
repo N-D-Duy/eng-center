@@ -60,10 +60,10 @@ const Header = () => {
   return (
     <header id="header" className="header fixed-top d-flex align-items-center">
       <div className="d-flex align-items-center justify-content-between">
-        <a href="#none" className="logo d-flex align-items-center">
+        <div className="logo d-flex align-items-center">
           <img src={logo} alt="Logo" />
           <span className="d-none d-lg-block">NiceAdmin</span>
-        </a>
+        </div>
         <i className="bi bi-list toggle-sidebar-btn" onClick={toggleSidebar}></i>
       </div>
 

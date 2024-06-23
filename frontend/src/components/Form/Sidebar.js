@@ -125,10 +125,20 @@ const StudentSlidebar = () => {
     return(
         <div>
             <li class="nav-item">
-                <a class="nav-link collapsed" href="#slidebar-student-all-course">
-                <i class="bi bi-person"></i>
-                <span>All Courses</span>
-                </a>
+                <div class="nav-link collapsed">
+                <Link to ="/student/courses"> 
+                    <i class="bi bi-person"></i>
+                    <span>Courses</span>
+                </Link>
+                </div>
+            </li>
+            <li class="nav-item">
+                <div class="nav-link collapsed">
+                <Link to ="/student/schedule"> 
+                    <i class="bi bi-person"></i>
+                    <span>Schedule</span>
+                </Link>
+                </div>
             </li>
         </div>
     )
@@ -139,16 +149,20 @@ const TeacherSlidebar = () => {
     return(
         <div>
             <li class="nav-item">
-                <a class="nav-link collapsed" href="#slidebar-teacher-all-course">
-                <i class="bi bi-person"></i>
-                <span>All Courses</span>
-                </a>
+                <div class="nav-link collapsed">
+                <Link to ="/teacher/courses"> 
+                    <i class="bi bi-person"></i>
+                    <span>Courses</span>
+                </Link>
+                </div>
             </li>
             <li class="nav-item">
-                <a class="nav-link collapsed" href="#slidebar-teacher-schedule">
-                <i class="bi bi-person"></i>
-                <span>Schedule</span>
-                </a>
+                <div class="nav-link collapsed">
+                <Link to ="/teacher/schedule"> 
+                    <i class="bi bi-person"></i>
+                    <span>Schedule</span>
+                </Link>
+                </div>
             </li>
         </div>
     )
@@ -158,10 +172,10 @@ const ParentSlidebar = () => {
     return(
         <div>
             <li class="nav-item">
-                <a class="nav-link collapsed" href="#slidebar-all-childrent">
+                <div class="nav-link collapsed">
                 <i class="bi bi-person"></i>
-                <span>All Childrent</span>
-                </a>
+                <span>All Children</span>
+                </div>
             </li>
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#slidebar-payment">

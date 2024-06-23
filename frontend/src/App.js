@@ -1,5 +1,4 @@
 import './App.css';
-import { AuthProvider } from './Context/AuthContext';
 import { CourseProvider } from './Context/CourseContext';
 import { Routes, Route } from 'react-router-dom';
 import { Login } from './components/Login';
@@ -14,28 +13,84 @@ import { StudentManager } from './components/Manager/StudentManager';
 import { ParentManager } from './components/Manager/ParentManager';
 import { UserOtherProfile, UserProfile } from './components/Profile/UserProfile';
 import { UserProvider } from './Context/UserContext';
-
+import { Schedule } from './components/Form/Schedule/Scheduele';
 
 function App() {
+
   return (<div>
     <UserProvider>
       <CourseProvider>
         <Routes>
           <Route path='/' element = {<Login />}/>
-          <Route path='/admin' element = {<HeaderSlideBar />}>
+          <Route path= {`/admin`} element = {<HeaderSlideBar />}>
+
+            {/* Manager */}
               <Route path='/admin/coursemanager' element = {<CourseManager />}/>
               <Route path='/admin/paymentmanager' element = {<CourseManager />}/>
               <Route path='/admin/teachermanager' element = {<TeacherManager />}/>
               <Route path='/admin/studentmanager' element = {<StudentManager />}/>
               <Route path='/admin/parentmanager' element = {<ParentManager />}/>
-              <Route path='/admin/courseprofile' element = {<CourseProfile />}/>
-              <Route path='/admin/otherprofile' element = {<UserOtherProfile />}/>
-              <Route path='/admin/profile' element = {<UserProfile />}/>
-              <Route path='/admin/add_user' element = {<AddUserForm />}/>
+
+            {/* Profile  */}
+              <Route path={'/admin/courseprofile'} element = {<CourseProfile />}/>
+              <Route path={'/admin/otherprofile'} element = {<UserOtherProfile />}/>
+              <Route path={'/admin/profile'} element = {<UserProfile />}/>
+
+              {/* Schedule */}
+              <Route path={'/admin/schedule'} element = {<Schedule />} />
+              
+
+              {/* Add User */}
+              <Route path='/admin/adduser' element = {<AddUserForm />}/>
+              {/* Default */}
               <Route index element = {<Dashboard />}/>
           </Route>
+
+          <Route path= {`/teacher`} element = {<HeaderSlideBar />}>
+            <Route path={"/teacher/courses"} element = {<CourseManager />}/>
+            {/* Profile  */}
+              <Route path={"/teacher/courseprofile"} element = {<CourseProfile />}/>
+              <Route path={'/teacher/otherprofile'} element = {<UserOtherProfile />}/>
+              <Route path={'/teacher/profile'} element = {<UserProfile />}/>
+
+              {/* Schedule */}
+              <Route path={'/teacher/schedule'} element = {<Schedule />} />
+              {/* Default */}
+              <Route index element = {<Dashboard />}/>
+          </Route>
+
+          <Route path= {`/student`} element = {<HeaderSlideBar />}>
+            <Route path={"/student/courses"} element = {<CourseManager />}/>
+            {/* Profile  */}
+              <Route path={"/student/courseprofile"} element = {<CourseProfile />}/>
+              <Route path={'/student/otherprofile'} element = {<UserOtherProfile />}/>
+              <Route path={'/student/profile'} element = {<UserProfile />}/>
+
+              {/* Schedule */}
+              <Route path={'/student/schedule'} element = {<Schedule />} />
+              {/* Default */}
+              <Route index element = {<Dashboard />}/>
+          </Route>
+
+          <Route path= {`/parent`} element = {<HeaderSlideBar />}>
+
+            
+            {/* Profile  */}
+              <Route path={"/parent/courseprofile"} element = {<CourseProfile />}/>
+              <Route path={'/parent/otherprofile'} element = {<UserOtherProfile />}/>
+              <Route path={'/parent/profile'} element = {<UserProfile />}/>
+
+              {/* Schedule */}
+              <Route path={'/parent/schedule'} element = {<Schedule />} />
+              {/* Default */}
+              <Route index element = {<Dashboard />}/>
+          </Route>
+
+
+
+
+
           <Route path='/login' element = {<Login />}/>
-          <Route path='/profile' element = {<UserProfile />}/>
           <Route path='/policy' element = {<Login />}/>
           <Route path='/register' element = {<Register />}/>
         </Routes>

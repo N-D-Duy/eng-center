@@ -1,10 +1,16 @@
 import React, { createContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { convertCourseDataToModels } from '../components/Controller/ConvertData.js';
+import { useUserContext } from './UserContext.js';
+import { useAuthContext } from './AuthContext.js';
 
 const CourseContext = createContext();
 
 export const CourseProvider = ({ children }) => {
+
+    const {user} = useUserContext();
+    const {role} = useAuthContext();
+
     const [course, setCourse] = useState(() => {
         const savedCourse = localStorage.getItem('course');
         return savedCourse ? JSON.parse(savedCourse) : null;
@@ -17,12 +23,22 @@ export const CourseProvider = ({ children }) => {
 
     const fetchAllCourses = async () => {
         try {
-            const response = await axios.get('http://165.232.161.56:8000/api/courses');
-            if (response.status === 200) {
-                const data = convertCourseDataToModels(response.data.data);
-                setCourses(data);
-                localStorage.setItem('courses', JSON.stringify(data));
+            if(role == 'admin'){
+                const response = await axios.get('http://165.232.161.56:8000/api/courses');
+                if (response.status === 200) {
+                    const data = convertCourseDataToModels(response.data.data);
+                    setCourses(data);
+                    localStorage.setItem('courses', JSON.stringify(data));
+                }
+            }else{
+                const response = await axios.get('http://165.232.161.56:8000/api/courses');
+                if (response.status === 200) {
+                    const data = convertCourseDataToModels(response.data.data);
+                    setCourses(data);
+                    localStorage.setItem('courses', JSON.stringify(data));
+                }
             }
+            
         } catch (error) {
             console.error('Error:', error);
         }

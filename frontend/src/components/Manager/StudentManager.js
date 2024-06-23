@@ -3,9 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import TableComponent from './TableComponent';
 import { useUserContext } from '../../Context/UserContext';
 import { useStudentContext } from '../../Context/StudentContext';
+import { useAuthContext } from '../../Context/AuthContext';
 
 export const StudentManager = () => {
-    const { setUserOther } = useUserContext();
     const { students } = useStudentContext();
     const navigate = useNavigate();
     const [allStudents, setAllStudents] = useState([]);
@@ -45,9 +45,11 @@ export const StudentManager = () => {
 const GenerateStudentTr = ({ data, navigate }) => {
     const bgActive = data.status === 'active' ? "badge bg-success" : "badge bg-warning";
     const { setOtherUser } = useUserContext();
+    const {role} = useAuthContext();
     const clickOther = () => {
+        console.log(data);
         setOtherUser(data);
-        navigate('/admin/otherprofile');
+        navigate(`/${role}/otherprofile`);
     };
     return (
         <tr onClick={clickOther}>

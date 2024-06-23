@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { convertTime } from "../Controller/Time";
 import TableComponent from "./TableComponent";
 import { useUserContext } from "../../Context/UserContext";
+import { useAuthContext } from "../../Context/AuthContext";
 export const TeacherManager = () => {
     const { teachers } = useTeacherContext();
     const navigate = useNavigate();
@@ -44,10 +45,11 @@ export const TeacherManager = () => {
 const GenerateTeacherTr = ({ data, navigate }) => {
     const bgActive = data.status === 'active' ? "badge bg-success" : "badge bg-warning";
     const { setOtherUser } = useUserContext();
-
+    const {role} = useAuthContext();
+    
     const clickTeacher = () => {
         setOtherUser(data);
-        navigate('/admin/otherprofile');
+        navigate(`/${role}/otherprofile`);
     };
 
     return (

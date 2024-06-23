@@ -3,9 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { convertTime } from "../Controller/Time";
 import TableComponent from "./TableComponent";
+import { useAuthContext } from "../../Context/AuthContext";
 
 export const CourseManager = () => {
-    const { courses, SetCourse } = useCourseContext();
+    const { courses } = useCourseContext();
     const navigate = useNavigate();
     const [allCourses, setAllCourses] = useState([]);
 
@@ -49,9 +50,11 @@ const GenerateCourseTr = ({ data, navigate }) => {
     const bgActive = data.status === 'active' ? "badge bg-success" : "badge bg-warning";
 
     const { setCourse } = useCourseContext();
+    
+    const {role} = useAuthContext();
 
     return (
-        <tr onClick={() => clickCourse(data, navigate, setCourse)}>
+        <tr onClick={() => ClickCourse(data, navigate, setCourse, role)}>
             <td className="text-center"><img src={data.image} alt="" /></td>
             <td><div className="text-primary fw-bold">{data.name}</div></td>
             <td>{data.teacher.name}</td>
@@ -62,8 +65,9 @@ const GenerateCourseTr = ({ data, navigate }) => {
     );
 };
 
-const clickCourse = (data, navigate, setCourse) => {
+const ClickCourse = (data, navigate, setCourse, role) => {
     setCourse(data);
-    navigate('/admin/courseprofile');
+    console.log("ROLE at here: ", role);
+    navigate(`/${role}/courseprofile`);
 };
 
