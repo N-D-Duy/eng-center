@@ -4,7 +4,7 @@ import EventDetails from './EventDetails';
 import { Container, Row, Col } from 'react-bootstrap';
 import { useScheduleContext } from '../../../Context/ScheduleContext';
 
-export const TeacherSchedule = () => {
+export const Schedule = () => {
     const { scheduleData } = useScheduleContext();
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [events, setEvents] = useState(scheduleData);

@@ -1,6 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useCourseContext } from '../../Context/CourseContext';
 import { convertTime } from '../Controller/Time';
+import { useStudentContext } from '../../Context/StudentContext';
+import { useParentContext } from '../../Context/ParentContext';
+import { useTeacherContext } from '../../Context/TeacherContext';
+import { useAuthContext } from '../../Context/AuthContext';
+import { useUserContext } from '../../Context/UserContext';
 
 export const OverviewCourse = () => {
     const {course} = useCourseContext();
@@ -25,23 +30,37 @@ export const OverviewCourse = () => {
 };
 
 
-export const OverviewTeacher = () => {
-    return (<>
-    
-    </>)
-}
 
-export const OverviewStudent = () => {
-    return (<>
-    
-    </>)
-}
+export const OverviewUser = () => {
+    const { user } = useUserContext();
 
-export const OverviewParent = () => {
-    return (<>
-    
-    </>)
-}
+    return (
+        <div className="tab-pane fade show active profile-overview" id="profile-overview">
+            <h5 className="card-title">Overview</h5>
+            <OverviewField label="Name" value={user.name} />
+            <OverviewField label="Email" value={user.email} />
+            <OverviewField label="Phone" value={user.phone} />
+            <OverviewField label="Status" value={user.status} />
+            {/* Add more fields as needed */}
+        </div>
+    );
+};
+
+
+export const OverviewUserOther = () => {
+    const { otherUser } = useUserContext();
+    console.log(otherUser);
+    return (
+        <div className="tab-pane fade show active profile-overview" id="profile-overview">
+            <h5 className="card-title">Overview</h5>
+            <OverviewField label="Name" value={otherUser.name} />
+            <OverviewField label="Email" value={otherUser.account.email} />
+            <OverviewField label="Phone" value={otherUser.account.phone} />
+            <OverviewField label="Status" value={otherUser.account.status} />
+            {/* Add more fields as needed */}
+        </div>
+    );
+};
 
 
 const OverviewField = ({ label, value }) => {

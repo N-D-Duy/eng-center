@@ -4,23 +4,71 @@ import React from 'react';
 const EventDetails = ({ date, events }) => {
     if (!date) return <p>Select a date to see events</p>;
 
-    const eventList = events.filter(event => new Date(event.date).toDateString() === date.toDateString());
+    const eventList = events.filter(event => new Date(event.day).toDateString() === date.toDateString());
 
     return (
         <div className="event-details">
-            <h2>Events on {date.toDateString()}</h2>
+            <h2>Schedule on {date.toDateString()}</h2>
             {eventList.length > 0 ? (
                 eventList.map((event, index) => (
-                    <div key={index} className="event-item">
-                        <h3>{event.title}</h3>
-                        <p>{event.date}</p>
-                    </div>
+                    <CardSchedule key={index} name={event.name} teacher={event.teacher} start_time={event.start_time} end_time={event.end_time} />
                 ))
             ) : (
-                <p>No events or classes on this day.</p>
+                // <p>There is no event on this day</p> 
+
+                <CardSchedule />
             )}
         </div>
     );
 };
+
+const CardSchedule = (prop) => {
+    return (<>
+        <div className='container mt-5'>
+            <div className='card shadow bg-primary'>
+                <div className='card-body'>
+                <div className='row gx-md-4 gy-4'>
+                    <div className='col-md-6'>
+                    <div className='info-box'>
+                        <i className='bi bi-geo-alt fs-2 text-light'></i>
+                        <div>
+                        <h3 className='text-light'>Course</h3>
+                        <p className='text-light'>{prop.name}</p>
+                        </div>
+                    </div>
+                    </div>
+                    <div className='col-md-6'>
+                    <div className='info-box'>
+                        <i className='bi bi-telephone fs-2 text-light'></i>
+                        <div>
+                        <h3 className='text-light'>Teacher</h3>
+                        <p className='text-light'>{prop.teacher}</p>
+                        </div>
+                    </div>
+                    </div>
+                    <div className='col-md-6'>
+                    <div className='info-box'>
+                        <i className='bi bi-clock fs-2 text-light'></i>
+                        <div>
+                        <h3 className='text-light'>Start Time</h3>
+                        <p className='text-light'>{prop.start_time}</p>
+                        </div>
+                    </div>
+                    </div>
+                    <div className='col-md-6'>
+                    <div className='info-box'>
+                        <i className='bi bi-clock fs-2 text-light'></i>
+                        <div>
+                        <h3 className='text-light'>End Time</h3>
+                        <p className='text-light'>{prop.end_time}</p>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+    </>)
+}
 
 export default EventDetails;

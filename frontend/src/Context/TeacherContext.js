@@ -5,47 +5,38 @@ import { convertTeacherDataToModels } from '../components/Controller/ConvertData
 const TeacherContext = createContext();
 
 export const TeacherProvider = ({ children }) => {
-    const [teachers, setTeachers] = useState([]);
+    
+    const [teachers, setTeachers] = useState(() => {
+        const savedTeachers = localStorage.getItem('teachers');
+        return savedTeachers ? JSON.parse(savedTeachers) : [];
+    });
 
-    useEffect(() => {
-        fetchTeachers();
-    }, []);
-
-    const fetchTeachers = async () => {
+    const fetchAllTeachers = async () => {
         try {
             const response = await axios.get('http://165.232.161.56:8000/api/teachers');
             if (response.status === 200) {
                 const data = convertTeacherDataToModels(response.data.data);
                 setTeachers(data);
-                console.log(data);
-            } else {
-                console.log(response.status);
+                // Save teachers data to localStorage
+                localStorage.setItem('teachers', JSON.stringify(data));
             }
         } catch (error) {
-            console.error('fetchTeachers error:', error);
-        } finally {
-                console.log('fetchTeachers done');
+            console.error('Error:', error);
         }
     };
 
-    const updateTeacher = (id, key, value) => {
-        setTeachers(prevTeachers => {
-            return prevTeachers.map(teacher => {
-                if (teacher._id === id) {
-                    return { ...teacher, [key]: value };
-                }
-                return teacher;
-            });
-        });
-    };
+    useEffect(() => {
+        if (teachers.length === 0) {
+            fetchAllTeachers();
+        }
+    }, []);
+
 
     return (
-        <TeacherContext.Provider value={{ teachers, updateTeacher}}>
+        <TeacherContext.Provider value={{teachers }}>
             {children}
         </TeacherContext.Provider>
     );
 };
 
-const useTeacherContext = () => React.useContext(TeacherContext);
-
-export { useTeacherContext };
+export const useTeacherContext = () => React.useContext(TeacherContext);

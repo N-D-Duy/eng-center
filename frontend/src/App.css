@@ -92,3 +92,33 @@
       max-height: 200px;
   }
 }
+
+.info-box {
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  border-radius: 10px;
+  height: 100%;
+}
+
+.info-box i {
+  flex: 0 0 auto;
+}
+
+.info-box > div {
+  flex: 1 1 auto;
+  margin-left: 20px;
+}
+
+/* Màu nền và màu chữ */
+.bg-primary {
+  background-color: #778b9d;
+}
+
+.text-light {
+  color: #fff;
+}
+.custom-checkbox {
+  pointer-events: none; /* Ngăn chặn sự kiện tương tác của người dùng */
+  opacity: 1; /* Đảm bảo phần tử không bị mờ */
+}

@@ -1,77 +1,126 @@
-import React, { createContext, useEffect, useState } from 'react';
-import ScheduleProvider from './ScheduleContext';
-import axios from 'axios';
-import { convertAccountDataToModel } from '../components/Controller/ConvertData';
-import { useNavigate } from 'react-router-dom';
-import { TeacherProvider } from './TeacherContext';
-import { StudentProvider } from './StudentContext';
-import { ParentProvider } from './ParentContext';
+import React, { createContext, useEffect, useState } from "react";
+import axios from "axios";
+import {
+  convertAccountDataToModel,
+  convertParentDataToModels,
+  convertStudentDataToModels,
+  convertTeacherDataToModels,
+} from "../components/Controller/ConvertData";
+import { useNavigate } from "react-router-dom";
+import { TeacherProvider } from "./TeacherContext";
+import { StudentProvider } from "./StudentContext";
+import { ParentProvider } from "./ParentContext";
+import ScheduleProvider from "./ScheduleContext";
+import { useUserContext } from "./UserContext";
+
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-
   const navigate = useNavigate();
 
   const [loggedIn, setLoggedIn] = useState(false);
   const [role, setRole] = useState(null);
-
+  const { setUser } = useUserContext();
   useEffect(() => {
-    const storedRole = localStorage.getItem('userRole');
+    const storedRole = localStorage.getItem("userRole");
+    const storedUser = JSON.parse(localStorage.getItem("user"));
     if (storedRole) {
       setRole(storedRole);
     }
+    if (storedUser) {
+      setUser(storedUser);
+      setLoggedIn(true);
+    }
   }, []);
 
-
-  const handleLogin = (userRole) => {
+  const handleLogin = (userRole, userData) => {
     setLoggedIn(true);
     setRole(userRole);
-    localStorage.setItem('userRole', userRole);
+    setUser(userData);
+    localStorage.setItem("userRole", userRole);
+    localStorage.setItem("user", JSON.stringify(userData));
   };
 
   const handleLogout = () => {
     setLoggedIn(false);
+    localStorage.removeItem("userRole");
+    localStorage.removeItem("user");
     setRole(null);
+    setUser(null);
+    localStorage.clear();
   };
 
   const loginHandler = async (email, password) => {
-        console.log(`${email} : ${password}`);
-        if (!email || !password) {
-            alert('Vui lòng nhập email và mật khẩu.');
-            return;
+    if (!email || !password) {
+      alert("Vui lòng nhập email và mật khẩu.");
+      return;
+    }
+    try {
+      const response = await axios.post(
+        "http://165.232.161.56:8000/api/login",
+        {
+          emailOrUsername: email,
+          password: password,
         }
-        try {
-            const response = await axios.post('http://165.232.161.56:8000/api/login', {
-                "emailOrUsername": email,
-                "password": password
-            });
-            console.log(response);
-              if (response.status === 200) {
-                
-                const account = convertAccountDataToModel(response.data.data);
-                handleLogin(account.role);
-                console.log(account);
-                console.log(response.data.data);
-                alert('Đăng nhập thành công!');
-                navigate(`/${account.role}`);
-              } else {
-                alert("email: " +  email + " pass: " + password);
-                alert('Đăng nhập không thành công. Vui lòng kiểm tra lại tên đăng nhập và mật khẩu.');
-              }
-        } catch (error) {
-            console.error('Đăng nhập khô0ng thành công:', error);
-            alert('Đăng nhập không thành công. Vui lòng thử lại sau.');
+      );
+      if (response.status === 200) {
+        if (email.startsWith('admin')) {
+          handleLogin('admin', response.data);
+          alert("Đăng nhập thành công!");
+          navigate(`/admin`);
+        } else {
+          console.log("Data: ", response.data);
+          var roleAccount = response.data.data.account.role;
+          console.log("ROle: ", roleAccount);
+          console.log("Data: ", response.data);
+          switch (roleAccount) {
+            case "teacher": {
+              const TeacherData = convertTeacherDataToModels(response.data);
+              handleLogin(roleAccount, TeacherData);
+              break;
+            }
+            case "student": {
+              const StudentData = convertStudentDataToModels(response.data);
+              handleLogin(roleAccount, StudentData);
+              break;
+            }
+            case "parent": {
+              const ParentData = convertParentDataToModels(response.data);
+              handleLogin(roleAccount, ParentData);
+              break;
+            }
+            case "admin": {
+             
+            }
+            default: {
+              alert(
+                "Đăng nhập không thành công. Vui lòng kiểm tra lại tên đăng nhập và mật khẩu."
+              );
+              return;
+            }
+          }
+          alert("Đăng nhập thành công!");
+          navigate(`/${roleAccount}`);
         }
+      } else {
+        alert(
+          "Đăng nhập không thành công. Vui lòng kiểm tra lại tên đăng nhập và mật khẩu."
+        );
+      }
+    } catch (error) {
+      console.error("Fail", error);
+      alert("Đăng nhập không thành công. Vui lòng thử lại sau.");
+    }
   };
 
   return (
-    <AuthContext.Provider value={{ loggedIn, role, handleLogin, handleLogout, loginHandler }}>
+    <AuthContext.Provider
+      value={{ loggedIn, role, handleLogin, handleLogout, loginHandler }}
+    >
       <TeacherProvider>
         <StudentProvider>
           <ParentProvider>
-            <ScheduleProvider>
-              {children}
-            </ScheduleProvider>
+            <ScheduleProvider>{children}</ScheduleProvider>
           </ParentProvider>
         </StudentProvider>
       </TeacherProvider>
