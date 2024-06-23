@@ -54,11 +54,18 @@ module.exports = (app) => {
      *                       type: integer
      *                       enum: [0, 1]
      *                       example: 0
+     *                     day:
+     *                       type: string
+     *                       example: "2021-06-14"
+     *                     reasons:
+     *                       type: string
+     *                       example: "Sick"
      *     responses:
      *       201:
      *         description: Attendance recorded successfully
      */
     app.post('/api/course/attendance', controller.courseData.studentAttendance);
+
 
     /**
      * @swagger
