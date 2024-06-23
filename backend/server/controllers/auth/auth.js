@@ -72,7 +72,7 @@ const loginWithEmailOrUsernameAndPassword = async (req, res) => {
                 const admin = await Admin.findOne({ account: account._id }).populate({
                     path: 'account',
                     select: 'role'
-                }).lean().exec();
+                });
                 return res.status(200).json({
                     data: admin
                 });

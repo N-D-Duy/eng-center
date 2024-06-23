@@ -84,8 +84,13 @@ const getStudentSchedule = async (req, res) => {
         const courseStudent = await CourseStudent.find({ student: id }).populate('course');
         const courses = courseStudent.map(cs => cs.course._id);
         //get all schedule of the courses
-        const schedules = await CourseSchedule.find({ course: { $in: courses } }).populate({
-            path: 'course',
+        const schedules = await CourseSchedule.find({ course: { $in: courses } }).populate(
+            {
+                path: 'course',
+                select: 'name'
+            }
+        ).populate({
+            path: 'teacher',
             select: 'name'
         });
         return res.status(200).json({
@@ -102,7 +107,13 @@ const getStudentSchedule = async (req, res) => {
 const getTeacherSchedule = async (req, res) => {
     try {
         const id = req.params.id;
-        const schedule = await CourseSchedule.find({ teacher: id });
+        const schedule = await CourseSchedule.find({ teacher: id }).populate({
+            path : 'course',
+            select: 'name'
+        }).populate({
+            path: 'teacher',
+            select: 'name'
+        });
         return res.status(200).json({
             data: schedule,
             message: 'Teacher schedule retrieved successfully'
@@ -115,7 +126,7 @@ const getTeacherSchedule = async (req, res) => {
 };
 
 const getStudentAttendanceInCourse = async (req, res) => {
-    try{
+    try {
         const course = req.params.course;
         //get attendance of all students in a course
         const Attendance = await Attendance.find({ course: course });
