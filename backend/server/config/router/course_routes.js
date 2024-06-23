@@ -333,4 +333,23 @@ module.exports = (app) => {
      */
     app.post('/api/course/leave', controller.courseData.leaveCourse);
 
+    /**
+     * @swagger
+     * /api/student/{student}/courses:
+     *   get:
+     *     summary: Get all courses for a student
+     *     tags: [Courses]
+     *     parameters:
+     *       - in: path
+     *         name: student
+     *         schema:
+     *           type: string
+     *         required: true
+     *         description: Student ID
+     *     responses:
+     *       200:
+     *         description: List of courses for the student
+     */
+    app.get('/api/student/:student/courses', controller.courseData.getStudentCourses);
+
 };
