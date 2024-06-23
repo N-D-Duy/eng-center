@@ -3,6 +3,7 @@ import { Account } from "../../model/account.ts";
 import { Course } from "../../model/course.ts";
 import { Parent } from "../../model/parent.ts";
 import { Teacher } from "../../model/teacher.ts";
+import { Schedule } from "../Form/Schedule/Scheduele.js";
 
 export const convertCourseDataToModels = (data) => {
   let parsedData;
@@ -55,6 +56,15 @@ export const convertStudentDataToModels = (data) => {
 
   return data.map(s => new Student(s));
 };
+
+export const convertScheduleDataToModels = (data) => {
+  if (!data || !Array.isArray(data)) {
+    return [];
+  }
+
+  return data.map(s => new Schedule(s));
+};
+
 
 export const convertParentDataToModels = (data) => {
   if (!data || !Array.isArray(data)) {

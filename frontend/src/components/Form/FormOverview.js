@@ -49,13 +49,14 @@ export const OverviewUser = () => {
 
 export const OverviewUserOther = () => {
     const { otherUser } = useUserContext();
+    console.log(otherUser);
     return (
         <div className="tab-pane fade show active profile-overview" id="profile-overview">
             <h5 className="card-title">Overview</h5>
             <OverviewField label="Name" value={otherUser.name} />
-            <OverviewField label="Email" value={otherUser.email} />
-            <OverviewField label="Phone" value={otherUser.phone} />
-            <OverviewField label="Status" value={otherUser.status} />
+            <OverviewField label="Email" value={otherUser.account.email} />
+            <OverviewField label="Phone" value={otherUser.account.phone} />
+            <OverviewField label="Status" value={otherUser.account.status} />
             {/* Add more fields as needed */}
         </div>
     );

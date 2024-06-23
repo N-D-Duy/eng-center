@@ -54,12 +54,12 @@ const EventCalendar = ({ onDateClick, events }) => {
     };
 
     const getEventsForDate = (date) => {
-        return events.filter(event => new Date(event.date).toDateString() === date.toDateString());
+        return events.filter(event => new Date(event.day).toDateString() === date.toDateString());
     };
 
     return (
         <Container className="calendar-container">
-            <h1>Event Calendar</h1>
+            <h1>Scheduele</h1>
             <div className="calendar-controls">
                 <Button variant="secondary" onClick={handlePrevMonth}>Previous</Button>
                 <Button variant="secondary" onClick={handleNextMonth}>Next</Button>

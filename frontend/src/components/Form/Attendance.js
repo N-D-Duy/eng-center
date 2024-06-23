@@ -87,7 +87,7 @@ export const CourseAttendance = () => {
                     </tbody>
                 </table>
             </div>
-            <ButtonSave onClick={handleEventClick} />
+            {/* <ButtonSave onClick={handleEventClick} /> */}
         </div>
     );
 };
@@ -125,12 +125,15 @@ const GenerateStudentTr = ({ data }) => {
             setCheckedDates([...checkedDates, date]);
         }
     };
+
+    // onClick={() => handleCheckboxChange(date)}
+
     return (
         <tr>
             <td className="sticky">{data.student}</td>
             {data.dates.map((date, index) => (
-                <td key={index} onClick={() => handleCheckboxChange(date)}>
-                    <input type="checkbox" checked={checkedDates.includes(date)}/>
+                <td key={index}>
+                    <input type="checkbox" className="custom-checkbox" checked={checkedDates.includes(date)}/>
                 </td>
             ))}
         </tr>

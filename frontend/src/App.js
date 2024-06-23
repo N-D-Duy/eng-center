@@ -35,13 +35,8 @@ function App() {
               <Route path={'/admin/courseprofile'} element = {<CourseProfile />}/>
               <Route path={'/admin/otherprofile'} element = {<UserOtherProfile />}/>
               <Route path={'/admin/profile'} element = {<UserProfile />}/>
-
-              {/* Schedule */}
-              <Route path={'/admin/schedule'} element = {<Schedule />} />
-              
-
               {/* Add User */}
-              <Route path='/admin/adduser' element = {<AddUserForm />}/>
+              <Route path='/admin/add_user' element = {<Schedule />}/>
               {/* Default */}
               <Route index element = {<Dashboard />}/>
           </Route>

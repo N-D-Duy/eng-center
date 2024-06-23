@@ -109,16 +109,16 @@ export const FormEditUserOther = () => {
 
     // State hooks for form fields
     const [name, setName] = useState(otherUser.name || "");
-    const [email, setEmail] = useState(otherUser.email || "");
-    const [phone, setPhone] = useState(otherUser.phone || "");
-    const [status, setStatus] = useState(otherUser.status || "");
+    const [email, setEmail] = useState(otherUser.account.email || "");
+    const [phone, setPhone] = useState(otherUser.account.phone || "");
+    const [status, setStatus] = useState(otherUser.account.status || "");
 
     // useEffect to update form fields when otherUser changes
     useEffect(() => {
         setName(otherUser.name || "");
-        setEmail(otherUser.email || "");
-        setPhone(otherUser.phone || "");
-        setStatus(otherUser.status || "");
+        setEmail(otherUser.account.email || "");
+        setPhone(otherUser.account.phone || "");
+        setStatus(otherUser.account.status || "");
     }, [otherUser]);
 
     // Handle Save button click
@@ -137,7 +137,7 @@ export const FormEditUserOther = () => {
                 <EditFormText label="Full Name" defaultValue={name} onChange={(e) => setName(e.target.value)} />
                 <EditFormText label="Email" defaultValue={email} onChange={(e) => setEmail(e.target.value)} />
                 <EditFormText label="Phone" defaultValue={phone} onChange={(e) => setPhone(e.target.value)} />
-                <EditFormText label="Status" defaultValue={status} onChange={(e) => setStatus(e.target.value)} />
+                <SelectOption keys={['active', 'disactive', 'pending']} values={['Active', 'Disactive', 'Pending']} title="Status" onChange={setStatus} />
                 <ButtonSave title="Save" />
             </form>
         </div>

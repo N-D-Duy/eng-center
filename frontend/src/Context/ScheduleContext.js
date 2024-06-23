@@ -1,32 +1,36 @@
 // src/contexts/ScheduleContext.js
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useAuthContext } from './AuthContext';
+import { useUserContext } from './UserContext';
+import { convertScheduleDataToModels, convertStudentDataToModels } from '../components/Controller/ConvertData';
+import axios from 'axios';
 
 const ScheduleContext = createContext();
 
 export const useScheduleContext = () => useContext(ScheduleContext);
 
-const fakeEvents = [
-    { title: 'Math Class', date: '2024-06-10' },
-    { title: 'Physics Class', date: '2024-06-10' },
-    { title: 'Chemistry Class', date: '2024-06-15' },
-    { title: 'Biology Class', date: '2024-06-18' },
-    { title: 'History Class', date: '2024-06-20' },
-];
-
-
 const ScheduleProvider = ({ children }) => {
     const { role } = useAuthContext();
+    const { user } = useUserContext();
     const [scheduleData, setScheduleData] = useState([]);
+
+
+    useEffect(() => {
+        const storedSchedule = JSON.parse(localStorage.getItem('schedule'));
+        if (storedSchedule) {
+            setScheduleData(storedSchedule);
+        }
+    }, []);
 
     const fetchData = async () => {
         try {
             // Example API call based on role
-            //const response = await fetch(`https://api.example.com/schedule/${role}`);
-            // const data = await response.json();
-            const data = fakeEvents;
-            console.log(data);
-            setScheduleData(data);
+            const response = await axios.get(`http://http://165.232.161.56:8000/api/schedule/student/${user.id}`);
+            if (response.status === 200) {
+                const data = convertScheduleDataToModels(response.data.data);
+                setScheduleData(data);
+                localStorage.setItem('schedule', JSON.stringify(data));
+            }
         } catch (error) {
             console.error('Error fetching schedule data:', error);
         }
