@@ -119,6 +119,5 @@
   color: #fff;
 }
 .custom-checkbox {
-  pointer-events: none; /* Ngăn chặn sự kiện tương tác của người dùng */
   opacity: 1; /* Đảm bảo phần tử không bị mờ */
 }

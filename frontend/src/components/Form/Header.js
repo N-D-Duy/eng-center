@@ -21,7 +21,6 @@ const Header = () => {
     try {
       if (storedUser) {
         const parsedUser = JSON.parse(storedUser);
-        console.log('Stored User:', parsedUser);
         return parsedUser;
       }
     } catch (error) {
@@ -35,7 +34,6 @@ const Header = () => {
     try {
       if (storedUser) {
         const parsedUser = JSON.parse(storedUser);
-        console.log('Stored User:', parsedUser);
         setUser(parsedUser);
       }
     } catch (error) {

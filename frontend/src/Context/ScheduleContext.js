@@ -18,7 +18,6 @@ const ScheduleProvider = ({ children }) => {
     useEffect(() => {
         const storedSchedule = JSON.parse(localStorage.getItem('schedule'));
         if (storedSchedule) {
-            console.log("Data Schedule" + storedSchedule);
             setScheduleData(storedSchedule);
         }
     }, []);
@@ -29,7 +28,6 @@ const ScheduleProvider = ({ children }) => {
             const response = await axios.get(`http://165.232.161.56:8000/api/schedule/student/${user._id}`);
             if (response.status === 200) {
                 const data = convertScheduleDataToModels(response.data.data);
-                console.log("Data Schedule" + data);
                 setScheduleData(data);
                 localStorage.setItem('schedule', JSON.stringify(data));
             }

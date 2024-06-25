@@ -32,17 +32,16 @@ const AttendanceProvider = ({ children }) => {
       const studentsResponse = await axios.get(
         `http://165.232.161.56:8000/api/${courseId}/students`
       );
-       const datesResponse = await axios.get(`http://165.232.161.56:8000/api/schedule/${courseId}`);
-    //   const datesResponse = await axios.get(
-    //     `http://165.232.161.56:8000/api/course/666873f388b4360aeb1827da/student/6668737d3e166087045db9a0/attendance`
-    //   );
+      // const datesResponse = await axios.get(`http://165.232.161.56:8000/api/schedule/${courseId}`);
+      const datesResponse = await axios.get(
+        `http://165.232.161.56:8000/api/course/666873f388b4360aeb1827da/student/6668737d3e166087045db9a0/attendance`
+      );
       if (studentsResponse.status === 200 && datesResponse.status === 200) {
         const data = await fetchMultipleStudents(
           studentsResponse.data.data.map((student) => student._id)
         );
-        const studentsData = convertStudentDataToModels(data);
-        console.log("Daterespone: ", datesResponse.data.data);
-        const datesData = datesResponse.data.data.map((item) => item.day);
+        const studentsData = convertStudentDataToModels(data); 
+        const datesData = datesResponse.data.data[1].map((item) => item.day);
         datesData.filter((d) => d !== null);
         datesData.sort();
         const initialAttendanceData = await initializeAttendanceData(
