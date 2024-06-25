@@ -67,7 +67,6 @@ const GenerateCourseTr = ({ data, navigate }) => {
 
 const ClickCourse = (data, navigate, setCourse, role) => {
     setCourse(data);
-    console.log("ROLE at here: ", role);
     navigate(`/${role}/courseprofile`);
 };
 

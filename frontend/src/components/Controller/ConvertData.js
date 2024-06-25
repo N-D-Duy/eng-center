@@ -1,9 +1,9 @@
-import { Student } from "../../model/student.ts";
+import { LoginStudent, Student } from "../../model/student.ts";
 import { Account } from "../../model/account.ts";
 import { Course } from "../../model/course.ts";
-import { Parent } from "../../model/parent.ts";
-import { Teacher } from "../../model/teacher.ts";
-import { Schedule } from "../Form/Schedule/Scheduele.js";
+import { LoginParent, Parent } from "../../model/parent.ts";
+import { LoginTeacher, Teacher } from "../../model/teacher.ts";
+import { Schedule } from "../../model/schedule.ts";
 
 export const convertCourseDataToModels = (data) => {
   let parsedData;
@@ -39,7 +39,67 @@ export const convertAccountDataToModel = (data) => {
 
   return new Account(data);
 }
+export const convertLoginStudentDataToModel = (data) => {
+  if (!data) {
+      return null;
+  }
+  try {
+      const student = new LoginStudent(data);
+      return student;
+  } catch (error) {
+      console.error('Error converting student data:', error);
+      return null;
+  }
+};
 
+
+export const convertStudentDataToModel = (data) => {
+  if (!data) {
+      return null;
+  }
+  try {
+      const student = new Student(data);
+      return student;
+  } catch (error) {
+      console.error('Error converting student data:', error);
+      return null;
+  }
+};
+
+
+export const convertTeacherDataToModel = (data) => {
+  if (!data) {
+    return [];
+  }
+
+  return new Teacher(data);
+}
+
+export const convertLoginTeacherDataToModel = (data) => {
+  if (!data) {
+    return [];
+  }
+
+  return new LoginTeacher(data);
+}
+
+
+export const convertParentDataToModel = (data) => {
+  if (!data) {
+    return [];
+  }
+
+  return new Parent(data);
+}
+
+
+export const convertLoginParentDataToModel = (data) => {
+  if (!data) {
+    return [];
+  }
+
+  return new LoginParent(data);
+}
 
 export const convertTeacherDataToModels = (data) => {
   if (!data || !Array.isArray(data)) {
@@ -56,7 +116,6 @@ export const convertStudentDataToModels = (data) => {
 
   return data.map(s => new Student(s));
 };
-
 export const convertScheduleDataToModels = (data) => {
   if (!data || !Array.isArray(data)) {
     return [];
@@ -65,6 +124,13 @@ export const convertScheduleDataToModels = (data) => {
   return data.map(s => new Schedule(s));
 };
 
+export const convertScheduleDataToModel = (data) => {
+  if (!data) {
+    return [];
+  }
+
+  return new Schedule(data);
+};
 
 export const convertParentDataToModels = (data) => {
   if (!data || !Array.isArray(data)) {

@@ -3,6 +3,7 @@ import axios from 'axios';
 import { convertCourseDataToModels } from '../components/Controller/ConvertData.js';
 import { useUserContext } from './UserContext.js';
 import { useAuthContext } from './AuthContext.js';
+import AttendanceProvider from './AttendanceContext.js';
 
 const CourseContext = createContext();
 
@@ -75,7 +76,9 @@ export const CourseProvider = ({ children }) => {
 
     return (
         <CourseContext.Provider value={{ course, courses, setCourse: setCourseData, setCourses, updateCourse }}>
-            {children}
+            <AttendanceProvider>
+                {children}       
+            </AttendanceProvider>
         </CourseContext.Provider>
     );
 };

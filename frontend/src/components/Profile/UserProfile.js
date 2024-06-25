@@ -75,7 +75,7 @@ export const UserOtherProfile = () => {
         <>
             <section className="section profile">
                 <div className="row">
-                    <CardProfile label={otherUser?.name} image={otherUser?.image} />  
+                    <CardProfile image={otherUser?.image} label={otherUser?.name} />  
                     <div className="col-xl-8">
                         <div className="card">
                             <div className="card-body pt-3">

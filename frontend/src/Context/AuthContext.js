@@ -1,10 +1,9 @@
 import React, { createContext, useEffect, useState } from "react";
 import axios from "axios";
 import {
-  convertAccountDataToModel,
-  convertParentDataToModels,
-  convertStudentDataToModels,
-  convertTeacherDataToModels,
+  convertLoginParentDataToModel,
+  convertLoginStudentDataToModel,
+  convertLoginTeacherDataToModel,
 } from "../components/Controller/ConvertData";
 import { useNavigate } from "react-router-dom";
 import { TeacherProvider } from "./TeacherContext";
@@ -75,17 +74,18 @@ export const AuthProvider = ({ children }) => {
           console.log("Data: ", response.data);
           switch (roleAccount) {
             case "teacher": {
-              const TeacherData = convertTeacherDataToModels(response.data);
+              const TeacherData = convertLoginTeacherDataToModel(response.data.data);
               handleLogin(roleAccount, TeacherData);
               break;
             }
             case "student": {
-              const StudentData = convertStudentDataToModels(response.data);
+              const StudentData = convertLoginStudentDataToModel(response.data.data);
+              console.log("Studebt: ", StudentData);
               handleLogin(roleAccount, StudentData);
               break;
             }
             case "parent": {
-              const ParentData = convertParentDataToModels(response.data);
+              const ParentData = convertLoginParentDataToModel(response.data.data);
               handleLogin(roleAccount, ParentData);
               break;
             }
