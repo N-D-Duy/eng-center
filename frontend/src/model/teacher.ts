@@ -9,14 +9,14 @@ export class Teacher {
   createdAt: string;
   updatedAt: string;
 
-  constructor(data: any) {
-    this._id = data._id;
-    this.name = data.name;
-    this.account = new Account(data.account);
-    this.session_count = data.session_count;
-    this.status = data.status;
-    this.createdAt = data.createdAt;
-    this.updatedAt = data.updatedAt;
+  constructor(data) {
+    this._id = data?._id;
+    this.name = data?.name;
+    this.account = new Account(data?.account);
+    this.session_count = data?.session_count;
+    this.status = data?.status;
+    this.createdAt = data?.createdAt;
+    this.updatedAt = data?.updatedAt;
   }
 }
 export class LoginTeacher {

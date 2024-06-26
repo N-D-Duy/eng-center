@@ -34,6 +34,7 @@ export const CourseProvider = ({ children }) => {
             }else{
                 const response = await axios.get('http://165.232.161.56:8000/api/courses');
                 if (response.status === 200) {
+                    console.log("Respone: " ,response.data.data)
                     const data = convertCourseDataToModels(response.data.data);
                     setCourses(data);
                     localStorage.setItem('courses', JSON.stringify(data));

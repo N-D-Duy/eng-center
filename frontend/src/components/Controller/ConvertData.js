@@ -6,21 +6,11 @@ import { LoginTeacher, Teacher } from "../../model/teacher.ts";
 import { Schedule } from "../../model/schedule.ts";
 
 export const convertCourseDataToModels = (data) => {
-  let parsedData;
-
-  if (typeof data === "string") {
-      parsedData = JSON.parse(data);
-  } else {
-      parsedData = data;
+  if (!data || !Array.isArray(data)) {
+    return [];
   }
 
-  if (!parsedData || !Array.isArray(parsedData)) {
-      return [];
-  }
-
-  console.log(new Course(parsedData[0]));
-
-  return parsedData.map((c) => new Course(c));
+  return data.map(a => new Course(a));
 }
 
 
