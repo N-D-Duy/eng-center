@@ -41,15 +41,21 @@ const AttendanceProvider = ({ children }) => {
           studentsResponse.data.data.map((student) => student._id)
         );
         const studentsData = convertStudentDataToModels(data); 
-        const datesData = datesResponse.data.data[1].map((item) => item.day);
-        datesData.filter((d) => d !== null);
-        datesData.sort();
+      //const datesData = datesResponse.data.data[1].map((item) => item.day);
+          const datesData = datesResponse.data.data[1]
+          .map((item) => item.day)
+          .filter((d) => d !== null);
+        
+        // Loại bỏ các giá trị trùng lặp và sắp xếp
+        const uniqueDates = [...new Set(datesData)].sort();
+
+        // Khởi tạo dữ liệu điểm danh
         const initialAttendanceData = await initializeAttendanceData(
           studentsData,
-          datesData
+          uniqueDates
         );
         setStudents(studentsData);
-        setDates(datesData);
+        setDates(uniqueDates);
         setAttendanceData(initialAttendanceData);
       }
     } catch (error) {
@@ -127,6 +133,36 @@ const AttendanceProvider = ({ children }) => {
     return attendanceData[studentId][date];
   };
 
+  const SetDataAttendance = async (dataAttendance, date) => {
+    console.log("Students: ", students);
+    for(const student of students){
+      await fetchDataStudentAttendance(student._id, dataAttendance[student._id][date], date);
+    }
+  }
+
+  const fetchDataStudentAttendance = async (studentId, isAttandance, date) => {
+    try {
+      const response = await axios.post(`http://165.232.161.56:8000/api/course/attendance`,
+        {
+          course: course._id,
+          students: [
+            {
+              id: studentId,
+              is_attended: isAttandance,
+              day: date,
+              reasons: isAttandance ? "Good" : "Sick"
+            }
+          ]
+        }
+
+      );
+      return response.data.data;
+    }catch (error) {
+      console.error("Error fetching student attendance data:", error);
+      return [];
+    }
+  }
+
   return (
     <AttendanceContext.Provider
       value={{
@@ -136,6 +172,7 @@ const AttendanceProvider = ({ children }) => {
         markAttendance,
         checkAttendance,
         courseInfo,
+        SetDataAttendance
       }}
     >
       {children}

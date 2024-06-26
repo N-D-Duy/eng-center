@@ -1,38 +1,46 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAttendanceContext } from '../../Context/AttendanceContext';
 import { useAuthContext } from '../../Context/AuthContext';
 import { ButtonSave } from '../Buttons/ButtonSave';
 
 export const CourseAttendance = () => {
-    const { students, dates, attendanceData, markAttendance, checkAttendance } = useAttendanceContext();
+    const { students, dates, SetDataAttendance, checkAttendance } = useAttendanceContext();
     const { role } = useAuthContext();
     const today = new Date().toISOString().slice(0, 10);
 
-    const [editMode, setEditMode] = useState(false);
-    const [editedData, setEditedData] = useState({});
+    const [initialAttendance, setInitialAttendance] = useState({});
+    const [editMode, setEditMode] = useState(true);
 
-    // Kiểm tra ngày hôm nay có trong danh sách không
+    useEffect(() => {
+        const initialData = {};
+        students.forEach(student => {
+            initialData[student._id] = {};
+            dates.forEach(date => {
+                initialData[student._id][date] = checkAttendance(student._id, date);
+            });
+        });
+        setInitialAttendance(initialData);
+    }, [students, dates, checkAttendance]);
+
     const canEditToday = dates.includes(today);
 
     const handleEditButtonClick = () => {
         setEditMode(!editMode);
-        setEditedData({});
     };
 
     const handleCheckboxChange = (studentId, date) => {
-        console.log('Checkbox changed:', studentId, date);
-        setEditedData(prevData => {
-            const updatedData = { ...prevData };
-            if (!updatedData[studentId]) {
-                updatedData[studentId] = {};
-            }
-            updatedData[studentId][date] = !updatedData[studentId][date];
-            return updatedData;
-        });
+        setInitialAttendance(prevData => ({
+            ...prevData,
+            [studentId]: {
+                ...prevData[studentId],
+                [date]: !prevData[studentId][date],
+            },
+        }));
     };
 
     const handleSubmit = () => {
-        console.log('Submitting edited data:', editedData);
+        console.log('Submitting edited data:', initialAttendance);
+        SetDataAttendance(initialAttendance, today);
         // Gửi dữ liệu lên server
     };
 
@@ -51,7 +59,9 @@ export const CourseAttendance = () => {
                         <tr>
                             <th className="sticky">Tất cả sinh viên</th>
                             {dates.map((date, index) => (
-                                <th key={index} className={date === today ? 'editable text-center' : 'text-center'}>{date}</th>
+                                <th key={index} className={date === today ? 'editable text-center' : 'text-center'}>
+                                    {date}
+                                </th>
                             ))}
                         </tr>
                     </thead>
@@ -61,23 +71,19 @@ export const CourseAttendance = () => {
                                 <td className="sticky">{student.name}</td>
                                 {dates.map((date, index) => (
                                     <td key={index} className="text-center">
-                                        {editMode ? (
-                                            <label>
-                                                <input
-                                                    type="checkbox"
-                                                    className="custom-checkbox"
-                                                    checked={!!editedData[student._id]?.[date]}
-                                                    onChange={() => handleCheckboxChange(student._id, date)}
-                                                />
-                                                {student.name}
-                                            </label>
+                                        {editMode && date === today ? (
+                                            <input
+                                                type="checkbox"
+                                                className="custom-checkbox"
+                                                checked={initialAttendance[student._id]?.[date] ?? false}
+                                                onChange={() => handleCheckboxChange(student._id, date)}
+                                            />
                                         ) : (
                                             <input
                                                 type="checkbox"
                                                 className="custom-checkbox"
-                                                checked={checkAttendance(student._id, date)}
-                                                disabled = {date !== today}
-                                                onChange={() => handleCheckboxChange(student._id, date)}
+                                                checked={initialAttendance[student._id]?.[date] ?? false}
+                                                disabled={date !== today || role !== 'teacher'}
                                             />
                                         )}
                                     </td>
