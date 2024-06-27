@@ -2,7 +2,6 @@ import { Account, LoginAccount } from "./account.ts";
 
 export class Teacher {
   _id: string;
-  name: string;
   account: Account;
   session_count: number;
   status: string;
@@ -11,7 +10,6 @@ export class Teacher {
 
   constructor(data) {
     this._id = data?._id;
-    this.name = data?.name;
     this.account = new Account(data?.account);
     this.session_count = data?.session_count;
     this.status = data?.status;
@@ -21,7 +19,6 @@ export class Teacher {
 }
 export class LoginTeacher {
   _id: string;
-  name: string;
   account: LoginAccount;
   session_count: number;
   status: string;
@@ -30,7 +27,6 @@ export class LoginTeacher {
 
   constructor(data: any) {
     this._id = data._id;
-    this.name = data.name;
     this.account = new LoginAccount(data.account);
     this.session_count = data.session_count;
     this.status = data.status;

@@ -75,6 +75,21 @@ export const CourseProvider = ({ children }) => {
         }
     };
 
+
+    const AddNewCourse = async (course) => {
+        try {
+            const response = await axios.post('http://http://165.232.161.56:8000/api/course', course);
+            if (response.status === 200) {
+                return true;
+            }
+        }
+        catch (error) {
+            console.error('Error:', error);
+            return false;
+        }
+    }
+
+
     return (
         <CourseContext.Provider value={{ course, courses, setCourse: setCourseData, setCourses, updateCourse }}>
             <AttendanceProvider>

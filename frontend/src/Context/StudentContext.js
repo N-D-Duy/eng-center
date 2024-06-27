@@ -23,15 +23,34 @@ export const StudentProvider = ({ children }) => {
         }
     };
 
+    const fetchStudents = async (id) => {
+        try {
+            const response = await axios.get('http://165.232.161.56:8000/api/student/' + id);
+            if (response.status === 200) {
+                const data = convertStudentDataToModels(response.data.data);
+                return data;
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            return null;
+        }
+    };
+
     useEffect(() => {
         if (students.length === 0) {
             fetchAllStudents();
         }
     }, []);
 
-   
+    const AddNewStudent = async (value) => {
+        try {
+            const response = await axios.post('http://165.232.161.56:8000/api/student', value);
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
     return (
-        <StudentContext.Provider value={{ students }}>
+        <StudentContext.Provider value={{ students, AddNewStudent, fetchStudents }}>
             {children}
         </StudentContext.Provider>
     );

@@ -7,13 +7,13 @@ import { Dashboard } from './components/DashBoard';
 import { HeaderSlideBar } from './components/Form/HeaderSlideBar';
 import { CourseProfile } from './components/Profile/CourseProfile';
 import { CourseManager } from './components/Manager/CourseManager';
-import AddUserForm from './components/AddUser';
 import { TeacherManager } from './components/Manager/TeacherManager';
 import { StudentManager } from './components/Manager/StudentManager';
 import { ParentManager } from './components/Manager/ParentManager';
 import { UserOtherProfile, UserProfile } from './components/Profile/UserProfile';
 import { UserProvider } from './Context/UserContext';
 import { Schedule } from './components/Form/Schedule/Scheduele';
+import { FormAddNewCourse, FormAddNewUser } from './components/FormAdd';
 
 function App() {
 
@@ -36,7 +36,8 @@ function App() {
               <Route path={'/admin/otherprofile'} element = {<UserOtherProfile />}/>
               <Route path={'/admin/profile'} element = {<UserProfile />}/>
               {/* Add User */}
-              <Route path='/admin/add_user' element = {<Schedule />}/>
+              <Route path='/admin/add_user' element = {<FormAddNewUser />}/>
+              <Route path='/admin/add_course' element = {<FormAddNewCourse />}/>
               {/* Default */}
               <Route index element = {<Dashboard />}/>
           </Route>
