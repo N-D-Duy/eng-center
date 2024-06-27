@@ -1,9 +1,11 @@
-const { default: mongoose, get } = require('mongoose');
+const mongoose = require('mongoose');
 const Course = require('../../models/course.js');
 const CourseStudent = require('../../models/course_student.js');
 const teacher = require('../../models/teacher.js');
 const { triggerCourseStudentJoin, triggerCourseStudentLeave, attendanceHandler, getAttendance } = require('../course_student/index.js');
+const {getStudentAttendanceInCourse} = require('../course_schedule_student/index.js');
 const Student = require('../../models/student.js');
+const Attendance = require('../../models/attendance.js');
 
 const joinCourse = async (req, res) => {
   try {
@@ -194,7 +196,6 @@ const getAllStudentsInCourse = async (req, res) => {
   try {
     // Lấy Course ID từ body
     const id = req.params.id;
-    console.log(id);
 
     // Tìm tất cả các course_student với Course ID đã cho
     const courseData = await CourseStudent.find({ course: id }).populate('student');
@@ -254,7 +255,87 @@ const getStudentCourses = async (req, res) => {
   }
 };
 
+const getAttendances = async (req, res) =>{
+  try{
+    getStudentAttendanceInCourse(req, res);
+  } catch (err) {
+    return res.status(400).json({
+      error: err.message
+    });
+  }
+};
 
+const updateStudentAttendance = async (req, res) => {
+  try {
+    const { course, students, day } = req.body;
+    
+    // Lấy danh sách các bản ghi hiện tại cho học sinh trong khóa học vào ngày cụ thể
+    const existingAttendances = await Attendance.find({ course, day, student: { $in: students.map(s => s.id) } });
+
+    // Tạo map từ student ID đến bản ghi hiện tại của họ
+    const existingAttendanceMap = existingAttendances.reduce((map, attendance) => {
+      map[attendance.student.toString()] = attendance;
+      console.log(map)
+      return map;
+    }, {});
+
+    const updateCourseStudentAttendance = students.map(student => {
+      const existingAttendance = existingAttendanceMap[student.id];
+      const wasAttended = existingAttendance ? existingAttendance.isAttend : false;
+      const newAttended = student.is_attended;
+
+      // Tính toán thay đổi attendance_count và absent_count
+      const attendanceCountChange = newAttended && !wasAttended ? 1 : !newAttended && wasAttended ? -1 : 0;
+      const absentCountChange = !newAttended && wasAttended ? 1 : newAttended && !wasAttended ? -1 : 0;
+
+      return {
+        updateOne: {
+          filter: { student: student.id, course: course },
+          update: {
+            $inc: {
+              attendance_count: attendanceCountChange,
+              absent_count: absentCountChange
+            }
+          },
+          upsert: true
+        }
+      };
+    });
+
+    const updateAttendance = students.map(student => ({
+      updateOne: {
+        filter: { student: student.id, course: course, day: day },
+        update: {
+          $set: {
+            isAttend: student.is_attended,
+            status: student.is_attended ? 'well done' : 'absent'
+          }
+        },
+        upsert: true
+      }
+    }));
+
+    const result1 = await CourseStudent.bulkWrite(updateCourseStudentAttendance);
+    const result2 = await Attendance.bulkWrite(updateAttendance);
+
+    if (result1.modifiedCount === 0 && result2.modifiedCount === 0) {
+      return res.status(404).json({
+        message: 'No course-student records updated'
+      });
+    }
+
+    return res.status(200).json({
+      message: 'Attendance updated successfully',
+      result1,
+      result2
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message
+    });
+  }
+};
 
 module.exports = {
   getAllCourses,
@@ -270,5 +351,7 @@ module.exports = {
   getAllStudentsInGrade,
   studentAttendance,
   getStudentAttendance,
-  getStudentCourses
+  getStudentCourses,
+  getAttendances,
+  updateStudentAttendance
 }

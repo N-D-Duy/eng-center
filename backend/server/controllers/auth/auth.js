@@ -70,32 +70,28 @@ const loginWithEmailOrUsernameAndPassword = async (req, res) => {
         switch (account.role) {
             case 'admin':
                 const admin = await Admin.findOne({ account: account._id }).populate({
-                    path: 'account',
-                    select: 'role'
+                    path: 'account'
                 });
                 return res.status(200).json({
                     data: admin
                 });
             case 'student':
                 const student = await Student.findOne({ account: account._id }).populate({
-                    path: 'account',
-                    select: 'role'
+                    path: 'account'
                 });
                 return res.status(200).json({
                     data: student
                 });
             case 'teacher':
                 const teacher = await Teacher.findOne({ account: account._id }).populate({
-                    path: 'account',
-                    select: 'role'
+                    path: 'account'
                 });
                 return res.status(200).json({
                     data: teacher
                 });
             case 'parent':
                 const parent = await Parent.findOne({ account: account._id }).populate({
-                    path: 'account',
-                    select: 'role'
+                    path: 'account'
                 });
                 return res.status(200).json({
                     data: parent

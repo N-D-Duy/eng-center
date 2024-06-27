@@ -11,13 +11,16 @@ const attendanceSchema = new mongoose.Schema({
         ref: 'Course',
         required: 'Course ID is required'
     },
+    isAttend:{
+        type: Boolean,
+        default: false
+    },
     day: {
         type: String,
         required: 'day is required'
     },
     status: {
-        type: String,
-        default: 'no reason'
+        type: String
     }
 }, {
     timestamps: true

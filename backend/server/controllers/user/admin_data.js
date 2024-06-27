@@ -14,6 +14,12 @@ const createAdmin = async (req, res) => {
         return res.status(400).send("Invalid role");
     }
 
+    if(checkValidPassword(account.password) === false) {
+        return res.status(400).json({
+            error: 'Password is too weak (>8, contains number, special character)'
+        });
+    }
+
     //hash password before save to database
     account.password = await hashPassword(account.password);
     

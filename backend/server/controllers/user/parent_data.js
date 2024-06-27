@@ -35,7 +35,6 @@ const createParent = async (req, res) => {
     //account and invite code from req.body
     const { account, parent } = req.body;
     const invite_code = parent.invite_code;
-    console.log(invite_code)
     
     //check if invite code is valid
     //query students to find the student match with the invite code
@@ -46,6 +45,12 @@ const createParent = async (req, res) => {
         });
     }
     try {
+        //check if password is valid
+        if(checkValidPassword(account.password) === false) {
+            return res.status(400).json({
+                error: 'Password is too weak (>8, contains number, special character)'
+            });
+        }
         //hash password before save to database
         account.password = await hashPassword(account.password);
         //create new account

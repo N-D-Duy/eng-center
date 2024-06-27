@@ -2,6 +2,7 @@ const Teacher = require('../../models/teacher');
 const Account = require('../../models/account');
 const mongoose = require('mongoose');
 const hashPassword = require('../../utils/hash_password');
+const { checkValidPassword } = require('../../utils/auth_check');
 
 const getTeacherInfor = async (req, res) => {
     try {
@@ -34,6 +35,11 @@ const getAllTeachers = async (req, res) => {
 const createTeacher = async (req, res) => {
     try {
         const accountData = req.body.account;
+        if(checkValidPassword(accountData.password) === false) {
+            return res.status(400).json({
+                error: 'Password is too weak (>8, contains number, special character)'
+            });
+        }
         //hash password before save to database
         accountData.password = await hashPassword(accountData.password);
         //create a new account first

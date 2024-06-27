@@ -1,4 +1,4 @@
-const attendance = require('../../models/attendance');
+const Attendance = require('../../models/attendance');
 const CourseSchedule = require('../../models/course_schedule');
 const CourseStudent = require('../../models/course_student');
 const setAsync = require('../../controllers/redis/cachedApi').setAsync;
@@ -86,12 +86,10 @@ const getStudentSchedule = async (req, res) => {
         //get all schedule of the courses
         const schedules = await CourseSchedule.find({ course: { $in: courses } }).populate(
             {
-                path: 'course',
-                select: 'name'
+                path: 'course'
             }
         ).populate({
-            path: 'teacher',
-            select: 'name'
+            path: 'teacher'
         });
         return res.status(200).json({
             data: schedules,
@@ -108,11 +106,9 @@ const getTeacherSchedule = async (req, res) => {
     try {
         const id = req.params.id;
         const schedule = await CourseSchedule.find({ teacher: id }).populate({
-            path : 'course',
-            select: 'name'
+            path: 'course'
         }).populate({
-            path: 'teacher',
-            select: 'name'
+            path: 'teacher'
         });
         return res.status(200).json({
             data: schedule,
@@ -129,9 +125,9 @@ const getStudentAttendanceInCourse = async (req, res) => {
     try {
         const course = req.params.course;
         //get attendance of all students in a course
-        const Attendance = await Attendance.find({ course: course });
+        const attendance = await Attendance.find({ course: course }).populate('student').exec();
         return res.status(200).json({
-            data: Attendance,
+            data: attendance,
             message: 'Attendance retrieved successfully'
         });
     } catch (error) {
@@ -140,6 +136,8 @@ const getStudentAttendanceInCourse = async (req, res) => {
         });
     }
 }
+
+
 
 module.exports = {
     getSchedule,

@@ -37,9 +37,9 @@ const createStudent = async (req, res) => {
     try {
         const account = req.body.account;
         //check nếu password không hợp lệ
-        if (!checkValidPassword(account.password)) {
+        if(checkValidPassword(account.password) === false) {
             return res.status(400).json({
-                error: 'Invalid password'
+                error: 'Password is too weak (>8, contains number, special character)'
             });
         }
 

@@ -1,6 +1,63 @@
 const controller = require('../../controllers');
 module.exports = (app) => {
 
+
+
+    /**
+     * @swagger
+     * /api/course/attendance:
+     *   put:
+     *     summary: update students attendance in a course for a day
+     *     tags: [Attendance]
+     *     requestBody:
+     *       required: true
+     *       content:
+     *         application/json:
+     *           schema:
+     *             type: object
+     *             properties:
+     *               course:
+     *                 type: string
+     *                 example: "666873f388b4360aeb1827da"
+     *               day:
+     *                 type: string
+     *                 example: "2021-06-14"
+     *               students:
+     *                 type: array
+     *                 items:
+     *                   type: object
+     *                   properties:
+     *                     id:
+     *                       type: string
+     *                       example: "666873b73e166087045db9a5"
+     *                     is_attended:
+     *                       type: integer
+     *                       enum: [0, 1]
+     *                       example: 0
+     *     responses:
+     *       200:
+     *         description: Student attendance information
+     */
+    app.put('/api/course/attendance', controller.courseData.updateStudentAttendance);
+
+    /**
+     * @swagger
+     * /api/course/{course}/attendances:
+     *   get:
+     *     summary: Get students attendance in a course
+     *     tags: [Attendance]
+     *     parameters:
+     *       - in: path
+     *         name: course
+     *         schema:
+     *           type: string
+     *         required: true
+     *         description: Course ID
+     *     responses:
+     *       200:
+     *         description: Student attendance information
+     */
+    app.get('/api/course/:course/attendances', controller.courseData.getAttendances);
     /**
      * @swagger
      * /api/course/{course}/student/{student}/attendance:
@@ -30,7 +87,7 @@ module.exports = (app) => {
      * @swagger
      * /api/course/attendance:
      *   post:
-     *     summary: Record student attendance
+     *     summary: Record student attendance in a course for a day
      *     tags: [Attendance]
      *     requestBody:
      *       required: true
@@ -42,6 +99,9 @@ module.exports = (app) => {
      *               course:
      *                 type: string
      *                 example: "666873f388b4360aeb1827da"
+     *               day:
+     *                 type: string
+     *                 example: "2021-06-14"
      *               students:
      *                 type: array
      *                 items:
@@ -54,9 +114,6 @@ module.exports = (app) => {
      *                       type: integer
      *                       enum: [0, 1]
      *                       example: 0
-     *                     day:
-     *                       type: string
-     *                       example: "2021-06-14"
      *                     reasons:
      *                       type: string
      *                       example: "Sick"
@@ -300,9 +357,9 @@ module.exports = (app) => {
      *           schema:
      *             type: object
      *             properties:
-     *               courseId:
+     *               course:
      *                 type: string
-     *               studentId:
+     *               student:
      *                 type: string
      *     responses:
      *       200:
@@ -323,9 +380,9 @@ module.exports = (app) => {
      *           schema:
      *             type: object
      *             properties:
-     *               courseId:
+     *               course:
      *                 type: string
-     *               studentId:
+     *               student:
      *                 type: string
      *     responses:
      *       200:
