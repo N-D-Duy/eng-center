@@ -289,7 +289,8 @@ module.exports = (app) => {
      * /api/course:
      *   post:
      *     summary: Create a new course
-     *     tags: [Admin]
+     *     tags:
+     *       - Courses
      *     requestBody:
      *       required: true
      *       content:
@@ -297,50 +298,77 @@ module.exports = (app) => {
      *           schema:
      *             type: object
      *             properties:
-     *              name:
-     *                  type: string
-     *                  description: The name of the course
-     *                  example: "Introduction to Programming"
-     *              description:
-     *                  type: string
-     *                  description: The description of the course
-     *                  example: "This course covers the basics of programming."
-     *              category:
-     *                  type: string
-     *                  description: The category of the course
-     *                  example: "Computer Science"
-     *              price:
-     *                  type: number
-     *                  description: The price of the course
-     *                  example: 99.99
-     *              image:
-     *                  type: string
-     *                  description: The image URL for the course
-     *                  example: "http://example.com/image.jpg"
-     *              grade:
-     *                  type: number
-     *                  description: The grade level for the course
-     *                  example: 10
-     *              status:
-     *                  type: string
-     *                  description: The status of the course
-     *                  default: "inactive"
-     *                  example: "active"
-     *              teacher:
-     *                  type: string
-     *                  description: The ID of the teacher for the course
-     *                  example: "60c72b2f9b1d8e6d88e5f3a7"
-     *              capacity:
-     *                  type: number
-     *                  description: The maximum number of students that can join the course
-     *                  example: 30
-     *              current_joined:
-     *                  type: number
-     *                  description: The current number of students joined
-     *                  example: 10
+     *               course:
+     *                 type: object
+     *                 properties:
+     *                   name:
+     *                     type: string
+     *                     example: Introduction to Programming
+     *                   description:
+     *                     type: string
+     *                     example: This course covers the basics of programming.
+     *                   category:
+     *                     type: string
+     *                     example: Computer Science
+     *                   price:
+     *                     type: number
+     *                     format: float
+     *                     example: 99.99
+     *                   image:
+     *                     type: string
+     *                     format: uri
+     *                     example: http://example.com/image.jpg
+     *                   grade:
+     *                     type: integer
+     *                     example: 10
+     *                   status:
+     *                     type: string
+     *                     enum: [active, inactive]
+     *                     example: active
+     *                   teacher:
+     *                     type: string
+     *                     format: uuid
+     *                     example: 60c72b2f9b1d8e6d88e5f3a7
+     *                   capacity:
+     *                     type: integer
+     *                     example: 30
+     *                   current_joined:
+     *                     type: integer
+     *                     example: 10
+     *               schedule:
+     *                 type: object
+     *                 properties:
+     *                   teacher:
+     *                     type: string
+     *                     format: uuid
+     *                     example: 666871e5273b637b6f9e2721
+     *                   startDate:
+     *                     type: string
+     *                     format: date
+     *                     example: 2024-06-11
+     *                   numberOfWeeks:
+     *                     type: integer
+     *                     example: 1
+     *                   daysOfWeek:
+     *                     type: array
+     *                     items:
+     *                       type: integer
+     *                       example: 2
+     *                   startTime:
+     *                     type: string
+     *                     format: time
+     *                     example: 09:00 AM
+     *                   endTime:
+     *                     type: string
+     *                     format: time
+     *                     example: 12:00 PM
      *     responses:
      *       201:
      *         description: Course created successfully
+     *       400:
+     *         description: Bad request, invalid data provided
+     *       500:
+     *         description: Internal server error
      */
     app.post('/api/course', controller.courseData.createCourse);
 

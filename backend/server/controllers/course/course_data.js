@@ -122,17 +122,17 @@ const getCourseById = async (req, res) => {
 const createCourse = async (req, res) => {
   try {
     const { course, schedule } = req.body;
-
     // create course
     const courseData = await Course.create(course);
     if (!courseData) {
+      console.log(courseData);
       return res.status(400).json({
         message: 'Course not created'
       });
     }
 
     // create schedule for the course
-    const schedules = await createSchedule(courseData._id, schedule);
+    const schedules = await createSchedule(courseData._id, courseData.teacher, schedule);
     if (schedules.length === 0) {
       // rollback course creation if schedule creation fails
       await Course.findByIdAndDelete(courseData._id);

@@ -23,15 +23,15 @@ const getSchedule = async (req, res) => {
         });
     }
 }
-const createSchedule = async (courseId, scheduleData) => {
-    const { teacher, startDate, numberOfWeeks, daysOfWeek, startTime, endTime } = scheduleData;
+const createSchedule = async (courseId, teacherId, scheduleData) => {
+    const {startDate, numberOfWeeks, daysOfWeek, startTime, endTime } = scheduleData;
   
     try {
       // Create schedules automatically
-      const schedules = await createCourseSchedulesAuto(courseId, teacher, startDate, numberOfWeeks, daysOfWeek, startTime, endTime);
+      const schedules = await createCourseSchedulesAuto(courseId, teacherId, startDate, numberOfWeeks, daysOfWeek, startTime, endTime);
       return schedules;
     } catch (error) {
-      throw new Error('Error creating schedules');
+      throw new Error('Error creating schedules' + error.message);
     }
   };
 
@@ -51,8 +51,7 @@ const createCourseSchedulesAuto = async (course, teacher, startDate, numberOfWee
                     teacher: teacher,
                     day: date.toISOString().split('T')[0],
                     start_time: startTime,
-                    end_time: endTime,
-                    status: 'active'
+                    end_time: endTime
                 });
             }
         });
