@@ -23,25 +23,17 @@ const getSchedule = async (req, res) => {
         });
     }
 }
-const createSchedule = async (req, res) => {
-    const { course, teacher, startDate, numberOfWeeks, daysOfWeek, startTime, endTime } = req.body;
+const createSchedule = async (courseId, scheduleData) => {
+    const { teacher, startDate, numberOfWeeks, daysOfWeek, startTime, endTime } = scheduleData;
+  
     try {
-        const schedules = await createCourseSchedulesAuto(course, teacher, startDate, numberOfWeeks, daysOfWeek, startTime, endTime);
-        if (schedules.length === 0) {
-            return res.status(500).json({
-                message: 'Error creating schedules'
-            });
-        }
-        return res.status(200).json({
-            data: schedules,
-            message: 'Schedules created successfully'
-        });
+      // Create schedules automatically
+      const schedules = await createCourseSchedulesAuto(courseId, teacher, startDate, numberOfWeeks, daysOfWeek, startTime, endTime);
+      return schedules;
     } catch (error) {
-        return res.status(500).json({
-            message: error.message
-        });
+      throw new Error('Error creating schedules');
     }
-};
+  };
 
 const createCourseSchedulesAuto = async (course, teacher, startDate, numberOfWeeks, daysOfWeek, startTime, endTime) => {
     const schedules = [];

@@ -3,7 +3,7 @@ const Course = require('../../models/course.js');
 const CourseStudent = require('../../models/course_student.js');
 const teacher = require('../../models/teacher.js');
 const { triggerCourseStudentJoin, triggerCourseStudentLeave, attendanceHandler, getAttendance } = require('../course_student/index.js');
-const {getStudentAttendanceInCourse} = require('../course_schedule_student/index.js');
+const {getStudentAttendanceInCourse, createSchedule} = require('../course_schedule_student/index.js');
 const Student = require('../../models/student.js');
 const Attendance = require('../../models/attendance.js');
 
@@ -121,9 +121,29 @@ const getCourseById = async (req, res) => {
 
 const createCourse = async (req, res) => {
   try {
-    const course = await Course.create(req.body);
+    const { course, schedule } = req.body;
+
+    // create course
+    const courseData = await Course.create(course);
+    if (!courseData) {
+      return res.status(400).json({
+        message: 'Course not created'
+      });
+    }
+
+    // create schedule for the course
+    const schedules = await createSchedule(courseData._id, schedule);
+    if (schedules.length === 0) {
+      // rollback course creation if schedule creation fails
+      await Course.findByIdAndDelete(courseData._id);
+      return res.status(500).json({
+        message: 'Error creating schedules'
+      });
+    }
+
     return res.status(201).json({
-      data: course
+      data: courseData,
+      schedules: schedules
     });
   } catch (err) {
     return res.status(400).json({
@@ -141,6 +161,7 @@ const updateCourse = async (req, res) => {
         message: 'Course not found'
       });
     }
+    // return updated course
     const updatedCourse = await Course.findById(id);
     return res.status(200).json({
       data: updatedCourse
@@ -194,20 +215,18 @@ const findCourse = async (req, res) => {
 
 const getAllStudentsInCourse = async (req, res) => {
   try {
-    // Lấy Course ID từ body
     const id = req.params.id;
 
-    // Tìm tất cả các course_student với Course ID đã cho
+    // find all course-student records for the course
     const courseData = await CourseStudent.find({ course: id }).populate('student');
 
-    // Kiểm tra nếu không tìm thấy dữ liệu nào
     if (!courseData.length) {
       return res.status(404).json({
         message: 'Course not found or no students enrolled'
       });
     }
 
-    // Trích xuất danh sách sinh viên từ kết quả truy vấn
+    // get student data from course-student records
     const students = courseData.map(cs => cs.student);
 
     return res.status(200).json({
@@ -269,7 +288,7 @@ const updateStudentAttendance = async (req, res) => {
   try {
     const { course, students, day } = req.body;
     
-    // Lấy danh sách các bản ghi hiện tại cho học sinh trong khóa học vào ngày cụ thể
+    // get all existing attendance records for the students in the course
     const existingAttendances = await Attendance.find({ course, day, student: { $in: students.map(s => s.id) } });
 
     // Tạo map từ student ID đến bản ghi hiện tại của họ
@@ -284,7 +303,7 @@ const updateStudentAttendance = async (req, res) => {
       const wasAttended = existingAttendance ? existingAttendance.isAttend : false;
       const newAttended = student.is_attended;
 
-      // Tính toán thay đổi attendance_count và absent_count
+      // calculate attendance and absent count changes
       const attendanceCountChange = newAttended && !wasAttended ? 1 : !newAttended && wasAttended ? -1 : 0;
       const absentCountChange = !newAttended && wasAttended ? 1 : newAttended && !wasAttended ? -1 : 0;
 

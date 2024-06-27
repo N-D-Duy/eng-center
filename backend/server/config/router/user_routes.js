@@ -52,6 +52,9 @@ module.exports = (app) => {
      *                   user_name:
      *                     type: string
      *                     example: "nguyenducduy"
+     *                   name:
+     *                     type: string
+     *                     example: "nguyễn đức duy"
      *                   password:
      *                     type: string
      *                     example: "12332145@"
@@ -70,9 +73,6 @@ module.exports = (app) => {
      *               student:
      *                 type: object
      *                 properties:
-     *                   name:
-     *                     type: string
-     *                     example: "nguyễn đức duy"
      *                   cocc_percent:
      *                     type: integer
      *                     example: 30
@@ -144,6 +144,9 @@ module.exports = (app) => {
      *                   user_name:
      *                     type: string
      *                     example: "tranvietbao"
+     *                   name:
+     *                     type: string
+     *                     example: "trần việt bảo"
      *                   password:
      *                     type: string
      *                     example: "123321"
@@ -162,9 +165,6 @@ module.exports = (app) => {
      *               teacher:
      *                 type: object
      *                 properties:
-     *                   name:
-     *                     type: string
-     *                     example: "trần việt bảo"
      *                   session_count:
      *                     type: integer
      *                     example: 0
@@ -227,6 +227,9 @@ module.exports = (app) => {
      *                   user_name:
      *                     type: string
      *                     example: "nguyenvanquyet1"
+     *                   full_name:
+     *                     type: string
+     *                     example: "nguyễn văn quyết1"
      *                   password:
      *                     type: string
      *                     example: "12332145@"
@@ -245,9 +248,6 @@ module.exports = (app) => {
      *               parent:
      *                 type: object
      *                 properties:
-     *                   name:
-     *                     type: string
-     *                     example: "nguyễn văn quyết1"
      *                   account:
      *                     type: string
      *                     example: ""
@@ -341,4 +341,42 @@ module.exports = (app) => {
 
     app.post('/api/admin', controller.userData.AdminData.createAdmin);
 
+
+    /**
+     * @swagger
+     * /api/account/{id}:
+     *   put:
+     *     summary: update account information by ID
+     *     tags: [Admin]
+     *     parameters:
+     *       - in: path
+     *         name: id
+     *         schema:
+     *           type: string
+     *         required: true
+     *         description: Account ID
+     *     requestBody:
+     *       required: true
+     *       content:
+     *         application/json:
+     *           schema:
+     *             type: object
+     *             properties:
+     *               full_name:
+     *                 type: string
+     *                 example: ""
+     *               email:
+     *                 type: string
+     *                 example: ""
+     *               phone:
+     *                 type: string
+     *                 example: ""
+     *               status:
+     *                 type: string
+     *                 example: ""
+     *     responses:
+     *       200:
+     *         description: Teacher schedule
+     */
+    app.put('/api/account/:id', controller.userData.updateAccount);
 };

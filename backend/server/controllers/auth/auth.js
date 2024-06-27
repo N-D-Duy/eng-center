@@ -43,7 +43,7 @@ const loginWithEmailOrUsernameAndPassword = async (req, res) => {
     const bcrypt = require('bcrypt');
 
     try {
-        // Tìm tài khoản dựa trên email hoặc username
+        // find account by email or username
         const account = await Account.findOne({
             $or: [
                 { email: emailOrUsername },
@@ -58,7 +58,7 @@ const loginWithEmailOrUsernameAndPassword = async (req, res) => {
         }
 
 
-        // So sánh mật khẩu người dùng nhập vào với mật khẩu đã hash trong cơ sở dữ liệu
+        // check password
         const isMatch = await bcrypt.compare(password, account.password);
 
         if (!isMatch) {
@@ -67,6 +67,7 @@ const loginWithEmailOrUsernameAndPassword = async (req, res) => {
             });
         }
 
+        // return account with role specific data
         switch (account.role) {
             case 'admin':
                 const admin = await Admin.findOne({ account: account._id }).populate({

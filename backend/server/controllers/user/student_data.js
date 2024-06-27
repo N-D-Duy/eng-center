@@ -36,7 +36,7 @@ const getAllStudents = async (req, res) => {
 const createStudent = async (req, res) => {
     try {
         const account = req.body.account;
-        //check nếu password không hợp lệ
+        //check if password is valid
         if(checkValidPassword(account.password) === false) {
             return res.status(400).json({
                 error: 'Password is too weak (>8, contains number, special character)'
@@ -50,7 +50,7 @@ const createStudent = async (req, res) => {
             });
         }
 
-        //check email đã sử dụng
+        //check if email is already used
         const emailExist = await Account.findOne({ email: account.email });
         if (emailExist) {
             return res.status(400).json({
@@ -60,28 +60,28 @@ const createStudent = async (req, res) => {
 
         //hash password before save to database
         account.password = await hashPassword(account.password);
-        // Tạo một tài khoản mới
+        //create new account
         const accountSchema = new Account(account);
 
         await accountSchema.save();
 
-        // Lấy account id
+        //get account id
         const account_id = accountSchema._id;
 
-        // Gán account id cho đối tượng student
+        //assign account id to student
         req.body.student.account = account_id;
 
         // convert parent id sang object id nếu parent id rỗng
         if (req.body.student.parent == "") {
             req.body.student.parent = null;
         } else {
-            // Chuyển parent id từ string sang ObjectId
+            // convert parent id sang object id
             req.body.student.parent = new mongoose.Types.ObjectId.createFromHexString(req.body.student.parent);
         }
 
 
 
-        // Tạo student mới
+        //create new student
         const student = await Student.create(req.body.student);
         return res.status(201).json({
             data: student,
@@ -110,31 +110,11 @@ const getAllCoursesJoined = async (req, res) => {
     }
 }
 
-const updateStudent = async (req, res) => {
-    try {
-        const student = await Student.findByIdAndUpdate(req.params.id, req.body);
-        if (!student) {
-            return res.status(404).json({
-                message: 'Student not found'
-            });
-        }
-        const updatedStudent = await Student.findById(req.params.id);
-        return res.status(200).json({
-            data: updatedStudent,
-            message: 'Student updated successfully'
-        });
-    } catch (err) {
-        return res.status(400).json({
-            error: err.message
-        });
-    }
-}
 
 module.exports = {
     getStudentInfor,
     getAllStudents,
     createStudent,
-    getAllCoursesJoined,
-    updateStudent
+    getAllCoursesJoined
 };
 

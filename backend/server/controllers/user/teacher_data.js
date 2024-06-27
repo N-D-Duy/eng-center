@@ -74,25 +74,6 @@ const createTeacher = async (req, res) => {
 };
 
 
-const updateTeacher = async (req, res) => {
-    try {
-        const teacher = await Teacher.findById(req.params.id);
-        if (!teacher) {
-            return res.status(400).json({
-                error: 'Teacher not found'
-            });
-        }
-        await Teacher.findByIdAndUpdate(req.params.id, req.body);
-        return res.status(200).json({
-            data: 'Teacher updated successfully'
-        });
-    } catch (err) {
-        return res.status(400).json({
-            error: err.message
-        });
-    }
-};
-
 module.exports = {
     getTeacherInfor,
     getAllTeachers,
