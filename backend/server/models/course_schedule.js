@@ -27,10 +27,6 @@ const scheduleSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Teacher',
         required: 'Teacher is required'
-    },
-    status: {
-        type: String,
-        default: 'active'
     }
 }, {
     timestamps: true

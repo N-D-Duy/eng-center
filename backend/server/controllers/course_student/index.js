@@ -10,10 +10,12 @@ const triggerCourseStudentJoin = async (req, res) => {
         const { course, student } = req.body;
         //check if course and student exist
         const courseData = await Course.findById(course);
-        if (courseData.current_joined >= courseData.capacity) {
-            return res.status(400).json({
-                message: 'Course is full'
-            });
+        if (!courseData) {
+            if (courseData.current_joined >= courseData.capacity) {
+                return res.status(400).json({
+                    message: 'Course is full'
+                });
+            }
         }
 
         const studentData = await Student.findById(student);
@@ -84,7 +86,7 @@ const triggerCourseStudentLeave = async (req, res) => {
 
 const attendanceHandler = async (req, res) => {
     try {
-        const { course, students } = req.body;
+        const { course, students, day } = req.body;
 
         // Check if course exists
         const courseData = await Course.findById(course);
@@ -95,7 +97,7 @@ const attendanceHandler = async (req, res) => {
         }
 
         // Extract student IDs
-        const studentIds = students.map(student => student._id);
+        const studentIds = students.map(student => student.id);
 
         // Check if all students exist
         const studentData = await Student.find({ _id: { $in: studentIds } });
@@ -108,12 +110,12 @@ const attendanceHandler = async (req, res) => {
         // Create bulk operations for updating attendance
         const bulkOperations = students.map(student => ({
             updateOne: {
-                filter: { student: student._id, course: course },
-                update: { 
-                    $inc: { 
-                        attendance_count: student.is_attended ? 1 : 0, 
-                        absent_count: student.is_attended ? 0 : 1 
-                    } 
+                filter: { student: student.id, course: course },
+                update: {
+                    $inc: {
+                        attendance_count: student.is_attended ? 1 : 0,
+                        absent_count: student.is_attended ? 0 : 1
+                    }
                 }
             }
         }));
@@ -129,15 +131,15 @@ const attendanceHandler = async (req, res) => {
         }
 
         //update attendance of each student
-        for(let student of students){
+        for (let student of students) {
             await Attendance.create({
-                student: student._id,
+                student: student.id,
                 course: course,
-                day: student.day,
-                status: student.is_attended ? 'no reason' : student.reasons
-            })
-        }
-
+                isAttend: student.is_attended,
+                day: day,
+                status: student.is_attended ? 'well done' : student.reasons
+            });
+        };
         return res.status(200).json({
             data: bulkWriteResult,
             message: 'Attendance updated successfully'
@@ -153,7 +155,7 @@ const attendanceHandler = async (req, res) => {
 
 //get the attendance of a student in a course
 const getAttendance = async (req, res) => {
-    try { 
+    try {
         const { student, course } = req.params;
         //join course_student to get all joined course id
         const courseStudent = await CourseStudent.find({ student: student, course: course });
@@ -167,6 +169,8 @@ const getAttendance = async (req, res) => {
         });
     }
 }
+
+
 
 
 module.exports = {

@@ -1,4 +1,4 @@
-const attendance = require('../../models/attendance');
+const Attendance = require('../../models/attendance');
 const CourseSchedule = require('../../models/course_schedule');
 const CourseStudent = require('../../models/course_student');
 const setAsync = require('../../controllers/redis/cachedApi').setAsync;
@@ -23,25 +23,17 @@ const getSchedule = async (req, res) => {
         });
     }
 }
-const createSchedule = async (req, res) => {
-    const { course, teacher, startDate, numberOfWeeks, daysOfWeek, startTime, endTime } = req.body;
+const createSchedule = async (courseId, teacherId, scheduleData) => {
+    const {startDate, numberOfWeeks, daysOfWeek, startTime, endTime } = scheduleData;
+  
     try {
-        const schedules = await createCourseSchedulesAuto(course, teacher, startDate, numberOfWeeks, daysOfWeek, startTime, endTime);
-        if (schedules.length === 0) {
-            return res.status(500).json({
-                message: 'Error creating schedules'
-            });
-        }
-        return res.status(200).json({
-            data: schedules,
-            message: 'Schedules created successfully'
-        });
+      // Create schedules automatically
+      const schedules = await createCourseSchedulesAuto(courseId, teacherId, startDate, numberOfWeeks, daysOfWeek, startTime, endTime);
+      return schedules;
     } catch (error) {
-        return res.status(500).json({
-            message: error.message
-        });
+      throw new Error('Error creating schedules' + error.message);
     }
-};
+  };
 
 const createCourseSchedulesAuto = async (course, teacher, startDate, numberOfWeeks, daysOfWeek, startTime, endTime) => {
     const schedules = [];
@@ -59,8 +51,7 @@ const createCourseSchedulesAuto = async (course, teacher, startDate, numberOfWee
                     teacher: teacher,
                     day: date.toISOString().split('T')[0],
                     start_time: startTime,
-                    end_time: endTime,
-                    status: 'active'
+                    end_time: endTime
                 });
             }
         });
@@ -84,9 +75,12 @@ const getStudentSchedule = async (req, res) => {
         const courseStudent = await CourseStudent.find({ student: id }).populate('course');
         const courses = courseStudent.map(cs => cs.course._id);
         //get all schedule of the courses
-        const schedules = await CourseSchedule.find({ course: { $in: courses } }).populate({
-            path: 'course',
-            select: 'name'
+        const schedules = await CourseSchedule.find({ course: { $in: courses } }).populate(
+            {
+                path: 'course'
+            }
+        ).populate({
+            path: 'teacher'
         });
         return res.status(200).json({
             data: schedules,
@@ -102,7 +96,11 @@ const getStudentSchedule = async (req, res) => {
 const getTeacherSchedule = async (req, res) => {
     try {
         const id = req.params.id;
-        const schedule = await CourseSchedule.find({ teacher: id });
+        const schedule = await CourseSchedule.find({ teacher: id }).populate({
+            path: 'course'
+        }).populate({
+            path: 'teacher'
+        });
         return res.status(200).json({
             data: schedule,
             message: 'Teacher schedule retrieved successfully'
@@ -115,12 +113,12 @@ const getTeacherSchedule = async (req, res) => {
 };
 
 const getStudentAttendanceInCourse = async (req, res) => {
-    try{
+    try {
         const course = req.params.course;
         //get attendance of all students in a course
-        const Attendance = await Attendance.find({ course: course });
+        const attendance = await Attendance.find({ course: course }).populate('student').exec();
         return res.status(200).json({
-            data: Attendance,
+            data: attendance,
             message: 'Attendance retrieved successfully'
         });
     } catch (error) {
@@ -129,6 +127,8 @@ const getStudentAttendanceInCourse = async (req, res) => {
         });
     }
 }
+
+
 
 module.exports = {
     getSchedule,

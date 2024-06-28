@@ -10,6 +10,10 @@ const accountSchema = new mongoose.Schema({
         type: String,
         default: ""
     },
+    full_name: {
+        type: String,
+        default: ""
+    },
     password: {
         type: String,
         required: 'Password is required'
