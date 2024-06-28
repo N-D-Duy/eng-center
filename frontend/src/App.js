@@ -1,5 +1,4 @@
 import './App.css';
-import { CourseProvider } from './Context/CourseContext';
 import { Routes, Route } from 'react-router-dom';
 import { Login } from './components/Login';
 import { Register } from './components/Register';
@@ -14,6 +13,8 @@ import { UserOtherProfile, UserProfile } from './components/Profile/UserProfile'
 import { UserProvider } from './Context/UserContext';
 import { Schedule } from './components/Form/Schedule/Scheduele';
 import { FormAddNewCourse, FormAddNewUser } from './components/FormAdd';
+import { NewCourseProvider } from './Context/NewCourseContext';
+import { CourseProvider } from './Context/CourseContext';
 
 function App() {
 

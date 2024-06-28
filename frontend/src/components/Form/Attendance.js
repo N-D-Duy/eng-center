@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAttendanceContext } from '../../Context/AttendanceContext';
 import { useAuthContext } from '../../Context/AuthContext';
-import { ButtonSave } from '../Buttons/ButtonSave';
+import { Button } from '../Buttons/Button';
 
 export const CourseAttendance = () => {
     const { students, dates, SetDataAttendance, checkAttendance } = useAttendanceContext();
@@ -46,7 +46,7 @@ export const CourseAttendance = () => {
 
     const renderButtons = () => {
         if (role === 'teacher' && canEditToday) {
-            return <ButtonSave onClick={handleSubmit} />;
+            return <Button onClick={handleSubmit} />;
         }
         return null;
     };

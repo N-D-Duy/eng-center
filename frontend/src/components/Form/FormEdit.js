@@ -2,23 +2,24 @@ import { useEffect, useState } from "react";
 import { convertTime } from "../Controller/Time";
 import { useCourseContext } from "../../Context/CourseContext";
 import { useTeacherContext } from "../../Context/TeacherContext";
-import { ButtonSave } from "../Buttons/ButtonSave";
+import { Button } from "../Buttons/Button";
 import { useAuthContext } from "../../Context/AuthContext";
 import { useUserContext } from "../../Context/UserContext";
+import { useNavigate } from "react-router-dom";
 export const DaysOfWeek = [
-  { value: "monday", label: "Monday" },
-  { value: "tuesday", label: "Tuesday" },
-  { value: "wednesday", label: "Wednesday" },
-  { value: "thursday", label: "Thursday" },
-  { value: "friday", label: "Friday" },
-  { value: "saturday", label: "Saturday" },
-  { value: "sunday", label: "Sunday" },
+  { value: 2, label: "Monday" },
+  { value: 3, label: "Tuesday" },
+  { value: 4, label: "Wednesday" },
+  { value: 5, label: "Thursday" },
+  { value: 6, label: "Friday" },
+  { value: 7, label: "Saturday" },
+  { value: 8, label: "Sunday" },
 ];
 
 export const FormEditCourse = (prop) => {
+  const navigate = useNavigate();
   const { course, updateCourse } = useCourseContext();
   const { teachers } = useTeacherContext();
-
   const [description, setDescription] = useState(course.description);
   const [name, setName] = useState(course.name);
   const [teacher, setTeacher] = useState([]);
@@ -33,13 +34,14 @@ export const FormEditCourse = (prop) => {
   const [capacity, setCapacity] = useState();
 
   const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
+  const [numberWeeks, setNumberWeeks] = useState(0);
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [selectedDays, setSelectedDays] = useState([]);
+
   const scheduleData = {
     startDate,
-    endDate,
+    numberWeeks,
     startTime,
     endTime,
     selectedDays,
@@ -66,6 +68,12 @@ export const FormEditCourse = (prop) => {
     updateCourse("grade", grade);
     updateCourse("status", status);
     updateCourse("startCourse", convertTime(startCourse));
+  };
+
+  const handleDeleteClick = (e) => {
+    e.preventDefault();
+    alert("Delete course");
+    navigate("/admin");
   };
 
   const allTeacherName = teachers.map((t) => t.account.full_name);
@@ -100,6 +108,13 @@ export const FormEditCourse = (prop) => {
                 </div>
               </div>
             </div>
+
+            <EditFormText
+              label="Course Name"
+              defaultValue={name}
+              onChange={setName}
+            />
+
             <div class="row mb-3">
               <label for="about" class="col-md-4 col-lg-3 col-form-label">
                 About
@@ -114,11 +129,7 @@ export const FormEditCourse = (prop) => {
                 </textarea>
               </div>
             </div>
-            <EditFormText
-              label="Course Name"
-              defaultValue={name}
-              onChange={setName}
-            />
+
             <EditFormText
               label="Category"
               defaultValue={category}
@@ -155,76 +166,52 @@ export const FormEditCourse = (prop) => {
               defaultValue={capacity}
               onChange={setCapacity}
             />
-            <div className="card-body">
-              <form>
-                <div className="form-group">
-                  <label htmlFor="startDate">Start Date</label>
+
+            <EditFormText
+              label="Start Date"
+              defaultValue={startDate}
+              onChange={setStartDate}
+              type={"date"}
+            />
+            <EditFormText
+              label="Number of weeks"
+              defaultValue={numberWeeks}
+              onChange={setNumberWeeks}
+            />
+
+            <div className="form-group">
+              <label>Days of the Week</label>
+              <br />
+              {DaysOfWeek.map((day) => (
+                <div key={day.value} className="form-check form-check-inline">
                   <input
-                    type="date"
-                    id="startDate"
-                    className="form-control"
-                    value={startDate}
-                    onChange={(e) => setStartDate(e.target.value)}
-                    required
+                    type="checkbox"
+                    id={day.value}
+                    className="form-check-input"
+                    checked={selectedDays.includes(day.value)}
+                    onChange={() => handleDayToggle(day.value)}
                   />
+                  <label htmlFor={day.value} className="form-check-label">
+                    {day.label}
+                  </label>
                 </div>
-                <div className="form-group">
-                  <label htmlFor="endDate">End Date</label>
-                  <input
-                    type="date"
-                    id="endDate"
-                    className="form-control"
-                    value={endDate}
-                    onChange={(e) => setEndDate(e.target.value)}
-                    required
-                  />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="startTime">Start Time (HH:mm)</label>
-                  <input
-                    type="time"
-                    id="startTime"
-                    className="form-control"
-                    value={startTime}
-                    onChange={(e) => setStartTime(e.target.value)}
-                    required
-                  />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="endTime">End Time (HH:mm)</label>
-                  <input
-                    type="time"
-                    id="endTime"
-                    className="form-control"
-                    value={endTime}
-                    onChange={(e) => setEndTime(e.target.value)}
-                    required
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Days of the Week</label>
-                  <br />
-                  {DaysOfWeek.map((day) => (
-                    <div
-                      key={day.value}
-                      className="form-check form-check-inline"
-                    >
-                      <input
-                        type="checkbox"
-                        id={day.value}
-                        className="form-check-input"
-                        checked={selectedDays.includes(day.value)}
-                        onChange={() => handleDayToggle(day.value)}
-                      />
-                      <label htmlFor={day.value} className="form-check-label">
-                        {day.label}
-                      </label>
-                    </div>
-                  ))}
-                </div>
-              </form>
+              ))}
             </div>
-            <ButtonSave onClick={handleEvenetClick} title={"Save"} />
+
+            <EditFormText
+              label="Start Time"
+              defaultValue={startTime}
+              onChange={setStartTime}
+              type={"time"}
+            />
+            <EditFormText
+              label="End Time"
+              defaultValue={endTime}
+              onChange={setEndTime}
+              type={"time"}
+            />
+            <Button onClick={handleEvenetClick} lable={"Save"} />
+            <Button onClick={handleDeleteClick} lable={"Delete"} />
           </div>
         </div>
       </div>
@@ -283,7 +270,7 @@ export const FormEditUser = () => {
           defaultValue={status}
           onChange={(e) => setStatus(e.target.value)}
         />
-        <ButtonSave title="Save" />
+        <Button title="Save" />
       </form>
     </div>
   );
@@ -291,13 +278,12 @@ export const FormEditUser = () => {
 
 export const FormEditUserOther = () => {
   const { otherUser, UpdateUser } = useUserContext();
-
+  const navigate = useNavigate();
   // State hooks for form fields
   const [name, setName] = useState(otherUser.account.full_name || "");
   const [email, setEmail] = useState(otherUser.account.email || "");
   const [phone, setPhone] = useState(otherUser.account.phone || "");
   const [status, setStatus] = useState(otherUser.account.status || "");
-
   // useEffect to update form fields when otherUser changes
   useEffect(() => {
     setName(otherUser.account.full_name || "");
@@ -324,53 +310,64 @@ export const FormEditUserOther = () => {
     else alert("User information saved failed!");
   };
 
+  const handleDeleteClick = async (e) => {
+    console.log("Delete user clicked");
+    navigate("/admin");
+  };
+
   return (
     <div className="tab-pane fade profile-edit pt-3" id="profile-edit">
-      <form onSubmit={handleSaveClick}>
-        <EditFormText
-          label="Full Name"
-          defaultValue={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-        <EditFormText
-          label="Email"
-          defaultValue={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <EditFormText
-          label="Phone"
-          defaultValue={phone}
-          onChange={(e) => setPhone(e.target.value)}
-        />
-        <SelectOption
-          keys={["active", "disactive", "pending"]}
-          values={["Active", "Disactive", "Pending"]}
-          title="Status"
-          onChange={setStatus}
-        />
-        <ButtonSave title="Save" />
-      </form>
+      <EditFormText
+        label="Full Name"
+        defaultValue={name}
+        onChange={(e) => setName(e.target.value)}
+      />
+      <EditFormText
+        label="Email"
+        defaultValue={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
+      <EditFormText
+        label="Phone"
+        defaultValue={phone}
+        onChange={(e) => setPhone(e.target.value)}
+      />
+      <SelectOption
+        keys={["active", "disactive", "pending"]}
+        values={["Active", "Disactive", "Pending"]}
+        title="Status"
+        onChange={setStatus}
+      />
+      <Button lable="Save" onClick={handleSaveClick} />
+      <div className="mt-3"></div>
+      <Button lable="Delete" onClick={handleDeleteClick} />
     </div>
   );
 };
 
-const EditFormText = ({ label, defaultValue, onChange }) => {
+export const EditFormText = ({
+  label,
+  defaultValue,
+  onChange,
+  type = null,
+}) => {
   return (
     <div>
       <div class="row mb-3">
         <label class="col-md-4 col-lg-3 col-form-label">{label}</label>
         <div class="col-md-8 col-lg-9">
           <input
+            type={type ? type : "form"}
             class="form-control"
             value={defaultValue}
-            onChange={onChange}
+            onChange={(e) => onChange(e.target.value)}
+            required
           />
         </div>
       </div>
     </div>
   );
 };
-
 const SelectOption = ({ keys, values, title, onChange }) => {
   const handleChange = (e) => {
     const selectedValue = e.target.value;

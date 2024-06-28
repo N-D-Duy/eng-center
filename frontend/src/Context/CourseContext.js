@@ -4,6 +4,7 @@ import { convertCourseDataToModels } from '../components/Controller/ConvertData.
 import { useUserContext } from './UserContext.js';
 import { useAuthContext } from './AuthContext.js';
 import AttendanceProvider from './AttendanceContext.js';
+import { NewCourseProvider } from './NewCourseContext.js';
 
 const CourseContext = createContext();
 
@@ -93,7 +94,9 @@ export const CourseProvider = ({ children }) => {
     return (
         <CourseContext.Provider value={{ course, courses, setCourse: setCourseData, setCourses, updateCourse }}>
             <AttendanceProvider>
-                {children}       
+                <NewCourseProvider>
+                    {children}       
+                </NewCourseProvider>
             </AttendanceProvider>
         </CourseContext.Provider>
     );
