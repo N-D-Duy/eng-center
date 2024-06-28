@@ -68,10 +68,7 @@ export const AuthProvider = ({ children }) => {
           alert("Đăng nhập thành công!");
           navigate(`/admin`);
         } else {
-          console.log("Data: ", response.data);
           var roleAccount = response.data.data.account.role;
-          console.log("ROle: ", roleAccount);
-          console.log("Data: ", response.data);
           switch (roleAccount) {
             case "teacher": {
               const TeacherData = convertLoginTeacherDataToModel(response.data.data);

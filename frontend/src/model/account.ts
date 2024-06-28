@@ -1,6 +1,7 @@
 export class Account {
   _id: string;
   user_name: string;
+  full_name: string;
   password: string;
   role: string;
   status: string;
@@ -17,6 +18,7 @@ export class Account {
       this.status = data?.status || '';
       this.email = data?.email || '';
       this.phone = data?.phone || '';
+      this.full_name = data?.full_name || '';
       this.createdAt = new Date(data?.createdAt);
       this.updatedAt = new Date(data?.updatedAt);
   }

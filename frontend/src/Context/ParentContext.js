@@ -30,10 +30,16 @@ export const ParentProvider = ({ children }) => {
         }
     }, []);
 
-  
+    const AddNewParent = async (value) => {
+        try {
+            const response = await axios.post('http://165.232.161.56:8000/api/student', value);
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
 
     return (
-        <ParentContext.Provider value={{ parents }}>
+        <ParentContext.Provider value={{ parents, AddNewParent }}>
             {children}
         </ParentContext.Provider>
     );

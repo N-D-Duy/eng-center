@@ -1,5 +1,6 @@
 import React, { createContext, useEffect, useState } from "react";
 import { AuthProvider } from "./AuthContext";
+import axios from "axios";
 
 const UserContext = createContext();
 
@@ -14,8 +15,23 @@ export const UserProvider = ({ children }) => {
     }
   }, []);
 
+  const UpdateUser = async (newUser, _id) => {
+    try{
+      console.log("Update user: ", newUser);
+      const response = await axios.put('http://165.232.161.56:8000/api/account/' + _id, newUser);
+      if(response.status === 200){
+        console.log("Update user successfully");
+        return true;
+      }
+    }catch(error){
+      console.error('Error:', error);
+      return false;
+    }
+
+  };
+
   return (
-    <UserContext.Provider value={{ user, setUser, otherUser, setOtherUser }}>
+    <UserContext.Provider value={{ user, setUser, otherUser, setOtherUser, UpdateUser }}>
         <AuthProvider>
             {children}
         </AuthProvider>

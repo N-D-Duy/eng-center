@@ -2,7 +2,6 @@ import { Account, LoginAccount } from "./account.ts";
 
 export class Student {
   _id: string;
-  name: string;
   parent: string | null;
   cocc_percent: number;
   tuition_due: number;
@@ -13,7 +12,6 @@ export class Student {
 
   constructor(data: any) {
       this._id = data?._id || '';
-      this.name = data?.name || '';
       this.parent = data?.parent || null;
       this.cocc_percent = data?.cocc_percent || 0;
       this.tuition_due = data?.tuition_due || 0;
@@ -26,7 +24,6 @@ export class Student {
 
 export class LoginStudent {
   _id: string;
-  name: string;
   parent: string | null;
   cocc_percent: number;
   tuition_due: number;
@@ -37,7 +34,6 @@ export class LoginStudent {
 
   constructor(data: any) {
       this._id = data?._id || '';
-      this.name = data?.name || '';
       this.parent = data?.parent || null;
       this.cocc_percent = data?.cocc_percent || 0;
       this.tuition_due = data?.tuition_due || 0;
