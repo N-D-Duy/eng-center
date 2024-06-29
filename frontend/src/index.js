@@ -25,12 +25,6 @@ import 'tinymce/skins/ui/oxide/skin.min.css';
 import 'tinymce/skins/content/default/content.min.css';
 
 import { AppProvider } from './Context/AppContext';
-const express = require('express');
-const cors = require('cors');
-const app = express();
-app.use(cors({
-  origin: 'https://eng-center.vercel.app'
-}));
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
