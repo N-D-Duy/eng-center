@@ -12,6 +12,7 @@ export const CourseManager = () => {
 
     useEffect(() => {
         setAllCourses(courses);
+        console.log("Courses: ", courses);
     }, [courses]);
 
     const columns = [
@@ -48,13 +49,10 @@ const GenerateCourseTr = ({ data, navigate }) => {
     const bgActive = data.status === 'active' ? "badge bg-success" : "badge bg-warning";
 
     const { setCourse } = useCourseContext();
-    
-    const {role} = useAuthContext();
-
-    //const teacher = await GetTeacherById(data.teacher_id);
+    const { role } = useAuthContext();
 
     return (
-        <tr onClick={() => ClickCourse(data, navigate, setCourse, role)}>
+        <tr onClick={() => data && ClickCourse(data, navigate, setCourse, role)}>
             <td className="text-center"><img src={data.image} alt="" /></td>
             <td><div className="text-primary fw-bold">{data.name}</div></td>
             <td>{convertTime(data.createdAt)}</td>
@@ -65,7 +63,8 @@ const GenerateCourseTr = ({ data, navigate }) => {
 };
 
 const ClickCourse = async (data, navigate, setCourse, role) => {
-    await setCourse(data);
+    console.log("Course: ", data);
+    const response = await setCourse(data);
     navigate(`/${role}/courseprofile`);
 };
 

@@ -10,14 +10,25 @@ import axios from "axios";
 
 export const OverviewCourse = () => {
   const { courseDetail } = useCourseContext();
-  const [scheduleData] = useState(courseDetail.schedule);
-  const [startDate] = useState(scheduleData[0].day);
-  const [endDate] = useState(scheduleData[scheduleData.length - 1].day);
-  const [startTime] = useState(scheduleData[0].start_time);
-  const [endTime] = useState(scheduleData[0].end_time);
+  const [scheduleData, setScheduleData] = useState();
+  const [startDate, setStartDate] = useState();
+  const [endDate, setEndDate] = useState();
+  const [startTime, setStartTime] = useState();
+  const [endTime, setEndTime] = useState();
   const { role } = useAuthContext();
   const { user } = useUserContext();
   const { students } = useAttendanceContext();
+
+  useEffect(() => {
+    if(courseDetail){
+      setScheduleData(courseDetail.schedule);
+      setStartDate(courseDetail.schedule[0].day);
+      setEndDate(courseDetail.schedule[courseDetail.schedule.length - 1].day);
+      setStartTime(courseDetail.schedule[0].start_time);
+      setEndTime(courseDetail.schedule[0].end_time);
+      setSelectedDays(updateSelectedDays(courseDetail.schedule));
+    }
+  }, [courseDetail]);
   
   const navigate = useNavigate();
   const location = useLocation();
@@ -28,13 +39,14 @@ export const OverviewCourse = () => {
 
   const updateSelectedDays = (schedule) => {
     const updatedSelectedDays = new Set();
-
     schedule.forEach((s) => {
       const dayOfWeek = getDayOfWeek(s.day);
       updatedSelectedDays.add(dayOfWeek);
     });
     return updatedSelectedDays;
   };
+  
+  const [selectedDays, setSelectedDays] = useState();
 
   const handleLeaveCourse = async () => {
     const response = await axios.post(`http://165.232.161.56:8000/api/course/leave`, {
@@ -61,7 +73,6 @@ export const OverviewCourse = () => {
     }
   };
 
-  const [selectedDays = updateSelectedDays(scheduleData)] = useState();
 
   return (
     <div
@@ -100,7 +111,7 @@ export const OverviewCourse = () => {
             <input
               type="checkbox"
               className="form-check-input custom-checkbox"
-              checked={selectedDays.has(day.value - 1)}
+              checked={selectedDays?.has(day.value - 1)}
               disabled={true}
             />
             <label htmlFor={day.value} className="form-check-label">
