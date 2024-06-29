@@ -31,7 +31,7 @@ const AttendanceProvider = ({ children }) => {
     try {
       // Fetch dữ liệu từ API dựa trên courseId
       const studentsResponse = await axios.get(
-        `http://165.232.161.56:8000/api/${courseId}/students`
+        `https://api.duynguyendev.xyz/api/${courseId}/students`
       );
       const datesResponse = courseDetail.schedule;
       if (studentsResponse.status === 200) {
@@ -75,7 +75,7 @@ const AttendanceProvider = ({ children }) => {
   const fetchDataStudentInfo = async (studentId) => {
     try {
       const response = await axios.get(
-        `http://165.232.161.56:8000/api/student/${studentId}`
+        `https://api.duynguyendev.xyz/api/student/${studentId}`
       );
       return response.data.data;
     } catch (error) {
@@ -87,7 +87,7 @@ const AttendanceProvider = ({ children }) => {
   const fetchDataStudent = async (courseId, studentId) => {
     try {
       const response = await axios.get(
-        `http://165.232.161.56:8000/api/course/${courseId}/student/${studentId}/attendance`
+        `https://api.duynguyendev.xyz/api/course/${courseId}/student/${studentId}/attendance`
       );
       return response.data.data;
     } catch (error) {
@@ -139,7 +139,7 @@ const AttendanceProvider = ({ children }) => {
 
   const fetchDataStudentAttendance = async (studentId, isAttandance, date) => {
     try {
-      const response = await axios.post(`http://165.232.161.56:8000/api/course/attendance`,
+      const response = await axios.post(`http://api.duynguyendev.xyz/api/course/attendance`,
         {
           course: course._id,
           students: [

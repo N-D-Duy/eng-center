@@ -66,7 +66,7 @@ export const FormAddNewCourse = () => {
       teacher: teacher._id,
       grade: grade,
       price: price,
-      capacity: capacity
+      capacity: capacity,
     };
     console.log("NewCourse", newCourse);
     // const r = await AddNewCourse(newCourse);
@@ -94,8 +94,8 @@ export const FormAddNewCourse = () => {
   };
 
   const handleTeacherSelected = (value) => {
-      setTeacher(value);
-  }
+    setTeacher(value);
+  };
 
   return (
     <div className="card cardStyle">
@@ -129,7 +129,11 @@ export const FormAddNewCourse = () => {
           onChange={setName}
         />
 
-        <EditFormText label="About" defaultValue={description} onChange={setDescription} />
+        <EditFormText
+          label="About"
+          defaultValue={description}
+          onChange={setDescription}
+        />
 
         <EditFormText
           label="Category"
@@ -146,7 +150,6 @@ export const FormAddNewCourse = () => {
           title={"Teacher"}
           onChange={handleTeacherSelected}
         />
-
 
         <EditFormText
           label="Capacity"
@@ -205,6 +208,7 @@ export const FormAddNewCourse = () => {
 };
 
 export const FormAddNewUser = () => {
+
   const [name, setName] = useState();
   const [email, setEmail] = useState();
   const [role, setRole] = useState("teacher");
@@ -217,6 +221,7 @@ export const FormAddNewUser = () => {
   const { AddNewStudent } = useStudentContext();
 
   const handleSaveClick = async (e) => {
+    
     e.preventDefault();
     if (
       email === "" ||
@@ -232,30 +237,34 @@ export const FormAddNewUser = () => {
       alert("Please fill id student required");
       return;
     }
+    
     //call api at here
     const newValueAccount = {
       user_name: name,
       full_name: name,
       password: password,
       role: role,
-      status: 'active',
+      status: "actived",
       email: email,
       phone: phone,
     };
+    console.log("Save Click");
     switch (role) {
       case "teacher":
         //call api to create teacher
-        const responseTeacher = await AddNewTeacher({
+        const dataTeacher = {
           account: newValueAccount,
           teacher: {
             session_count: 0,
             account: "",
           },
-        });
+        }
+        const responseTeacher = await AddNewTeacher(JSON.stringify(dataTeacher));
         if (responseTeacher) alert("User information saved successfully!");
         else alert("User information saved FAIL!");
         break;
       case "student":
+        console.log("Save Click");
         const responseStudent = await AddNewStudent({
           account: newValueAccount,
           student: {
@@ -303,20 +312,16 @@ export const FormAddNewUser = () => {
           keys={["teacher", "student", "parent"]}
           values={["Teacher", "Student", "Parent"]}
           title="Role"
-          actionChange={(e) => {
-            setRole(e)
-          
-            console.log("Role: ", role)}
-            
-          }
-
+          actionChange={(e) => setRole(e)}
         />
         {role === "parent" && (
-          <EditFormText
-            label="Invited Code"
-            defaultValue={studentIdCode}
-            onChange={setStudentIdCode}
-          />
+          <>
+            <EditFormText
+              label="Invited Code"
+              defaultValue={studentIdCode}
+              onChange={setStudentIdCode}
+            />
+          </>
         )}
         <EditFormText label="Email" defaultValue={email} onChange={setEmail} />
         <EditFormText
@@ -334,21 +339,22 @@ export const FormAddNewUser = () => {
 const SelectOption = ({ keys, values, title, actionChange }) => {
   const handleChange = (e) => {
     const selectedValue = e.target.value;
+    console.log(selectedValue);
     actionChange(selectedValue);
   };
 
   return (
     <>
       <div className="row mb-3">
-        <label class="col-md-4 col-lg-3 col-form-label">{title}</label>
-        <div class="col-md-8 col-lg-9">
+        <label className="col-md-4 col-lg-3 col-form-label">{title}</label>
+        <div className="col-md-8 col-lg-9">
           <select
             className="form-select"
             aria-label="Default select example"
             onChange={handleChange}
           >
             {keys.map((key, index) => (
-              <option value={key._id}>{values[index]}</option>
+              key._id ? <option value={key._id}>{values[index]}</option> : <option value={key}>{values[index]}</option>
             ))}
           </select>
         </div>

@@ -13,7 +13,7 @@ export const TeacherProvider = ({ children }) => {
 
     const fetchAllTeachers = async () => {
         try {
-            const response = await axios.get('http://165.232.161.56:8000/api/teachers');
+            const response = await axios.get('https://api.duynguyendev.xyz/api/teachers');
             if (response.status === 200) {
                 console.log("Teacher: ", response.data.data);
                 const data = convertTeacherDataToModels(response.data.data);
@@ -36,7 +36,7 @@ export const TeacherProvider = ({ children }) => {
     const AddNewTeacher = async (teacher) => {
         try {
             console.log(teacher);
-            const response = await axios.post('http://165.232.161.56:8000/api/teacher', teacher);
+            const response = await axios.post('https://api.duynguyendev.xyz/api/teacher', teacher);
             if (response.status === 200) {
                 return true;
             }

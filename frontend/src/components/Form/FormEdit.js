@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
-import { convertTime } from "../Controller/Time";
 import { useCourseContext } from "../../Context/CourseContext";
 import { useTeacherContext } from "../../Context/TeacherContext";
 import { Button } from "../Buttons/Button";
-import { useAuthContext } from "../../Context/AuthContext";
 import { useUserContext } from "../../Context/UserContext";
 import { useNavigate } from "react-router-dom";
 export const DaysOfWeek = [
@@ -34,8 +32,6 @@ export const FormEditCourse = (prop) => {
 
 const handleEvenetClick = async (e) => {
     e.preventDefault();
-    console.log("Teacher Selected: ", teacher);
-    console.log("Save course");
     const newCourse = {
         name: name,
         description: description,
@@ -161,13 +157,13 @@ export const FormEditUser = () => {
   const { user, UpdateUser } = useUserContext();
 
   const [name, setName] = useState(user.account.full_name || "");
-  const [email, setEmail] = useState(user.email || "");
-  const [phone, setPhone] = useState(user.phone || "");
+  const [email, setEmail] = useState(user.account.email || "");
+  const [phone, setPhone] = useState(user.account.phone || "");
 
   useEffect(() => {
     setName(user.account.full_name || "");
-    setEmail(user.email || "");
-    setPhone(user.phone || "");
+    setEmail(user.account.email || "");
+    setPhone(user.account.phone || "");
   }, [user]);
 
   const handleSaveClick = async (e) => {
@@ -200,7 +196,7 @@ export const FormEditUser = () => {
           defaultValue={phone}
           onChange={(e) => setPhone(e.target.value)}
         />
-        <Button title="Save" />
+        <Button lable="Save" onClick={handleSaveClick} />
       </form>
     </div>
   );
@@ -247,17 +243,17 @@ export const FormEditUserOther = () => {
       <EditFormText
         label="Full Name"
         defaultValue={name}
-        onChange={(e) => setName(e.target.value)}
+        onChange={setName}
       />
       <EditFormText
         label="Email"
         defaultValue={email}
-        onChange={(e) => setEmail(e.target.value)}
+        onChange={setEmail}
       />
       <EditFormText
         label="Phone"
         defaultValue={phone}
-        onChange={(e) => setPhone(e.target.value)}
+        onChange={setPhone}
       />
       <Button lable="Save" onClick={handleSaveClick} />
       <div className="mt-3"></div>

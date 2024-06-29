@@ -13,8 +13,8 @@ import { UserOtherProfile, UserProfile } from './components/Profile/UserProfile'
 import { UserProvider } from './Context/UserContext';
 import { Schedule } from './components/Form/Schedule/Scheduele';
 import { FormAddNewCourse, FormAddNewUser } from './components/FormAdd';
-import { NewCourseProvider } from './Context/NewCourseContext';
 import { CourseProvider } from './Context/CourseContext';
+import { ChildrenManager } from './components/Manager/ChildrenManager';
 
 function App() {
 
@@ -75,6 +75,7 @@ function App() {
             {/* Profile  */}
               <Route path={"/parent/courseprofile"} element = {<CourseProfile />}/>
               <Route path={'/parent/otherprofile'} element = {<UserOtherProfile />}/>
+              <Route path={'/parent/allchildren'} element = {<ChildrenManager />}/>
               <Route path={'/parent/profile'} element = {<UserProfile />}/>
 
               {/* Schedule */}

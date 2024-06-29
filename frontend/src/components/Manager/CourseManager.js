@@ -47,14 +47,14 @@ export const CourseManager = () => {
 const GenerateCourseTr = ({ data, navigate }) => {
     const bgActive = data.status === 'active' ? "badge bg-success" : "badge bg-warning";
 
-    const { setCourseDetail } = useCourseContext();
+    const { setCourse } = useCourseContext();
     
     const {role} = useAuthContext();
 
     //const teacher = await GetTeacherById(data.teacher_id);
 
     return (
-        <tr onClick={() => ClickCourse(data, navigate, setCourseDetail, role)}>
+        <tr onClick={() => ClickCourse(data, navigate, setCourse, role)}>
             <td className="text-center"><img src={data.image} alt="" /></td>
             <td><div className="text-primary fw-bold">{data.name}</div></td>
             <td>{convertTime(data.createdAt)}</td>

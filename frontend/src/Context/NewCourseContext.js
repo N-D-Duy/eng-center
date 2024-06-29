@@ -24,7 +24,7 @@ export const NewCourseProvider = ({ children }) => {
     const fetchData = async () => {
         try {
             // Gọi API để lấy dữ liệu các khóa học
-            const response = await axios.get('http://165.232.161.56:8000/api/courses');
+            const response = await axios.get('https://api.duynguyendev.xyz/api/courses');
             if (response.status === 200) {
                 const data = response.data.data;
                 setCourseData(data);

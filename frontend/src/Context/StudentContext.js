@@ -12,7 +12,7 @@ export const StudentProvider = ({ children }) => {
 
     const fetchAllStudents = async () => {
         try {
-            const response = await axios.get('http://165.232.161.56:8000/api/students');
+            const response = await axios.get('https://api.duynguyendev.xyz/api/students');
             if (response.status === 200) {
                 const data = convertStudentDataToModels(response.data.data);
                 setStudents(data);
@@ -25,7 +25,7 @@ export const StudentProvider = ({ children }) => {
 
     const fetchStudents = async (id) => {
         try {
-            const response = await axios.get('http://165.232.161.56:8000/api/student/' + id);
+            const response = await axios.get('https://api.duynguyendev.xyz/api/student/' + id);
             if (response.status === 200) {
                 const data = convertStudentDataToModels(response.data.data);
                 return data;
@@ -44,7 +44,11 @@ export const StudentProvider = ({ children }) => {
 
     const AddNewStudent = async (value) => {
         try {
-            const response = await axios.post('http://165.232.161.56:8000/api/student', value);
+            const response = await axios.post('https://api.duynguyendev.xyz/api/student', value);
+            if (response.status === 200) {
+                console.log("Student: ", response.data.data);
+                return true;
+            }
         } catch (error) {
             console.error('Error:', error);
         }

@@ -71,13 +71,13 @@ const Header = () => {
             <Dropdown>
               <Dropdown.Toggle as="a" className="nav-link nav-profile d-flex align-items-center pe-0" href="#null">
                 <img src={logo} alt="Profile" className="rounded-circle" />
-                <span className="d-none d-md-block ps-2">{user?.name}</span>
+                <span className="d-none d-md-block ps-2">{user?.account.full_name}</span>
               </Dropdown.Toggle>
 
               <Dropdown.Menu className="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
                 <li className="dropdown-header">
-                  <h6>{user?.name}</h6>
-                  <span>{user?.role}</span>
+                  <h6>{user?.account.full_name}</h6>
+                  <span>{user?.account.role}</span>
                 </li>
                 <li>
                   <hr className="dropdown-divider" />

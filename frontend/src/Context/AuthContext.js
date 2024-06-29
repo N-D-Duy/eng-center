@@ -4,6 +4,9 @@ import {
   convertLoginParentDataToModel,
   convertLoginStudentDataToModel,
   convertLoginTeacherDataToModel,
+  convertParentDataToModel,
+  convertStudentDataToModel,
+  convertTeacherDataToModel,
 } from "../components/Controller/ConvertData";
 import { useNavigate } from "react-router-dom";
 import { TeacherProvider } from "./TeacherContext";
@@ -56,7 +59,7 @@ export const AuthProvider = ({ children }) => {
     }
     try {
       const response = await axios.post(
-        "http://165.232.161.56:8000/api/login",
+        "https://api.duynguyendev.xyz/api/login",
         {
           emailOrUsername: email,
           password: password,
@@ -71,18 +74,18 @@ export const AuthProvider = ({ children }) => {
           var roleAccount = response.data.data.account.role;
           switch (roleAccount) {
             case "teacher": {
-              const TeacherData = convertLoginTeacherDataToModel(response.data.data);
+              const TeacherData = convertTeacherDataToModel(response.data.data);
               handleLogin(roleAccount, TeacherData);
               break;
             }
             case "student": {
-              const StudentData = convertLoginStudentDataToModel(response.data.data);
-              console.log("Studebt: ", StudentData);
+              const StudentData = convertStudentDataToModel(response.data.data);
+              console.log("Student: ", StudentData);
               handleLogin(roleAccount, StudentData);
               break;
             }
             case "parent": {
-              const ParentData = convertLoginParentDataToModel(response.data.data);
+              const ParentData = convertParentDataToModel(response.data.data);
               handleLogin(roleAccount, ParentData);
               break;
             }

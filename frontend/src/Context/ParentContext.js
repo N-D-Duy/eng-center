@@ -13,7 +13,7 @@ export const ParentProvider = ({ children }) => {
 
     const fetchAllParents = async () => {
         try {
-            const response = await axios.get('http://165.232.161.56:8000/api/parents');
+            const response = await axios.get('https://api.duynguyendev.xyz/api/parents');
             if (response.status === 200) {
                 const data = convertParentDataToModels(response.data.data);
                 setParents(data);
@@ -32,7 +32,7 @@ export const ParentProvider = ({ children }) => {
 
     const AddNewParent = async (value) => {
         try {
-            const response = await axios.post('http://165.232.161.56:8000/api/student', value);
+            const response = await axios.post('https://api.duynguyendev.xyz/api/student', value);
         } catch (error) {
             console.error('Error:', error);
         }
