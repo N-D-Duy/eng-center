@@ -3,7 +3,7 @@ const Course = require('../../models/course.js');
 const CourseStudent = require('../../models/course_student.js');
 const teacher = require('../../models/teacher.js');
 const { triggerCourseStudentJoin, triggerCourseStudentLeave, attendanceHandler, getAttendance } = require('../course_student/index.js');
-const {getStudentAttendanceInCourse, createSchedule} = require('../course_schedule_student/index.js');
+const { getStudentAttendanceInCourse, createSchedule, getSchedule } = require('../course_schedule_student/index.js');
 const Student = require('../../models/student.js');
 const Attendance = require('../../models/attendance.js');
 
@@ -62,7 +62,15 @@ const getAllStudentsInGrade = async (req, res) => {
 const getAllCourses = async (req, res) => {
   try {
     //get course with teacher info from teacher schema
-    const courses = await Course.find().populate('teacher').exec();
+    const courses = await Course.find()
+      .populate({
+        path: 'teacher',
+        populate: {
+          path: 'account',
+          model: 'Account'
+        }
+      })
+      .exec();
     if (!courses) {
       return res.status(404).json({
         message: 'No courses found'
@@ -101,7 +109,16 @@ const getNewCourses = async (req, res) => {
 const getCourseById = async (req, res) => {
   try {
     const { id } = req.params;
-    const course = await Course.findById(id).exec();
+    const course = await Course.findById(id)
+      .populate({
+        path: 'teacher',
+        populate: {
+          path: 'account',
+          model: 'Account'
+        }
+      })
+      .exec();
+    const schedule = await getSchedule(id);
     if (!course) {
       return res.status(404).json({
         message: 'Course not found'
@@ -109,7 +126,8 @@ const getCourseById = async (req, res) => {
     }
 
     return res.status(200).json({
-      data: course
+      course: course,
+      schedule: schedule
     });
   } catch (err) {
     return res.status(400).json({
@@ -255,7 +273,7 @@ const getStudentCourses = async (req, res) => {
   try {
     const student = req.params.student;
     const courseStudents = await CourseStudent.find({ student: student }).populate('course').exec();
-    
+
     if (!courseStudents || courseStudents.length === 0) {
       return res.status(404).json({
         message: 'No courses found'
@@ -274,8 +292,8 @@ const getStudentCourses = async (req, res) => {
   }
 };
 
-const getAttendances = async (req, res) =>{
-  try{
+const getAttendances = async (req, res) => {
+  try {
     getStudentAttendanceInCourse(req, res);
   } catch (err) {
     return res.status(400).json({
@@ -287,7 +305,7 @@ const getAttendances = async (req, res) =>{
 const updateStudentAttendance = async (req, res) => {
   try {
     const { course, students, day } = req.body;
-    
+
     // get all existing attendance records for the students in the course
     const existingAttendances = await Attendance.find({ course, day, student: { $in: students.map(s => s.id) } });
 

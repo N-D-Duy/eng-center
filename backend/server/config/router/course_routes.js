@@ -338,10 +338,6 @@ module.exports = (app) => {
      *               schedule:
      *                 type: object
      *                 properties:
-     *                   teacher:
-     *                     type: string
-     *                     format: uuid
-     *                     example: 666871e5273b637b6f9e2721
      *                   startDate:
      *                     type: string
      *                     format: date

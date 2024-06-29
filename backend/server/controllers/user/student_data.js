@@ -50,11 +50,18 @@ const createStudent = async (req, res) => {
             });
         }
 
-        //check if email is already used
+        //check if email or username is already used
         const emailExist = await Account.findOne({ email: account.email });
+        const usernameExist = await Account.findOne({ user_name: account.user_name });
         if (emailExist) {
             return res.status(400).json({
                 error: 'Email already exists'
+            });
+        }
+
+        if (usernameExist) {
+            return res.status(400).json({
+                error: 'Username already exists'
             });
         }
 

@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const account = require('../../models/account.js');
 const Student = require('../../models/student.js');
 const hashPassword = require('../../utils/hash_password.js');
+const { checkValidPassword } = require('../../utils/auth_check.js');
 
 const getParentInfor = async (req, res) => {
     try {
@@ -35,6 +36,11 @@ const createParent = async (req, res) => {
     //account and invite code from req.body
     const { account, parent } = req.body;
     const invite_code = parent.invite_code;
+    if(invite_code.length != 24) {
+        return res.status(400).json({
+            error: 'Invalid invite code'
+        });
+    }
     
     //check if invite code is valid
     //query students to find the student match with the invite code
@@ -66,6 +72,14 @@ const createParent = async (req, res) => {
         if(emailExist){
             return res.status(400).json({
                 error: 'Email already exists'
+            });
+        }
+
+        //check username already exists
+        const usernameExist = await Account.findOne({ user_name: accountSchema.user_name });
+        if(usernameExist){
+            return res.status(400).json({
+                error: 'Username already exists'
             });
         }
 

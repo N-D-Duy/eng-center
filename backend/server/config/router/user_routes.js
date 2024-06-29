@@ -52,7 +52,7 @@ module.exports = (app) => {
      *                   user_name:
      *                     type: string
      *                     example: "nguyenducduy"
-     *                   name:
+     *                   full_name:
      *                     type: string
      *                     example: "nguyễn đức duy"
      *                   password:
@@ -144,7 +144,7 @@ module.exports = (app) => {
      *                   user_name:
      *                     type: string
      *                     example: "tranvietbao"
-     *                   name:
+     *                   full_name:
      *                     type: string
      *                     example: "trần việt bảo"
      *                   password:
@@ -339,6 +339,49 @@ module.exports = (app) => {
      */
     app.get('/api/student/:id/courses', controller.userData.StudentData.getAllCoursesJoined);
 
+    /**
+     * @swagger
+     * /api/admin:
+     *   post:
+     *     summary: Create a new admin
+     *     tags: [Admin]
+     *     requestBody:
+     *       required: true
+     *       content:
+     *         application/json:
+     *           schema:
+     *             type: object
+     *             properties:
+     *               account:
+     *                 type: object
+     *                 properties:
+     *                   user_name:
+     *                     type: string
+     *                     example: "nguyenvanquyet1"
+     *                   full_name:
+     *                     type: string
+     *                     example: "nguyễn văn quyết1"
+     *                   password:
+     *                     type: string
+     *                     example: "12332145@"
+     *                   role:
+     *                     type: string
+     *                     example: "parent"
+     *                   status:
+     *                     type: string
+     *                     example: "actived"
+     *                   email:
+     *                     type: string
+     *                     example: "nguyenvanquyet1@gmail.com"
+     *                   phone:
+     *                     type: string
+     *                     example: "02132321"
+     *               unique_code:
+     *                 type: string
+     *     responses:
+     *       201:
+     *         description: Parent created successfully
+     */
     app.post('/api/admin', controller.userData.AdminData.createAdmin);
 
 

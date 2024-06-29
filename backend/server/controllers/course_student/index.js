@@ -3,6 +3,7 @@ const Student = require('../../models/student');
 const Course = require('../../models/course');
 const CourseStudent = require('../../models/course_student');
 const Attendance = require('../../models/attendance');
+const { sendZaloMessage } = require('../direct_message');
 
 //trigger when a student join a course
 const triggerCourseStudentJoin = async (req, res) => {
@@ -140,6 +141,34 @@ const attendanceHandler = async (req, res) => {
                 status: student.is_attended ? 'well done' : student.reasons
             });
         };
+
+        //send zalo message to parent if student is absent
+        for(let student of students){
+            if(!student.is_attended){
+                const studentData = await Student.findById(student.id).populate({
+                    path: 'parent',
+                    populate: {
+                        path: 'account',
+                        select: 'facebook',
+                        model: 'Account'
+                    }
+                });
+                const facebook = studentData.parent.account.facebook;
+                if(!facebook) {
+                    const facebookId = facebook.split('/')[3];
+                    console.log(facebookId);
+                    //send message to parent
+                    try{
+                        const sendMessageResponse = await sendFacebookMessage('Your child is absent today', phone);
+                        console.log('Facebook message sent:', sendMessageResponse);
+                    } catch (err) {
+                        console.error('Error sending zalo message:', err);
+                    }
+                } else {
+                    console.log('Parent does not have facebook account');
+                }
+            }
+        }
         return res.status(200).json({
             data: bulkWriteResult,
             message: 'Attendance updated successfully'

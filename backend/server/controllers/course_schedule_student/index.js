@@ -3,24 +3,16 @@ const CourseSchedule = require('../../models/course_schedule');
 const CourseStudent = require('../../models/course_student');
 const setAsync = require('../../controllers/redis/cachedApi').setAsync;
 
-const getSchedule = async (req, res) => {
+const getSchedule = async (courseId) => {
     // with course id as input, return the schedule of the course
     try {
-        const id = req.params.id;
-        const schedules = await CourseSchedule.find({ course: id }).exec();
+        const schedules = await CourseSchedule.find({ course: courseId }).exec();
         if (!schedules) {
-            return res.status(404).json({
-                message: 'Schedule not found'
-            });
+            return [];
         }
-        return res.status(200).json({
-            data: schedules,
-            message: 'Schedule retrieved successfully'
-        });
+        return schedules;
     } catch (error) {
-        return res.status(500).json({
-            message: error.message
-        });
+        return error.message;
     }
 }
 const createSchedule = async (courseId, teacherId, scheduleData) => {

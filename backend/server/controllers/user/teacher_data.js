@@ -50,12 +50,20 @@ const createTeacher = async (req, res) => {
             });
         }
 
+        //check email and username is already used
         const emailExist = await Account.findOne({ email: account.email });
+        const usernameExist = await Account.findOne({ user_name: account.user_name });
         if (emailExist) {
             return res.status(400).json({
                 error: 'Email already exists'
             });
         }
+        if (usernameExist) {
+            return res.status(400).json({
+                error: 'Username already exists'
+            });
+        }
+        
         await account.save();
         //then get the account id
         const account_id = account._id;
