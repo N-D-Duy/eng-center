@@ -15,6 +15,7 @@ export const TeacherProvider = ({ children }) => {
         try {
             const response = await axios.get('http://165.232.161.56:8000/api/teachers');
             if (response.status === 200) {
+                console.log("Teacher: ", response.data.data);
                 const data = convertTeacherDataToModels(response.data.data);
                 setTeachers(data);
                 // Save teachers data to localStorage
@@ -32,8 +33,21 @@ export const TeacherProvider = ({ children }) => {
     }, []);
 
 
+    const AddNewTeacher = async (teacher) => {
+        try {
+            console.log(teacher);
+            const response = await axios.post('http://165.232.161.56:8000/api/teacher', teacher);
+            if (response.status === 200) {
+                return true;
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            return false;
+        }
+    }
+
     return (
-        <TeacherContext.Provider value={{teachers }}>
+        <TeacherContext.Provider value={{teachers, AddNewTeacher }}>
             {children}
         </TeacherContext.Provider>
     );

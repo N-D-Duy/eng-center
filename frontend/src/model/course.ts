@@ -1,35 +1,34 @@
 import { Teacher } from "./teacher.ts";
 
 export class Course {
-  _id: string;
-  name: string;
-  description: string;
-  category: string;
-  price: number;
-  image: string;
-  grade: number;
-  status: string;
-  teacher: Teacher;
-  capacity: number;
-  current_joined: number;
-  createdAt: string;
-  updatedAt: string;
-  __v: number;
+  private _id: string;
+  private name: string;
+  private description: string;
+  private category: string;
+  private price: number;
+  private image: string;
+  private grade: number;
+  private status: string;
+  private teacher: Teacher;
+  private capacity: number;
+  private current_joined: number;
+  private createdAt: string;
+  private updatedAt: string;
 
-  constructor(courseData: any) {
-      this._id = courseData._id;
-      this.name = courseData.name;
-      this.description = courseData.description;
-      this.category = courseData.category;
-      this.price = courseData.price;
-      this.image = courseData.image;
-      this.grade = courseData.grade;
-      this.status = courseData.status;
-      this.teacher = new Teacher(courseData.teacher);
-      this.capacity = courseData.capacity;
-      this.current_joined = courseData.current_joined;
-      this.createdAt = courseData.createdAt;
-      this.updatedAt = courseData.updatedAt;
-      this.__v = courseData.__v;
+  constructor(data) {
+      this._id = data._id;
+      this.name = data.name;
+      this.description = data.description;
+      this.category = data.category;
+      this.price = data.price;
+      this.image = data.image;
+      this.grade = data.grade;
+      this.status = data.status;
+      this.teacher = new Teacher(data.teacher); // Assuming Teacher class constructor accepts 'data.teacher' parameter
+      this.capacity = data.capacity;
+      this.current_joined = data.current_joined;
+      this.createdAt = data.createdAt;
+      this.updatedAt = data.updatedAt;
   }
+
 }

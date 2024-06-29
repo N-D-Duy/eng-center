@@ -1,19 +1,31 @@
 import { useEffect, useState } from 'react';
 import { useCourseContext } from '../../Context/CourseContext';
 import { convertTime } from '../Controller/Time';
-import { useStudentContext } from '../../Context/StudentContext';
-import { useParentContext } from '../../Context/ParentContext';
-import { useTeacherContext } from '../../Context/TeacherContext';
-import { useAuthContext } from '../../Context/AuthContext';
 import { useUserContext } from '../../Context/UserContext';
+import { DaysOfWeek } from './FormEdit';
 
 export const OverviewCourse = () => {
     const {course} = useCourseContext();
     const [date, setDate] = useState();
 
+    const [startDate, setStartDate] = useState("");
+    const [endDate, setEndDate] = useState("");
+    const [startTime, setStartTime] = useState("");
+    const [endTime, setEndTime] = useState("");
+    const [selectedDays, setSelectedDays] = useState([]);
+
     useEffect(() => {
         setDate(convertTime(course.createdAt));
     }, [course]);
+
+    const scheduleData = {
+        startDate,
+        endDate,
+        startTime,
+        endTime,
+        selectedDays,
+    };
+    
 
     return (
         <div class="tab-pane fade show active profile-overview" id="profile-overview">
@@ -22,9 +34,34 @@ export const OverviewCourse = () => {
                 <h5 class="card-title">Profile Details</h5>
                 <OverviewField label="Course Name" value={course.name} />
                 <OverviewField label="Grade" value={`${course.name}.${course.grade}`} />
-                <OverviewField label="Teacher" value={course.teacher.name} />
+                <OverviewField label="Teacher" value={course.teacher.account.full_name} />
+                <OverviewField label="Capacity" value={course.current_joined + "/" + course.capacity} />
+                <OverviewField label="Category" value={course.category} />
+                <OverviewField label="Price" value={course.price} />
                 <OverviewField label="Status" value={course.status} />
-                <OverviewField label="Start" value={date} />
+                <OverviewField label="Begin" value={date} />
+                <OverviewField label="End" value={date} />
+                <div className="form-group">
+                  <label>Days of the Week</label>
+                  <br />
+                  {DaysOfWeek.map((day) => (
+                    <div
+                      key={day.value}
+                      className="form-check form-check-inline"
+                    >
+                      <input
+                        type="checkbox"
+                        id={day.value}
+                        className="form-check-input"
+                        checked={selectedDays.includes(day.value)}
+                        disabled = {true}
+                      />
+                      <label htmlFor={day.value} className="form-check-label">
+                        {day.label}
+                      </label>
+                    </div>
+                  ))}
+                </div>
         </div>
     );
 };
@@ -37,7 +74,7 @@ export const OverviewUser = () => {
     return (
         <div className="tab-pane fade show active profile-overview" id="profile-overview">
             <h5 className="card-title">Overview</h5>
-            <OverviewField label="Name" value={user.name} />
+            <OverviewField label="Full Name" value={user.account.full_name} />
             <OverviewField label="Email" value={user.email} />
             <OverviewField label="Phone" value={user.phone} />
             <OverviewField label="Status" value={user.status} />
@@ -53,7 +90,7 @@ export const OverviewUserOther = () => {
     return (
         <div className="tab-pane fade show active profile-overview" id="profile-overview">
             <h5 className="card-title">Overview</h5>
-            <OverviewField label="Name" value={otherUser.name} />
+            <OverviewField label="Full Name" value={otherUser.account.full_name} />
             <OverviewField label="Email" value={otherUser.account.email} />
             <OverviewField label="Phone" value={otherUser.account.phone} />
             <OverviewField label="Status" value={otherUser.account.status} />

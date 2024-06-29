@@ -3,6 +3,8 @@ import axios from 'axios';
 import { convertCourseDataToModels } from '../components/Controller/ConvertData.js';
 import { useUserContext } from './UserContext.js';
 import { useAuthContext } from './AuthContext.js';
+import AttendanceProvider from './AttendanceContext.js';
+import { NewCourseProvider } from './NewCourseContext.js';
 
 const CourseContext = createContext();
 
@@ -33,6 +35,7 @@ export const CourseProvider = ({ children }) => {
             }else{
                 const response = await axios.get('http://165.232.161.56:8000/api/courses');
                 if (response.status === 200) {
+                    console.log("Respone: " ,response.data.data)
                     const data = convertCourseDataToModels(response.data.data);
                     setCourses(data);
                     localStorage.setItem('courses', JSON.stringify(data));
@@ -73,9 +76,28 @@ export const CourseProvider = ({ children }) => {
         }
     };
 
+
+    const AddNewCourse = async (course) => {
+        try {
+            const response = await axios.post('http://http://165.232.161.56:8000/api/course', course);
+            if (response.status === 200) {
+                return true;
+            }
+        }
+        catch (error) {
+            console.error('Error:', error);
+            return false;
+        }
+    }
+
+
     return (
         <CourseContext.Provider value={{ course, courses, setCourse: setCourseData, setCourses, updateCourse }}>
-            {children}
+            <AttendanceProvider>
+                <NewCourseProvider>
+                    {children}       
+                </NewCourseProvider>
+            </AttendanceProvider>
         </CourseContext.Provider>
     );
 };

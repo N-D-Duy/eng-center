@@ -1,76 +1,55 @@
-import React, { useState } from 'react';
-import '../../attendance.css';
-import { ButtonSave } from '../Buttons/ButtonSave';
+import React, { useState, useEffect } from 'react';
+import { useAttendanceContext } from '../../Context/AttendanceContext';
+import { useAuthContext } from '../../Context/AuthContext';
+import { Button } from '../Buttons/Button';
 
 export const CourseAttendance = () => {
-    const dataList = ['2022-01-01', '2022-01-02', '2022-01-03', '2022-01-01', '2022-01-02', '2022-01-03', '2022-01-01', '2022-01-02', '2022-01-03', '2022-01-01', '2022-01-02'];
-    const studentsData = [
-        {
-            student: 'John Doe',
-            dates: ['2022-01-01', '2022-01-02', '2022-01-03', '2022-01-01', '2022-01-02', '2022-01-03', '2022-01-01', '2022-01-02', '2022-01-03', '2022-01-01', '2022-01-02'],
-        },
-        {
-            student: 'Jane Smith',
-            dates: ['2022-01-01', '2022-01-02', '2022-01-03', '2022-01-01', '2022-01-02', '2022-01-03', '2022-01-01', '2022-01-02', '2022-01-03', '2022-01-01', '2022-01-02'],
-        },
-        {
-            student: 'Jim Beam',
-            dates: ['2022-01-01', '2022-01-02', '2022-01-03', '2022-01-01', '2022-01-02', '2022-01-03', '2022-01-01', '2022-01-02', '2022-01-03', '2022-01-01', '2022-01-02'],
-        },
-        {
-            student: 'John Doe',
-            dates: ['2022-01-01', '2022-01-02', '2022-01-03', '2022-01-01', '2022-01-02', '2022-01-03', '2022-01-01', '2022-01-02', '2022-01-03', '2022-01-01', '2022-01-02'],
-        },
-        {
-            student: 'Jane Smith',
-            dates: ['2022-01-01', '2022-01-02', '2022-01-03', '2022-01-01', '2022-01-02', '2022-01-03', '2022-01-01', '2022-01-02', '2022-01-03', '2022-01-01', '2022-01-02'],
-        },
-        {
-            student: 'Jim Beam',
-            dates: ['2022-01-01', '2022-01-02', '2022-01-03', '2022-01-01', '2022-01-02', '2022-01-03', '2022-01-01', '2022-01-02', '2022-01-03', '2022-01-01', '2022-01-02'],
-        },
-        {
-            student: 'John Doe',
-            dates: ['2022-01-01', '2022-01-02', '2022-01-03', '2022-01-01', '2022-01-02', '2022-01-03', '2022-01-01', '2022-01-02', '2022-01-03', '2022-01-01', '2022-01-02'],
-        },
-        {
-            student: 'Jane Smith',
-            dates: ['2022-01-01', '2022-01-02', '2022-01-03', '2022-01-01', '2022-01-02', '2022-01-03', '2022-01-01', '2022-01-02', '2022-01-03', '2022-01-01', '2022-01-02'],
-        },
-        {
-            student: 'Jim Beam',
-            dates: ['2022-01-01', '2022-01-02', '2022-01-03', '2022-01-01', '2022-01-02', '2022-01-03', '2022-01-01', '2022-01-02', '2022-01-03', '2022-01-01', '2022-01-02'],
-        },
-        {
-            student: 'John Doe',
-            dates: ['2022-01-01', '2022-01-02', '2022-01-03', '2022-01-01', '2022-01-02', '2022-01-03', '2022-01-01', '2022-01-02', '2022-01-03', '2022-01-01', '2022-01-02'],
-        },
-        {
-            student: 'Jane Smith',
-            dates: ['2022-01-01', '2022-01-02', '2022-01-03', '2022-01-01', '2022-01-02', '2022-01-03', '2022-01-01', '2022-01-02', '2022-01-03', '2022-01-01', '2022-01-02'],
-        },
-        {
-            student: 'Jim Beam',
-            dates: ['2022-01-01', '2022-01-02', '2022-01-03', '2022-01-01', '2022-01-02', '2022-01-03', '2022-01-01', '2022-01-02', '2022-01-03', '2022-01-01', '2022-01-02'],
-        },
-        {
-            student: 'John Doe',
-            dates: ['2022-01-01', '2022-01-02', '2022-01-03', '2022-01-01', '2022-01-02', '2022-01-03', '2022-01-01', '2022-01-02', '2022-01-03', '2022-01-01', '2022-01-02'],
-        },
-        {
-            student: 'Jane Smith',
-            dates: ['2022-01-01', '2022-01-02', '2022-01-03', '2022-01-01', '2022-01-02', '2022-01-03', '2022-01-01', '2022-01-02', '2022-01-03', '2022-01-01', '2022-01-02'],
-        },
-        {
-            student: 'Jim Beam',
-            dates: ['2022-01-01', '2022-01-02', '2022-01-03', '2022-01-01', '2022-01-02', '2022-01-03', '2022-01-01', '2022-01-02', '2022-01-03', '2022-01-01', '2022-01-02'],
-        },
-    ];
-    
+    const { students, dates, SetDataAttendance, checkAttendance } = useAttendanceContext();
+    const { role } = useAuthContext();
+    const today = new Date().toISOString().slice(0, 10);
 
-    const handleEventClick = () => {
-        alert('Save clicked');
-    }
+    const [initialAttendance, setInitialAttendance] = useState({});
+    const [editMode, setEditMode] = useState(true);
+
+    useEffect(() => {
+        const initialData = {};
+        students.forEach(student => {
+            initialData[student._id] = {};
+            dates.forEach(date => {
+                initialData[student._id][date] = checkAttendance(student._id, date);
+            });
+        });
+        setInitialAttendance(initialData);
+    }, [students, dates, checkAttendance]);
+
+    const canEditToday = dates.includes(today);
+
+    const handleEditButtonClick = () => {
+        setEditMode(!editMode);
+    };
+
+    const handleCheckboxChange = (studentId, date) => {
+        setInitialAttendance(prevData => ({
+            ...prevData,
+            [studentId]: {
+                ...prevData[studentId],
+                [date]: !prevData[studentId][date],
+            },
+        }));
+    };
+
+    const handleSubmit = () => {
+        console.log('Submitting edited data:', initialAttendance);
+        SetDataAttendance(initialAttendance, today);
+        // Gửi dữ liệu lên server
+    };
+
+    const renderButtons = () => {
+        if (role === 'teacher' && canEditToday) {
+            return <Button onClick={handleSubmit} />;
+        }
+        return null;
+    };
 
     return (
         <div className="container-fluid">
@@ -78,64 +57,43 @@ export const CourseAttendance = () => {
                 <table className="table table-bordered table-hover" id="attendanceTable">
                     <thead className="thead-light">
                         <tr>
-                            <th className="sticky">All Student</th>
-                            <GenerateDate dataListDate={dataList} />
+                            <th className="sticky">Tất cả sinh viên</th>
+                            {dates.map((date, index) => (
+                                <th key={index} className={date === today ? 'editable text-center' : 'text-center'}>
+                                    {date}
+                                </th>
+                            ))}
                         </tr>
                     </thead>
                     <tbody>
-                        <GenerateStudent studentsData={studentsData} />
+                        {students.map((student, index) => (
+                            <tr key={index}>
+                                <td className="sticky">{student.name}</td>
+                                {dates.map((date, index) => (
+                                    <td key={index} className="text-center">
+                                        {editMode && date === today ? (
+                                            <input
+                                                type="checkbox"
+                                                className="custom-checkbox"
+                                                checked={initialAttendance[student._id]?.[date] ?? false}
+                                                onChange={() => handleCheckboxChange(student._id, date)}
+                                            />
+                                        ) : (
+                                            <input
+                                                type="checkbox"
+                                                className="custom-checkbox"
+                                                checked={initialAttendance[student._id]?.[date] ?? false}
+                                                disabled={date !== today || role !== 'teacher'}
+                                            />
+                                        )}
+                                    </td>
+                                ))}
+                            </tr>
+                        ))}
                     </tbody>
                 </table>
             </div>
-            {/* <ButtonSave onClick={handleEventClick} /> */}
+            {renderButtons()}
         </div>
     );
 };
-
-const GenerateDate = ({ dataListDate }) => {
-    return (
-        <>
-            {dataListDate.map((data, index) => (
-                <th key={index}>{data}</th>
-            ))}
-        </>
-    );
-}
-
-const GenerateStudent = ({studentsData}) => {
-    return (
-        <>
-            {studentsData.map((data, index) => (
-                <GenerateStudentTr key={index} data={data} />
-            ))}
-        </>
-    );
-}
-
-const GenerateStudentTr = ({ data }) => {
-    const [checkedDates, setCheckedDates] = useState([]);
-    const handleCheckboxChange = (date) => {
-        const isChecked = checkedDates.includes(date);
-
-        if (isChecked) {
-            // Nếu đã chọn, loại bỏ khỏi mảng
-            setCheckedDates(checkedDates.filter(d => d !== date));
-        } else {
-            // Nếu chưa chọn, thêm vào mảng
-            setCheckedDates([...checkedDates, date]);
-        }
-    };
-
-    // onClick={() => handleCheckboxChange(date)}
-
-    return (
-        <tr>
-            <td className="sticky">{data.student}</td>
-            {data.dates.map((date, index) => (
-                <td key={index}>
-                    <input type="checkbox" className="custom-checkbox" checked={checkedDates.includes(date)}/>
-                </td>
-            ))}
-        </tr>
-    );
-}

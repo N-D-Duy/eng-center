@@ -2,7 +2,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useAuthContext } from './AuthContext';
 import { useUserContext } from './UserContext';
-import { convertScheduleDataToModels, convertStudentDataToModels } from '../components/Controller/ConvertData';
+import { convertScheduleDataToModel, convertScheduleDataToModels, convertStudentDataToModels } from '../components/Controller/ConvertData';
 import axios from 'axios';
 
 const ScheduleContext = createContext();
@@ -25,8 +25,9 @@ const ScheduleProvider = ({ children }) => {
     const fetchData = async () => {
         try {
             // Example API call based on role
-            const response = await axios.get(`http://http://165.232.161.56:8000/api/schedule/student/${user.id}`);
+            const response = await axios.get(`http://165.232.161.56:8000/api/schedule/student/${user._id}`);
             if (response.status === 200) {
+                console.log(response.data.data);
                 const data = convertScheduleDataToModels(response.data.data);
                 setScheduleData(data);
                 localStorage.setItem('schedule', JSON.stringify(data));

@@ -9,14 +9,13 @@ const EventDetails = ({ date, events }) => {
     return (
         <div className="event-details">
             <h2>Schedule on {date.toDateString()}</h2>
+            {console.log("EventList:" , eventList)}
             {eventList.length > 0 ? (
                 eventList.map((event, index) => (
-                    <CardSchedule key={index} name={event.name} teacher={event.teacher} start_time={event.start_time} end_time={event.end_time} />
+                    <CardSchedule key={index} name={event.course.name} teacher={event.teacher.name} start_time={event.start_time} end_time={event.end_time} />
                 ))
             ) : (
-                // <p>There is no event on this day</p> 
-
-                <CardSchedule />
+                <p>There is no event on this day</p> 
             )}
         </div>
     );

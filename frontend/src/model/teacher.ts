@@ -1,22 +1,36 @@
+import { Account, LoginAccount } from "./account.ts";
 
 export class Teacher {
   _id: string;
-  name: string;
-  account: string;
+  account: Account;
   session_count: number;
   status: string;
-  createdAt: Date;
-  updatedAt: Date;
-  __v: number;
+  createdAt: string;
+  updatedAt: string;
 
-  constructor(teacherData: any) {
-      this._id = teacherData._id;
-      this.name = teacherData.name;
-      this.account = teacherData.account;
-      this.session_count = teacherData.session_count;
-      this.status = teacherData.status;
-      this.createdAt = new Date(teacherData.createdAt);
-      this.updatedAt = new Date(teacherData.updatedAt);
-      this.__v = teacherData.__v;
+  constructor(data) {
+    this._id = data?._id;
+    this.account = new Account(data?.account);
+    this.session_count = data?.session_count;
+    this.status = data?.status;
+    this.createdAt = data?.createdAt;
+    this.updatedAt = data?.updatedAt;
+  }
+}
+export class LoginTeacher {
+  _id: string;
+  account: LoginAccount;
+  session_count: number;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+
+  constructor(data: any) {
+    this._id = data._id;
+    this.account = new LoginAccount(data.account);
+    this.session_count = data.session_count;
+    this.status = data.status;
+    this.createdAt = data.createdAt;
+    this.updatedAt = data.updatedAt;
   }
 }
