@@ -8,24 +8,15 @@ import { useEffect, useState } from "react";
 import { useAuthContext } from "../../Context/AuthContext";
 
 export const CourseProfile = () => {
-    const { course, setCourse } = useCourseContext();
+    const { courseDetail } = useCourseContext();
     const [loading, setLoading] = useState(true);
     const { role } = useAuthContext();
+  
     useEffect(() => {
-        if (!course) {
-            const savedCourse = localStorage.getItem('course');
-            if (savedCourse) {
-                setCourse(JSON.parse(savedCourse));
-            }
-        }
-        setLoading(false);
-    }, []);
-
-    useEffect(() => {
-        if (course) {
+        if (courseDetail) {
             setLoading(false);
         }
-    }, [course]);
+    }, [courseDetail]);
 
     if (loading) {
         return <div>Loading...</div>; // Or any other loading indicator
@@ -35,7 +26,7 @@ export const CourseProfile = () => {
         <>
             <section className="section profile">
                 <div className="row">
-                    <CardProfile label={course.name} image={course.image} />  
+                    <CardProfile label={courseDetail.course.name} image={courseDetail.course.image} />  
                     <div className="col-xl-8">
                         <div className="card">
                             <div className="card-body pt-3">

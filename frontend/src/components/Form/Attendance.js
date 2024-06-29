@@ -68,7 +68,7 @@ export const CourseAttendance = () => {
                     <tbody>
                         {students.map((student, index) => (
                             <tr key={index}>
-                                <td className="sticky">{student.name}</td>
+                                <td className="sticky">{student.account.full_name}</td>
                                 {dates.map((date, index) => (
                                     <td key={index} className="text-center">
                                         {editMode && date === today ? (

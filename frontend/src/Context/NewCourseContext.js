@@ -26,7 +26,6 @@ export const NewCourseProvider = ({ children }) => {
             // Gọi API để lấy dữ liệu các khóa học
             const response = await axios.get('http://165.232.161.56:8000/api/courses');
             if (response.status === 200) {
-                console.log(response.data.data);
                 const data = response.data.data;
                 setCourseData(data);
                 localStorage.setItem('newCourses', JSON.stringify(data));

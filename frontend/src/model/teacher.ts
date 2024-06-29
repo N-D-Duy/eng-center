@@ -8,7 +8,7 @@ export class Teacher {
   createdAt: string;
   updatedAt: string;
 
-  constructor(data) {
+  constructor(data : any) {
     this._id = data?._id;
     this.account = new Account(data?.account);
     this.session_count = data?.session_count;

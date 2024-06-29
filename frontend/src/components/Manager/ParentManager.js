@@ -19,7 +19,6 @@ export const ParentManager = () => {
         { header: 'Name' },
         { header: 'Email' },
         { header: 'Phone' },
-        { header: 'Status' }
     ];
 
     const generateRow = (parent, index) => (
@@ -55,11 +54,10 @@ const GenerateParentTr = ({ data, navigate, setParent }) => {
 
     return (
         <tr onClick={ClickOther}>
-            <td className="text-center"><img src={data.image} alt="" /></td>
-            <td><div className="text-primary fw-bold">{data.name}</div></td>
-            <td>{data.email}</td>
-            <td>{data.phone}</td>
-            <td><span className={bgActive}>{data.status}</span></td>
+            <td className="text-center"><img src={data.account.image} alt="" /></td>
+            <td><div className="text-primary fw-bold">{data.account.full_name}</div></td>
+            <td>{data.account.email}</td>
+            <td>{data.account.phone}</td>
         </tr>
     );
 };

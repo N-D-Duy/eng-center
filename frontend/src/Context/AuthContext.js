@@ -87,7 +87,8 @@ export const AuthProvider = ({ children }) => {
               break;
             }
             case "admin": {
-             
+              handleLogin('admin', response.data);
+              break;
             }
             default: {
               alert(
