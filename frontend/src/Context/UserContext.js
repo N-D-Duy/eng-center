@@ -3,6 +3,7 @@ import { AuthProvider } from "./AuthContext";
 import axios from "axios";
 import { useLocation, useNavigate, useNavigation } from "react-router-dom";
 import ChildrenProvider from "./ChildrenContext.js";
+import { APIPath } from "../App.js";
 
 const UserContext = createContext();
 
@@ -20,13 +21,25 @@ export const UserProvider = ({ children }) => {
     }
   }, []);
 
-  const UpdateUser = async (newUser, _id) => {
+
+  const SetOtherUser = (data) => {
+    setOtherUser(data);
+    localStorage.setItem("otherUser", JSON.stringify(data));
+  };
+
+
+  const UpdateUser = async (newUser, _id, myAccount) => {
     try{
       console.log("Update user: ", newUser);
-      const response = await axios.put('https://api.duynguyendev.xyz' + _id, newUser);
+      const response = await axios.put(APIPath + `account/${_id}`, newUser);
       if(response.status === 200){
-        otherUser.account = response.data.updatedAccount;        ;
-        setOtherUser(otherUser);
+        if(myAccount){
+          user.account = response.data.updatedAccount;  
+          setUser(user);
+        }else{
+          otherUser.account = response.data.updatedAccount;
+          setOtherUser(otherUser);
+        }
         navigate(location.pathname, { replace: true });
         return true;
       }
@@ -38,7 +51,7 @@ export const UserProvider = ({ children }) => {
   };
 
   return (
-    <UserContext.Provider value={{ user, setUser, otherUser, setOtherUser, UpdateUser }}>
+    <UserContext.Provider value={{ user, setUser, otherUser, setOtherUser: SetOtherUser, UpdateUser }}>
         <AuthProvider>
           <ChildrenProvider>
             {children}

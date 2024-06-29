@@ -1,6 +1,7 @@
 import React, { createContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { convertTeacherDataToModels } from '../components/Controller/ConvertData.js';
+import { APIPath } from "../App.js";
 
 const TeacherContext = createContext();
 
@@ -13,9 +14,8 @@ export const TeacherProvider = ({ children }) => {
 
     const fetchAllTeachers = async () => {
         try {
-            const response = await axios.get('https://api.duynguyendev.xyz/api/teachers');
+            const response = await axios.get(APIPath + "teachers");
             if (response.status === 200) {
-                console.log("Teacher: ", response.data.data);
                 const data = convertTeacherDataToModels(response.data.data);
                 setTeachers(data);
                 // Save teachers data to localStorage
@@ -36,7 +36,7 @@ export const TeacherProvider = ({ children }) => {
     const AddNewTeacher = async (teacher) => {
         try {
             console.log(teacher);
-            const response = await axios.post('https://api.duynguyendev.xyz/api/teacher', teacher);
+            const response = await axios.post(APIPath + "teacher", teacher);
             if (response.status === 200) {
                 return true;
             }

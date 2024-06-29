@@ -60,19 +60,32 @@ export const FormAddNewCourse = () => {
     }
 
     const newCourse = {
-      name: name,
-      description: description,
-      category: category,
-      teacher: teacher._id,
-      grade: grade,
-      price: price,
-      capacity: capacity,
+      course :{
+        name: name,
+        image: "http://example.com/image.jpg",
+        description: description,
+        category: category,
+        teacher: teacher._id,
+        grade: +grade,
+        price: +price,
+        capacity: +capacity,
+        teacher: teacher,
+        current_joined: 0,
+        status: "active",
+      },
+      schedule: {
+        startDate: startDate,
+        numberOfWeeks: +numberWeeks,
+        daysOfWeek: selectedDays,
+        startTime: startTime,
+        endTime: endTime,
+      },
     };
     console.log("NewCourse", newCourse);
-    // const r = await AddNewCourse(newCourse);
-    // if (r) alert("Course information saved successfully!");
-    // else alert("Course information saved FAIL!");
-    // //Clear data
+    const r = await AddNewCourse(JSON.stringify(newCourse));
+    if (r) alert("Course information saved successfully!");
+    else alert("Course information saved FAIL!");
+    //Clear data
     // setDescription("");
     // setCategory("");
     // setName("");
@@ -93,9 +106,6 @@ export const FormAddNewCourse = () => {
     selectedDays,
   };
 
-  const handleTeacherSelected = (value) => {
-    setTeacher(value);
-  };
 
   return (
     <div className="card cardStyle">
@@ -145,10 +155,10 @@ export const FormAddNewCourse = () => {
         <EditFormText label="Price" defaultValue={price} onChange={setPrice} />
 
         <SelectOption
-          keys={teachers}
+          keys={teachers.map((t) => t._id)}
           values={allTeacherName}
           title={"Teacher"}
-          onChange={handleTeacherSelected}
+          onChange={setTeacher}
         />
 
         <EditFormText
@@ -201,7 +211,7 @@ export const FormAddNewCourse = () => {
           onChange={setEndTime}
           type={"time"}
         />
-        <Button onClick={handleEvenetClick} title={"Create Course"} />
+        <Button onClick={handleEvenetClick} lable={"Create Course"} />
       </div>
     </div>
   );
@@ -286,7 +296,7 @@ export const FormAddNewUser = () => {
           },
         });
         if (responseParent) alert("User information saved successfully!");
-        else alert("User information saved FAIL!");
+        else alert("User information saved FAIL!. Try Again!");
         break;
       default:
         break;
@@ -311,8 +321,8 @@ export const FormAddNewUser = () => {
         <SelectOption
           keys={["teacher", "student", "parent"]}
           values={["Teacher", "Student", "Parent"]}
-          title="Role"
-          actionChange={(e) => setRole(e)}
+          title= {"Role"}
+          onChange={setRole}
         />
         {role === "parent" && (
           <>
@@ -336,13 +346,7 @@ export const FormAddNewUser = () => {
   );
 };
 
-const SelectOption = ({ keys, values, title, actionChange }) => {
-  const handleChange = (e) => {
-    const selectedValue = e.target.value;
-    console.log(selectedValue);
-    actionChange(selectedValue);
-  };
-
+const SelectOption = ({ keys, values, title, onChange }) => {
   return (
     <>
       <div className="row mb-3">
@@ -351,7 +355,7 @@ const SelectOption = ({ keys, values, title, actionChange }) => {
           <select
             className="form-select"
             aria-label="Default select example"
-            onChange={handleChange}
+            onChange={(e) => onChange(e.target.value)}
           >
             {keys.map((key, index) => (
               key._id ? <option value={key._id}>{values[index]}</option> : <option value={key}>{values[index]}</option>

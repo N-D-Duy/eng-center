@@ -141,10 +141,8 @@ export const OverviewUser = () => {
 
 export const OverviewUserOther = () => {
   const { otherUser } = useUserContext();
-  console.log(otherUser);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    console.log("otherUser", otherUser);
     if (otherUser) {
       setLoading(false);
     }

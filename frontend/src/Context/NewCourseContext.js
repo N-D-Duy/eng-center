@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
+import { APIPath } from "../App.js";
 
 const NewCourseContext = createContext();
 
@@ -24,7 +25,7 @@ export const NewCourseProvider = ({ children }) => {
     const fetchData = async () => {
         try {
             // Gọi API để lấy dữ liệu các khóa học
-            const response = await axios.get('https://api.duynguyendev.xyz/api/courses');
+            const response = await axios.get(APIPath + 'courses');
             if (response.status === 200) {
                 const data = response.data.data;
                 setCourseData(data);

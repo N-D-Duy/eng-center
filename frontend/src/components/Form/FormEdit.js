@@ -221,14 +221,14 @@ export const FormEditUserOther = () => {
     console.log("Save button clicked");
     e.preventDefault();
     // Call setOtherUser to update specific fields of otherUser
-    var newUser = {
+    const newOtherUser = {
       full_name: name,
       email: email,
       phone: phone,
+      status: "active"
     };
-    console.log("New user: ", newUser, otherUser.account._id);
-
-    var r = await UpdateUser(newUser, otherUser.account._id);
+    console.log("New user: ", newOtherUser, otherUser.account._id);
+    var r = await UpdateUser(newOtherUser, otherUser.account._id);
     if (r) alert("User information saved successfully!");
     else alert("User information saved failed!");
   };

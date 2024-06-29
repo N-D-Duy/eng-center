@@ -73,7 +73,7 @@ export const UserOtherProfile = () => {
     if (otherUser) {
       setLoading(false);
     } else {
-      const savedUser = localStorage.getItem("user");
+      const savedUser = localStorage.getItem("otherUser");
       if (savedUser) {
         setOtherUser(JSON.parse(savedUser));
       }
@@ -89,7 +89,7 @@ export const UserOtherProfile = () => {
       <section className="section profile">
         <div className="row">
           <CardProfile
-            image={otherUser?.image}
+            image={otherUser?.account.image}
             label={otherUser?.account.full_name}
           />
           <div className="col-xl-8">

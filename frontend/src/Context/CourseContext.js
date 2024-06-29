@@ -7,6 +7,7 @@ import {
 import { useAuthContext } from "./AuthContext.js";
 import AttendanceProvider from "./AttendanceContext.js";
 import { NewCourseProvider } from "./NewCourseContext.js";
+import { APIPath } from "../App.js";
 
 const CourseContext = createContext();
 
@@ -27,7 +28,7 @@ export const CourseProvider = ({ children }) => {
     try {
       if (role == "admin") {
         const response = await axios.get(
-          "https://api.duynguyendev.xyz/api/courses"
+          APIPath + "courses"
         );
         if (response.status === 200) {
           const data = convertCourseDataToModels(response.data.data);
@@ -36,7 +37,7 @@ export const CourseProvider = ({ children }) => {
         }
       } else {
         const response = await axios.get(
-          "https://api.duynguyendev.xyz/api/courses"
+          APIPath + "courses"
         );
         if (response.status === 200) {
           const data = convertCourseDataToModels(response.data.data);
@@ -58,7 +59,7 @@ export const CourseProvider = ({ children }) => {
   const setCourseData = async (course) => {
     try {
       const response = await axios.get(
-        `https://api.duynguyendev.xyz/api/course/${course._id}`
+        APIPath + `course/${course._id}`
       );
       if (response.status === 200) {
         const data = convertCourseScheduleToModel(response.data);
@@ -73,7 +74,7 @@ export const CourseProvider = ({ children }) => {
   const AddNewCourse = async (course) => {
     try {
       const response = await axios.post(
-        "https://api.duynguyendev.xyz/api/course",
+        APIPath + 'course',
         course
       );
       if (response.status === 200) {
@@ -90,7 +91,7 @@ export const CourseProvider = ({ children }) => {
     try {
         console.log("Data: ", data);
       const response = await axios.put(
-        `https://api.duynguyendev.xyz/api/course/${_id}`, data);
+        APIPath + `course/${_id}`, data);
       if (response.status === 200) {
         console.log("Updated: " , response.data);
         fetchAllCourses();
@@ -109,7 +110,8 @@ export const CourseProvider = ({ children }) => {
         courses,
         setCourse: setCourseData,
         setCourses,
-        UpdateCourseDetail
+        UpdateCourseDetail,
+        AddNewCourse
       }}
     >
       <AttendanceProvider>

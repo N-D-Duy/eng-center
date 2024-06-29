@@ -1,6 +1,7 @@
 import React, { createContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { convertStudentDataToModels } from '../components/Controller/ConvertData.js';
+import { APIPath } from "../App.js";
 
 const StudentContext = createContext();
 
@@ -12,7 +13,7 @@ export const StudentProvider = ({ children }) => {
 
     const fetchAllStudents = async () => {
         try {
-            const response = await axios.get('https://api.duynguyendev.xyz/api/students');
+            const response = await axios.get(APIPath + 'students');
             if (response.status === 200) {
                 const data = convertStudentDataToModels(response.data.data);
                 setStudents(data);
@@ -25,7 +26,7 @@ export const StudentProvider = ({ children }) => {
 
     const fetchStudents = async (id) => {
         try {
-            const response = await axios.get('https://api.duynguyendev.xyz/api/student/' + id);
+            const response = await axios.get(APIPath + 'student' + id);
             if (response.status === 200) {
                 const data = convertStudentDataToModels(response.data.data);
                 return data;
@@ -44,7 +45,7 @@ export const StudentProvider = ({ children }) => {
 
     const AddNewStudent = async (value) => {
         try {
-            const response = await axios.post('https://api.duynguyendev.xyz/api/student', value);
+            const response = await axios.post(APIPath + 'student', value);
             if (response.status === 200) {
                 console.log("Student: ", response.data.data);
                 return true;

@@ -16,8 +16,14 @@ import { FormAddNewCourse, FormAddNewUser } from './components/FormAdd';
 import { CourseProvider } from './Context/CourseContext';
 import { ChildrenManager } from './components/Manager/ChildrenManager';
 
+
+const APIVer_0 = "http://165.232.161.56:8000/api/";     
+const APIVer_1 =  "http://localhost:8000/";    
+
+export const APIPath = APIVer_0;
 function App() {
 
+  //localStorage.clear();
   return (<div>
     <UserProvider>
       <CourseProvider>

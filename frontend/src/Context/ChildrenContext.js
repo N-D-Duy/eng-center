@@ -3,6 +3,7 @@ import { useAuthContext } from './AuthContext';
 import { useUserContext } from './UserContext';
 import { convertStudentDataToModels } from '../components/Controller/ConvertData';
 import axios from 'axios';
+import { APIPath } from "../App.js";
 
 const ChildrenContext = createContext();
 
@@ -25,7 +26,7 @@ const ChildrenProvider = ({ children }) => {
     const fetchData = async () => {
         try {
             // Example API call based on role
-            const response = await axios.get(`https://api.duynguyendev.xyz/api/children/student/${user._id}`);
+            const response = await axios.get(APIPath + `children/student/${user._id}`);
             if (response.status === 200) {
                 console.log(response.data.data);
                 const data = convertStudentDataToModels(response.data.data);

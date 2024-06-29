@@ -46,7 +46,6 @@ const GenerateStudentTr = ({ data, navigate }) => {
     const { setOtherUser } = useUserContext();
     const {role} = useAuthContext();
     const clickOther = () => {
-        console.log(data);
         setOtherUser(data);
         navigate(`/${role}/otherprofile`);
     };

@@ -1,9 +1,6 @@
 import React, { createContext, useEffect, useState } from "react";
 import axios from "axios";
 import {
-  convertLoginParentDataToModel,
-  convertLoginStudentDataToModel,
-  convertLoginTeacherDataToModel,
   convertParentDataToModel,
   convertStudentDataToModel,
   convertTeacherDataToModel,
@@ -14,6 +11,7 @@ import { StudentProvider } from "./StudentContext";
 import { ParentProvider } from "./ParentContext";
 import ScheduleProvider from "./ScheduleContext";
 import { useUserContext } from "./UserContext";
+import { APIPath } from "../App.js";
 
 const AuthContext = createContext();
 
@@ -59,7 +57,7 @@ export const AuthProvider = ({ children }) => {
     }
     try {
       const response = await axios.post(
-        "https://api.duynguyendev.xyz/api/login",
+        APIPath + "login",
         {
           emailOrUsername: email,
           password: password,
