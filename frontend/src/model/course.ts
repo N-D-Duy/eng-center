@@ -1,3 +1,4 @@
+import { ScheduleCourse } from "./schedule.ts";
 import { Teacher } from "./teacher.ts";
 
 export class Course {
@@ -24,11 +25,19 @@ export class Course {
       this.image = data.image;
       this.grade = data.grade;
       this.status = data.status;
-      this.teacher = new Teacher(data.teacher); // Assuming Teacher class constructor accepts 'data.teacher' parameter
+      this.teacher = new Teacher(data.teacher);
       this.capacity = data.capacity;
       this.current_joined = data.current_joined;
       this.createdAt = data.createdAt;
       this.updatedAt = data.updatedAt;
   }
+}
+export class CourseSchedule {
+  course: Course;
+  schedule: ScheduleCourse[];
 
+  constructor(courseData: any, scheduleData: any[]) {
+      this.course = new Course(courseData);
+      this.schedule = scheduleData.map(schedule => new ScheduleCourse(schedule));
+  }
 }

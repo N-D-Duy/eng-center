@@ -8,18 +8,19 @@ const AttendanceContext = createContext();
 export const useAttendanceContext = () => useContext(AttendanceContext);
 
 const AttendanceProvider = ({ children }) => {
-  const { course } = useCourseContext();
+  const { courseDetail } = useCourseContext();
   const [students, setStudents] = useState([]);
   const [dates, setDates] = useState([]);
   const [attendanceData, setAttendanceData] = useState({});
   const [courseInfo, setCourseInfo] = useState(null);
-
+  const [course, setCourse] = useState(null);
   useEffect(() => {
-    if (course) {
+    if (courseDetail != null) {
       setCourseInfo(course);
-      fetchData(course._id);
+      fetchData(courseDetail.course._id);
+      setCourse(courseDetail.course);
     }
-  }, [course]);
+  }, [courseDetail]);
 
   useEffect(() => {
     // Lưu dữ liệu vào localStorage khi attendanceData thay đổi
@@ -32,19 +33,13 @@ const AttendanceProvider = ({ children }) => {
       const studentsResponse = await axios.get(
         `http://165.232.161.56:8000/api/${courseId}/students`
       );
-      const datesResponse = await axios.get(`http://165.232.161.56:8000/api/schedule/${courseId}`);
-      // const datesResponse = await axios.get(
-      //   `http://165.232.161.56:8000/api/course/666873f388b4360aeb1827da/student/6668737d3e166087045db9a0/attendance`
-      // );
-      if (studentsResponse.status === 200 && datesResponse.status === 200) {
+      const datesResponse = courseDetail.schedule;
+      if (studentsResponse.status === 200) {
         const data = await fetchMultipleStudents(
           studentsResponse.data.data.map((student) => student._id)
         );
         const studentsData = convertStudentDataToModels(data); 
-      //const datesData = datesResponse.data.data[1].map((item) => item.day);
-          const datesData = datesResponse.data.data
-          .map((item) => item.day)
-          .filter((d) => d !== null);
+        const datesData = datesResponse.map((item) => item.day).filter((d) => d !== null);
         
         // Loại bỏ các giá trị trùng lặp và sắp xếp
         const uniqueDates = [...new Set(datesData)].sort();
@@ -104,7 +99,9 @@ const AttendanceProvider = ({ children }) => {
   const initializeAttendanceData = async (studentsData, datesData) => {
     // Khởi tạo dữ liệu điểm danh ban đầu dựa trên students và dates
     const initialData = {};
+    if(studentsData == null || datesData == null) return initialData;
     for (const student of studentsData) {
+      if(student == null || student._id == null) continue;
       initialData[student._id] = {};
       const studentAttendance = await fetchDataStudent(course._id, student._id);
       for (const date of datesData) {

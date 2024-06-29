@@ -27,3 +27,23 @@ export class Schedule {
   }
 }
 
+export class ScheduleCourse {
+    _id: string;
+    course: string;
+    day: string;
+    start_time: string;
+    end_time: string;
+    teacher: string;
+
+    constructor(
+      data: any
+    ) {
+        this._id = data._id;
+        this.course = data.course;
+        this.day = data.day;
+        this.start_time = data.start_time;
+        this.end_time = data.end_time;
+        this.teacher = data.teacher;
+    }
+}
+

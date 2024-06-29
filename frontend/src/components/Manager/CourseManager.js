@@ -17,7 +17,6 @@ export const CourseManager = () => {
     const columns = [
         { header: 'Image' },
         { header: 'Name' },
-        { header: 'Teacher' },
         { header: 'Start Date' },
         { header: 'Status' },
         { header: 'Capacity' }
@@ -45,19 +44,19 @@ export const CourseManager = () => {
 
 
 
-
 const GenerateCourseTr = ({ data, navigate }) => {
     const bgActive = data.status === 'active' ? "badge bg-success" : "badge bg-warning";
 
-    const { setCourse } = useCourseContext();
+    const { setCourseDetail } = useCourseContext();
     
     const {role} = useAuthContext();
 
+    //const teacher = await GetTeacherById(data.teacher_id);
+
     return (
-        <tr onClick={() => ClickCourse(data, navigate, setCourse, role)}>
+        <tr onClick={() => ClickCourse(data, navigate, setCourseDetail, role)}>
             <td className="text-center"><img src={data.image} alt="" /></td>
             <td><div className="text-primary fw-bold">{data.name}</div></td>
-            <td>{data.teacher.name}</td>
             <td>{convertTime(data.createdAt)}</td>
             <td><span className={bgActive}>{data.status}</span></td>
             <td>{data.current_joined}/{data.capacity}</td>
@@ -65,8 +64,8 @@ const GenerateCourseTr = ({ data, navigate }) => {
     );
 };
 
-const ClickCourse = (data, navigate, setCourse, role) => {
-    setCourse(data);
+const ClickCourse = async (data, navigate, setCourse, role) => {
+    await setCourse(data);
     navigate(`/${role}/courseprofile`);
 };
 

@@ -1,15 +1,13 @@
-
 import { useTeacherContext } from "../../Context/TeacherContext";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { convertTime } from "../Controller/Time";
 import TableComponent from "./TableComponent";
 import { useUserContext } from "../../Context/UserContext";
 import { useAuthContext } from "../../Context/AuthContext";
 export const TeacherManager = () => {
     const { teachers } = useTeacherContext();
     const navigate = useNavigate();
-    const [allTeachers, setAllTeachers] = useState([]);
+    const [allTeachers, setAllTeachers] = useState(teachers);
 
     useEffect(() => {
         setAllTeachers(teachers);
@@ -20,7 +18,6 @@ export const TeacherManager = () => {
         { header: 'Name' },
         { header: 'Email' },
         { header: 'Phone' },
-        { header: 'Status' }
     ];
 
     const generateRow = (teacher, index) => (
@@ -34,6 +31,7 @@ export const TeacherManager = () => {
                     <div className="card">
                         <div className="card-body">
                             <h5 className="card-title">Teachers</h5>
+                            {console.log(allTeachers)}
                             <TableComponent columns={columns} data={allTeachers} generateRow={generateRow} />
                         </div>
                     </div>
@@ -43,7 +41,6 @@ export const TeacherManager = () => {
     );
 };
 const GenerateTeacherTr = ({ data, navigate }) => {
-    const bgActive = data.status === 'active' ? "badge bg-success" : "badge bg-warning";
     const { setOtherUser } = useUserContext();
     const {role} = useAuthContext();
     
@@ -54,11 +51,11 @@ const GenerateTeacherTr = ({ data, navigate }) => {
 
     return (
         <tr onClick={clickTeacher}>
-            <td className="text-center"><img src={data.image} alt="" /></td>
-            <td><div className="text-primary fw-bold">{data.name}</div></td>
-            <td>{data.email}</td>
-            <td>{data.phone}</td>
-            <td><span className={bgActive}>{data.status}</span></td>
+            <td className="text-center"><img src={data.account.image} alt="" /></td>
+            <td><div className="text-primary fw-bold">{data.account.full_name}</div></td>
+            <td>{data.account.email}</td>
+            <td>{data.account.phone}</td>
         </tr>
     );
 };
+

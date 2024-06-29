@@ -13,7 +13,6 @@ export const FormAddNewCourse = () => {
   const [name, setName] = useState();
   const [teacher, setTeacher] = useState([]);
   const [grade, setGrade] = useState();
-  const [status, setStatus] = useState("active");
   const [startDate, setStartDate] = useState("");
   const [numberWeeks, setNumberWeek] = useState();
   const [startTime, setStartTime] = useState("");
@@ -43,7 +42,6 @@ export const FormAddNewCourse = () => {
       !grade ||
       !price ||
       !capacity ||
-      !status ||
       !startDate ||
       !endTime ||
       !startTime ||
@@ -68,9 +66,7 @@ export const FormAddNewCourse = () => {
       teacher: teacher._id,
       grade: grade,
       price: price,
-      capacity: capacity,
-      status: status,
-      schedule: scheduleData,
+      capacity: capacity
     };
     console.log("NewCourse", newCourse);
     // const r = await AddNewCourse(newCourse);
@@ -87,7 +83,7 @@ export const FormAddNewCourse = () => {
     // setStatus("active");
   };
 
-  const allTeacherName = teachers.map((t) => t.name);
+  const allTeacherName = teachers.map((t) => t.account.full_name);
 
   const scheduleData = {
     startDate,
@@ -96,6 +92,10 @@ export const FormAddNewCourse = () => {
     endTime,
     selectedDays,
   };
+
+  const handleTeacherSelected = (value) => {
+      setTeacher(value);
+  }
 
   return (
     <div className="card cardStyle">
@@ -129,20 +129,7 @@ export const FormAddNewCourse = () => {
           onChange={setName}
         />
 
-        <div class="row mb-3">
-          <label for="about" class="col-md-4 col-lg-3 col-form-label">
-            About
-          </label>
-          <div class="col-md-8 col-lg-9">
-            <textarea
-              name="about"
-              class="form-control"
-              onChange={setDescription}
-            >
-              {description}
-            </textarea>
-          </div>
-        </div>
+        <EditFormText label="About" defaultValue={description} onChange={setDescription} />
 
         <EditFormText
           label="Category"
@@ -157,15 +144,9 @@ export const FormAddNewCourse = () => {
           keys={teachers}
           values={allTeacherName}
           title={"Teacher"}
-          onChange={setTeacher}
+          onChange={handleTeacherSelected}
         />
 
-        <SelectOption
-          keys={["active", "disactive", "pending"]}
-          values={["Active", "Disactive", "Pending"]}
-          title={"Status"}
-          onChange={setStatus}
-        />
 
         <EditFormText
           label="Capacity"
@@ -229,7 +210,6 @@ export const FormAddNewUser = () => {
   const [role, setRole] = useState("teacher");
   const [password, setPassword] = useState();
   const [phone, setPhone] = useState();
-  const [status, setStatus] = useState("active");
   const [studentIdCode, setStudentIdCode] = useState();
 
   const { AddNewTeacher } = useTeacherContext();
@@ -258,7 +238,7 @@ export const FormAddNewUser = () => {
       full_name: name,
       password: password,
       role: role,
-      status: status,
+      status: 'active',
       email: email,
       phone: phone,
     };
@@ -323,7 +303,13 @@ export const FormAddNewUser = () => {
           keys={["teacher", "student", "parent"]}
           values={["Teacher", "Student", "Parent"]}
           title="Role"
-          actionChange={setRole}
+          actionChange={(e) => {
+            setRole(e)
+          
+            console.log("Role: ", role)}
+            
+          }
+
         />
         {role === "parent" && (
           <EditFormText
@@ -339,12 +325,6 @@ export const FormAddNewUser = () => {
           onChange={setPassword}
         />
         <EditFormText label="Phone" defaultValue={phone} onChange={setPhone} />
-        <SelectOption
-          keys={["actived", "disactived", "pending"]}
-          values={["Active", "Disactive", "Pending"]}
-          title="Status"
-          actionChange={setStatus}
-        />
         <Button lable="Save" onClick={handleSaveClick} />
       </div>
     </div>
@@ -368,7 +348,7 @@ const SelectOption = ({ keys, values, title, actionChange }) => {
             onChange={handleChange}
           >
             {keys.map((key, index) => (
-              <option value={key}>{values[index]}</option>
+              <option value={key._id}>{values[index]}</option>
             ))}
           </select>
         </div>

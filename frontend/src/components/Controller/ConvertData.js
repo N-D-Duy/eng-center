@@ -1,6 +1,6 @@
 import { LoginStudent, Student } from "../../model/student.ts";
 import { Account } from "../../model/account.ts";
-import { Course } from "../../model/course.ts";
+import { Course, CourseSchedule } from "../../model/course.ts";
 import { LoginParent, Parent } from "../../model/parent.ts";
 import { LoginTeacher, Teacher } from "../../model/teacher.ts";
 import { Schedule } from "../../model/schedule.ts";
@@ -13,6 +13,13 @@ export const convertCourseDataToModels = (data) => {
   return data.map(a => new Course(a));
 }
 
+export const convertCourseScheduleToModel = (data) => {
+  if (!data) {
+    return [];
+  }
+
+  return new CourseSchedule(data.course, data.schedule);
+}
 
 export const convertAccountDataToModels = (data) => {
   if (!data || !Array.isArray(data)) {
