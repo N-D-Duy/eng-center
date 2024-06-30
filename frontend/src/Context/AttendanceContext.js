@@ -9,17 +9,15 @@ const AttendanceContext = createContext();
 export const useAttendanceContext = () => useContext(AttendanceContext);
 
 const AttendanceProvider = ({ children }) => {
-  const { courseDetail } = useCourseContext();
+  const { courseDetail, setCourse } = useCourseContext();
   const [students, setStudents] = useState([]);
   const [dates, setDates] = useState([]);
   const [attendanceData, setAttendanceData] = useState({});
   const [courseInfo, setCourseInfo] = useState(null);
-  const [course, setCourse] = useState(null);
   useEffect(() => {
-    if (courseDetail != null) {
-      setCourseInfo(course);
+    if (courseDetail) {
+      setCourseInfo(courseDetail.course);
       fetchData(courseDetail.course._id);
-      setCourse(courseDetail.course);
     }
   }, [courseDetail]);
 
@@ -39,9 +37,11 @@ const AttendanceProvider = ({ children }) => {
         const data = await fetchMultipleStudents(
           studentsResponse.data.data.map((student) => student._id)
         );
-        const studentsData = convertStudentDataToModels(data); 
-        const datesData = datesResponse.map((item) => item.day).filter((d) => d !== null);
-        
+        const studentsData = convertStudentDataToModels(data);
+        const datesData = datesResponse
+          .map((item) => item.day)
+          .filter((d) => d !== null);
+
         // Loại bỏ các giá trị trùng lặp và sắp xếp
         const uniqueDates = [...new Set(datesData)].sort();
 
@@ -55,6 +55,9 @@ const AttendanceProvider = ({ children }) => {
         setAttendanceData(initialAttendanceData);
       }
     } catch (error) {
+      setStudents([]);
+      setDates([]);
+      setAttendanceData({});
       console.error("Error fetching attendance data:", error);
     }
   };
@@ -75,9 +78,7 @@ const AttendanceProvider = ({ children }) => {
 
   const fetchDataStudentInfo = async (studentId) => {
     try {
-      const response = await axios.get(
-        APIPath + `student/${studentId}`
-      );
+      const response = await axios.get(APIPath + `student/${studentId}`);
       return response.data.data;
     } catch (error) {
       console.error("Error fetching student attendance data:", error);
@@ -100,17 +101,20 @@ const AttendanceProvider = ({ children }) => {
   const initializeAttendanceData = async (studentsData, datesData) => {
     // Khởi tạo dữ liệu điểm danh ban đầu dựa trên students và dates
     const initialData = {};
-    if(studentsData == null || datesData == null) return initialData;
+    if (studentsData == null || datesData == null) return initialData;
+
+    console.log("course: ", courseDetail);
     for (const student of studentsData) {
-      if(student == null || student._id == null) continue;
+      if (student == null || student._id == null) continue;
       initialData[student._id] = {};
-      console.log("Course: " , course);
-      console.log("student: " , student);
-      const studentAttendance = await fetchDataStudent(course._id, student._id);
+      const studentAttendance = await fetchDataStudent(
+        courseDetail.course._id,
+        student._id
+      );
       for (const date of datesData) {
         var attendanceStatus = false;
         for (const item of studentAttendance[1]) {
-          if(item.day == date){  
+          if (item.day == date) {
             attendanceStatus = item.isAttend;
             break;
           }
@@ -120,7 +124,6 @@ const AttendanceProvider = ({ children }) => {
     }
     return initialData;
   };
-
 
   const markAttendance = (studentId, date) => {
     const updatedAttendanceData = { ...attendanceData };
@@ -135,33 +138,37 @@ const AttendanceProvider = ({ children }) => {
 
   const SetDataAttendance = async (dataAttendance, date) => {
     console.log("Students: ", students);
-    for(const student of students){
-      await fetchDataStudentAttendance(student._id, dataAttendance[student._id][date], date);
+    for (const student of students) {
+      await fetchDataStudentAttendance(
+        student._id,
+        dataAttendance[student._id][date],
+        date
+      );
     }
-  }
+  };
 
   const fetchDataStudentAttendance = async (studentId, isAttandance, date) => {
     try {
-      const response = await axios.post(`http://api.duynguyendev.xyz/api/course/attendance`,
+      const response = await axios.post(
+        `http://api.duynguyendev.xyz/api/course/attendance`,
         {
-          course: course._id,
+          course: courseDetail.course._id,
           students: [
             {
               id: studentId,
               is_attended: isAttandance,
               day: date,
-              reasons: isAttandance ? "Good" : "Sick"
-            }
-          ]
+              reasons: isAttandance ? "Good" : "Sick",
+            },
+          ],
         }
-
       );
       return response.data.data;
-    }catch (error) {
+    } catch (error) {
       console.error("Error fetching student attendance data:", error);
       return [];
     }
-  }
+  };
 
   return (
     <AttendanceContext.Provider
@@ -172,7 +179,7 @@ const AttendanceProvider = ({ children }) => {
         markAttendance,
         checkAttendance,
         courseInfo,
-        SetDataAttendance
+        SetDataAttendance,
       }}
     >
       {children}

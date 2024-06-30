@@ -41,7 +41,7 @@ export const NewCourseProvider = ({ children }) => {
     }, []);
 
     return (
-        <NewCourseContext.Provider value={{ courseData }}>
+        <NewCourseContext.Provider value={{ newCourseData: courseData }}>
             {children}
         </NewCourseContext.Provider>
     );

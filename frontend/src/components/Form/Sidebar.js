@@ -1,191 +1,221 @@
-import { Link, useLocation } from "react-router-dom"
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap-icons/font/bootstrap-icons.min.css';
+import React from "react";
+import { Link, useLocation } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap-icons/font/bootstrap-icons.min.css";
 import { useAuthContext } from "../../Context/AuthContext";
-import { useEffect } from "react";
+
 export const Sidebar = () => {
+  const { role } = useAuthContext();
+  const location = useLocation();
 
-    const {role} = useAuthContext();
-    const location = useLocation();
+  // Hàm này kiểm tra xem một đường dẫn có phải là đường dẫn hiện tại hay không
+  const isActive = (path) => {
+    return location.pathname === path;
+  };
 
-    // Hàm này kiểm tra xem một đường dẫn có phải là đường dẫn hiện tại hay không
-    const isActive = (path) => {
-        return location.pathname === path;
-    };
+  const isDashBoardActive = () => {
+    return location.pathname === `/${role}`;
+  };
 
-    const isDashBoardActive = () => {
-        return location.pathname === `/${role}`;
-    };
+  const renderView = (role) => {
+    switch (role) {
+      case "admin":
+        return <AdminSidebar />;
+      case "teacher":
+        return <TeacherSidebar />;
+      case "student":
+        return <StudentSidebar />;
+      case "parent":
+        return <ParentSidebar />;
+      default:
+        return <div></div>;
+    }
+  };
 
-    const renderView = (role) => {
-        switch(role) {
-            case 'admin':
-                return <AdminSlidebar />;
-            case 'teacher':
-                return <TeacherSlidebar />;
-            case 'student':
-                return <StudentSlidebar />;
-            case 'parent':
-                return <ParentSlidebar />;
-            default:{
-                return <div></div>;
-            }
-        }
-    };
-    
-    return (
-        <div>
-            {/* <Header /> */}
-            <div id="slidebar-content">
-                <aside id="sidebar" class="sidebar">
-                    <ul class="sidebar-nav" id="sidebar-nav">
-                        <li className={`nav-item ${isDashBoardActive() ? 'active' : ''}`}>
-                            <Link to={`/${role}`}>
-                                <a className="nav-link collapsed" href="#a">
-                                <i className="bi bi-grid"></i>
-                                <span>Dashboard</span>
-                                </a>
-                            </Link>
-                        </li>
-                        {renderView(role)}
-                    </ul>
-                </aside>
-            </div>
-        </div>
-    )
-}
-
-
-const AdminSlidebar = () =>{
-    return (
-        <div class="sidebar-nav" id="sidebar-nav">
-              <li class="nav-item active">
-                <Link to ="/admin/coursemanager"> 
-                    <a class="nav-link collapsed" href="#a">
-                        <i class="bi bi-grid"></i>
-                        <span>Course Manager</span>
-                    </a>
-                </Link>
-              </li>
-        
-              <li class="nav-item">
-                <a class="nav-link collapsed" data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#slidebar-user-manager">
-                    <i class="bi bi-layout-text-window-reverse"></i><span>User Manager</span><i class="bi bi-chevron-down ms-auto"></i>
-                </a>
-                <ul id="tables-nav" class="nav-content collapse show" data-bs-parent="#sidebar-nav">
-                  <li>
-                        <Link to ="/admin/teachermanager"> 
-                            <i class="bi bi-circle"></i><span>Teacher Manager</span>
-                        </Link>
-                  </li>
-                  <li>
-                        <Link to ="/admin/studentmanager"> 
-                        <i class="bi bi-circle"></i><span>Student Manager</span>
-                        </Link>
-                  </li>
-                  <li>
-                        <Link to ="/admin/parentmanager"> 
-                             <i class="bi bi-circle"></i><span>Parent Manager</span>
-                        </Link>
-                  </li>
-                </ul>
-              </li>
-
-              <li class="nav-item">
-                <div class="nav-link collapsed" data-bs-target="#tables-nav" data-bs-toggle="collapse">
-                    <i class="bi bi-layout-text-window-reverse"></i><span>Add</span><i class="bi bi-chevron-down ms-auto"></i>
-                </div>
-                <ul id="tables-nav" class="nav-content collapse show" data-bs-parent="#sidebar-nav">
-                  <li>
-                        <Link to ="/admin/add_course"> 
-                            <i class="bi bi-circle"></i><span>Add Course</span>
-                        </Link>
-                  </li>
-                  <li>
-                        <Link to ="/admin/add_user"> 
-                        <i class="bi bi-circle"></i><span>Add User</span>
-                        </Link>
-                  </li>
-                </ul>
-              </li>
-        
-              <li class="nav-item">
-                <Link to = "/admin/paymentmanager">
-                    <a class="nav-link collapsed" href="#a">
-                    <i class="bi bi-person"></i>
-                    <span>Payment Manager</span>
-                    </a>
-                </Link>
-              </li>
-        </div>
-    )
-}
-
-const StudentSlidebar = () => {
-    return(
-        <div>
-            <li class="nav-item">
-                <div class="nav-link collapsed">
-                <Link to ="/student/courses"> 
-                    <i class="bi bi-person"></i>
-                    <span>Courses</span>
-                </Link>
-                </div>
+  return (
+    <div>
+      <div id="sidebar-content">
+        <aside id="sidebar" className="sidebar">
+          <ul className="sidebar-nav" id="sidebar-nav">
+            <li className={`nav-item ${isDashBoardActive() ? "active" : ""}`}>
+              <Link to={`/${role}`}>
+                <span className="nav-link collapsed">
+                  <i className="bi bi-grid"></i>
+                  Dashboard
+                </span>
+              </Link>
             </li>
-            <li class="nav-item">
-                <div class="nav-link collapsed">
-                <Link to ="/student/schedule"> 
-                    <i class="bi bi-person"></i>
-                    <span>Schedule</span>
-                </Link>
-                </div>
-            </li>
-        </div>
-    )
-}
+            {renderView(role)}
+          </ul>
+        </aside>
+      </div>
+    </div>
+  );
+};
 
+const AdminSidebar = () => {
+  return (
+    <ul className="sidebar-nav" id="sidebar-nav">
+      <li className="nav-item active">
+        <Link to="/admin/coursemanager">
+          <span className="nav-link collapsed">
+            <i className="bi bi-grid"></i>
+            Course Manager
+          </span>
+        </Link>
+      </li>
 
-const TeacherSlidebar = () => {
-    return(
-        <div>
-            <li class="nav-item">
-                <div class="nav-link collapsed">
-                <Link to ="/teacher/courses"> 
-                    <i class="bi bi-person"></i>
-                    <span>Courses</span>
-                </Link>
-                </div>
-            </li>
-            <li class="nav-item">
-                <div class="nav-link collapsed">
-                <Link to ="/teacher/schedule"> 
-                    <i class="bi bi-person"></i>
-                    <span>Schedule</span>
-                </Link>
-                </div>
-            </li>
-        </div>
-    )
-}
+      <li className="nav-item">
+        <span
+          className="nav-link collapsed"
+          data-bs-target="#tables-nav"
+          data-bs-toggle="collapse"
+        >
+          <i className="bi bi-layout-text-window-reverse"></i>
+          User Manager
+          <i className="bi bi-chevron-down ms-auto"></i>
+        </span>
+        <ul
+          id="tables-nav"
+          className="nav-content collapse show"
+          data-bs-parent="#sidebar-nav"
+        >
+          <li>
+            <Link to="/admin/teachermanager">
+              <span>
+                <i className="bi bi-circle"></i>
+                Teacher Manager
+              </span>
+            </Link>
+          </li>
+          <li>
+            <Link to="/admin/studentmanager">
+              <span>
+                <i className="bi bi-circle"></i>
+                Student Manager
+              </span>
+            </Link>
+          </li>
+          <li>
+            <Link to="/admin/parentmanager">
+              <span>
+                <i className="bi bi-circle"></i>
+                Parent Manager
+              </span>
+            </Link>
+          </li>
+        </ul>
+      </li>
 
-const ParentSlidebar = () => {
-    return(
-        <div>
-            <li class="nav-item">
-                <div class="nav-link collapsed">
-                <Link to ="/parent/allchildren"> 
-                    <i class="bi bi-person"></i>
-                    <span>All Children</span>
-                </Link>
-                </div>
-            </li>
-            <li class="nav-item">
-                <div class="nav-link collapsed" href="#slidebar-payment">
-                <i class="bi bi-person"></i>
-                <span>Payment</span>
-                </div>
-            </li>
-        </div>
-    )
-}
+      <li className="nav-item">
+        <span
+          className="nav-link collapsed"
+          data-bs-target="#tables-nav"
+          data-bs-toggle="collapse"
+        >
+          <i className="bi bi-layout-text-window-reverse"></i>
+          Add
+          <i className="bi bi-chevron-down ms-auto"></i>
+        </span>
+        <ul
+          id="tables-nav"
+          className="nav-content collapse show"
+          data-bs-parent="#sidebar-nav"
+        >
+          <li>
+            <Link to="/admin/add_course">
+              <span>
+                <i className="bi bi-circle"></i>
+                Add Course
+              </span>
+            </Link>
+          </li>
+          <li>
+            <Link to="/admin/add_user">
+              <span>
+                <i className="bi bi-circle"></i>
+                Add User
+              </span>
+            </Link>
+          </li>
+        </ul>
+      </li>
 
+      <li className="nav-item">
+        <Link to="/admin/paymentmanager">
+          <span className="nav-link collapsed">
+            <i className="bi bi-person"></i>
+            Payment Manager
+          </span>
+        </Link>
+      </li>
+    </ul>
+  );
+};
+
+const StudentSidebar = () => {
+  return (
+    <ul className="sidebar-nav" id="sidebar-nav">
+      <li className="nav-item">
+        <Link to="/student/courses">
+          <span className="nav-link collapsed">
+            <i className="bi bi-person"></i>
+            Courses
+          </span>
+        </Link>
+      </li>
+      <li className="nav-item">
+        <Link to="/student/schedule">
+          <span className="nav-link collapsed">
+            <i className="bi bi-person"></i>
+            Schedule
+          </span>
+        </Link>
+      </li>
+    </ul>
+  );
+};
+
+const TeacherSidebar = () => {
+  return (
+    <ul className="sidebar-nav" id="sidebar-nav">
+      <li className="nav-item">
+        <Link to="/teacher/courses">
+          <span className="nav-link collapsed">
+            <i className="bi bi-person"></i>
+            Courses
+          </span>
+        </Link>
+      </li>
+      <li className="nav-item">
+        <Link to="/teacher/schedule">
+          <span className="nav-link collapsed">
+            <i className="bi bi-person"></i>
+            Schedule
+          </span>
+        </Link>
+      </li>
+    </ul>
+  );
+};
+
+const ParentSidebar = () => {
+  return (
+    <ul className="sidebar-nav" id="sidebar-nav">
+      <li className="nav-item">
+        <Link to="/parent/allchildren">
+          <span className="nav-link collapsed">
+            <i className="bi bi-person"></i>
+            All Children
+          </span>
+        </Link>
+      </li>
+      <li className="nav-item">
+        <span className="nav-link collapsed" href="#slidebar-payment">
+          <i className="bi bi-person"></i>
+          Payment
+        </span>
+      </li>
+    </ul>
+  );
+};

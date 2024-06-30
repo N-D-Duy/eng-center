@@ -7,9 +7,10 @@ import { useAuthContext } from "../../Context/AuthContext";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAttendanceContext } from "../../Context/AttendanceContext";
 import axios from "axios";
+import { APIPath } from "../../App";
 
 export const OverviewCourse = () => {
-  const { courseDetail } = useCourseContext();
+  const { courseDetail, fetchAllRoleCourses } = useCourseContext();
   const [scheduleData, setScheduleData] = useState();
   const [startDate, setStartDate] = useState();
   const [endDate, setEndDate] = useState();
@@ -31,7 +32,6 @@ export const OverviewCourse = () => {
   }, [courseDetail]);
   
   const navigate = useNavigate();
-  const location = useLocation();
   const getDayOfWeek = (dateString) => {
     const date = new Date(dateString);
     return date.getDay(); // returns 0 for Sunday, 1 for Monday, ..., 6 for Saturday
@@ -49,25 +49,29 @@ export const OverviewCourse = () => {
   const [selectedDays, setSelectedDays] = useState();
 
   const handleLeaveCourse = async () => {
-    const response = await axios.post(`http://165.232.161.56:8000/api/course/leave`, {
+    const response = await axios.post(APIPath + `course/leave`, {
       course: courseDetail.course._id,
       student: user._id,
     });
     if (response.status === 200) {
       alert("You have left the course successfully!");
+      fetchAllRoleCourses();
       navigate("/");
     } else {
       alert("Failed to leave the course!");
     }
   };
   const handleJoinCourse = async () => {
-    const response = await axios.post(`http://165.232.161.56:8000/api/course/join`, {
+    const response = await axios.post(APIPath + `course/join`, {
       course: courseDetail.course._id,
       student: user._id,
     });
     if (response.status === 200) {
       alert("You have join the course successfully!");
-      navigate(location.pathname, { replace: true });
+      fetchAllRoleCourses();
+      setTimeout(() => {
+        window.location.reload()
+      }, 200);
     } else {
       alert("Failed to leave the course!");
     }
@@ -123,7 +127,7 @@ export const OverviewCourse = () => {
       {role == "student" && (
         <div className="row">
          <div class="row mb-3"></div>
-          {(students.includes(user._id) ? (
+          {(students.some(student => student._id === user._id) ? (
           <Button lable={"Leave Course"} onClick={handleLeaveCourse} />) : (
           <Button lable={"Join Course"} onClick={handleJoinCourse} />
           ))}

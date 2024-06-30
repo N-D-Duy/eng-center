@@ -8,12 +8,13 @@ import { useAuthContext } from "./AuthContext.js";
 import AttendanceProvider from "./AttendanceContext.js";
 import { NewCourseProvider } from "./NewCourseContext.js";
 import { APIPath } from "../App.js";
+import { useUserContext } from "./UserContext.js";
 
 const CourseContext = createContext();
 
 export const CourseProvider = ({ children }) => {
   const { role } = useAuthContext();
-
+  const {user} = useUserContext();
   const [courseDetail, setCourseDetail] = useState(() => {
     const savedCourse = localStorage.getItem("courseDetail");
     return savedCourse ? JSON.parse(savedCourse) : null;
@@ -24,37 +25,74 @@ export const CourseProvider = ({ children }) => {
     return savedCourses ? JSON.parse(savedCourses) : [];
   });
 
+  const [coursesWithRole, setCoursesWithRole] = useState([]);
+
   const fetchAllCourses = async () => {
     try {
+      const response = await axios.get(
+        APIPath + "courses"
+      );
+      if (response.status === 200) {
+        const data = convertCourseDataToModels(response.data.data);
+        setCourses(data);
+        localStorage.setItem("courses", JSON.stringify(data));
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+    if(courseDetail){
+      setCourseData(courseDetail.course);
+    }
+  };
+
+  const fetchAllRoleCourses = async () => {
+    try {
       if (role == "admin") {
-        const response = await axios.get(
+        const responseFetch = await axios.get(
           APIPath + "courses"
         );
-        if (response.status === 200) {
-          const data = convertCourseDataToModels(response.data.data);
-          setCourses(data);
-          localStorage.setItem("courses", JSON.stringify(data));
+        if (responseFetch.status === 200) {
+          const data = convertCourseDataToModels(responseFetch.data.data);
+          
+          const filterData = data.filter((course, index, self) =>
+            index === self.findIndex((t) => t._id === course._id)
+          ); 
+
+          setCourses(filterData);
+          localStorage.setItem("courses", JSON.stringify(filterData));
         }
       } else {
+        console.log("Role: ", role);
+        console.log("Path: ", APIPath + `${role}/${user._id}/courses`);
         const response = await axios.get(
-          APIPath + "courses"
+          APIPath + `${role}/${user._id}/courses`
         );
         if (response.status === 200) {
+          console.log("Data: ", response.data.data);
           const data = convertCourseDataToModels(response.data.data);
-          setCourses(data);
-          localStorage.setItem("courses", JSON.stringify(data));
+          setCoursesWithRole(data);
+          console.log("Courses: ", data); 
+          localStorage.setItem("coursesRole", JSON.stringify(data));
         }
       }
     } catch (error) {
       console.error("Error:", error);
     }
+
+    
+    if(courseDetail){
+      setCourseData(courseDetail.course);
+    }
   };
 
   useEffect(() => {
-    const savedCourse = localStorage.getItem("courseDetail");
-    if(savedCourse) setCourseDetail(JSON.parse(savedCourse));
-    else fetchAllCourses();
+    fetchAllCourses();
+    // const savedCourse = localStorage.getItem("courseDetail");
+    // if(savedCourse) setCourseDetail(JSON.parse(savedCourse));
+    //else fetchAllCourses();
   }, []);
+
+
 
   const setCourseData = async (course) => {
     try {
@@ -73,10 +111,13 @@ export const CourseProvider = ({ children }) => {
 
   const AddNewCourse = async (course) => {
     try {
+      console.log("Path: ", APIPath + 'course');
+
       const response = await axios.post(
         APIPath + 'course',
         course
       );
+      console.log("Response: ", response);
       if (response.status === 200 || response.status === 201) {
         fetchAllCourses();
         return true;
@@ -103,15 +144,19 @@ export const CourseProvider = ({ children }) => {
     }
   };
 
+
+
   return (
     <CourseContext.Provider
       value={{
         courseDetail,
         courses,
+        coursesWithRole,
         setCourse: setCourseData,
         setCourses,
         UpdateCourseDetail,
-        AddNewCourse
+        AddNewCourse,
+        fetchAllRoleCourses
       }}
     >
       <AttendanceProvider>

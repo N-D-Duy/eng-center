@@ -1,11 +1,11 @@
-import { useContext, useEffect, useState } from "react";
+import { useState } from "react";
 import { useTeacherContext } from "../Context/TeacherContext";
 import { useStudentContext } from "../Context/StudentContext";
 import { useParentContext } from "../Context/ParentContext";
 import { Button } from "./Buttons/Button";
 import { useCourseContext } from "../Context/CourseContext";
 import { DaysOfWeek, EditFormText } from "./Form/FormEdit";
-
+import { FirebaseImageUpLoad } from "./firebase/FirebaseImageUpLoad";
 export const FormAddNewCourse = () => {
   const { AddNewCourse } = useCourseContext();
   const { teachers } = useTeacherContext();
@@ -18,7 +18,12 @@ export const FormAddNewCourse = () => {
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [selectedDays, setSelectedDays] = useState([]);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [url, setURL] = useState(null);
 
+  const handleImageChange = (image) => {
+    setSelectedImage(image); // Lưu ảnh đã chọn vào state của form
+  };
   const [price, setPrice] = useState();
   const [category, setCategory] = useState();
   const [capacity, setCapacity] = useState();
@@ -59,26 +64,27 @@ export const FormAddNewCourse = () => {
       return;
     }
 
-    const newCourse = {
-      course :{
+    
+    const newCourse ={
+      "course": {
         name: name,
-        image: "http://example.com/image.jpg",
         description: description,
         category: category,
-        teacher: teacher._id,
-        grade: +grade,
         price: +price,
-        capacity: +capacity,
-        current_joined: 0,
+        image: "http://example.com/image.jpg",
+        grade: +grade,
         status: "active",
+        teacher: teacher,
+        capacity: +capacity,
+        current_joined: 0
       },
-      schedule: {
+      "schedule": {
         startDate: startDate,
         numberOfWeeks: +numberWeeks,
         daysOfWeek: selectedDays,
         startTime: startTime,
-        endTime: endTime,
-      },
+        endTime: endTime
+      }
     };
     console.log("NewCourse", newCourse);
     const r = await AddNewCourse(JSON.stringify(newCourse));
@@ -109,28 +115,7 @@ export const FormAddNewCourse = () => {
   return (
     <div className="card cardStyle">
       <div className="card-body cardBodyStyle">
-        <div class="row mb-3">
-          <label for="profileImage" class="col-md-4 col-lg-3 col-form-label">
-            Profile Image
-          </label>
-          <div class="col-md-8 col-lg-9">
-            <img src="" alt="Profile" />
-            <div class="pt-2">
-              <div
-                class="btn btn-primary btn-sm"
-                title="Upload new profile image"
-              >
-                <i class="bi bi-upload"></i>
-              </div>
-              <div
-                class="btn btn-danger btn-sm"
-                title="Remove my profile image"
-              >
-                <i class="bi bi-trash"></i>
-              </div>
-            </div>
-          </div>
-        </div>
+        <FirebaseImageUpLoad onImageChange={handleImageChange} onSetURL={setURL}/>
 
         <EditFormText
           label="Course Name"
@@ -217,20 +202,23 @@ export const FormAddNewCourse = () => {
 };
 
 export const FormAddNewUser = () => {
-
   const [name, setName] = useState();
   const [email, setEmail] = useState();
   const [role, setRole] = useState("teacher");
   const [password, setPassword] = useState();
   const [phone, setPhone] = useState();
   const [studentIdCode, setStudentIdCode] = useState();
-
+  const [selectedImage, setSelectedImage] = useState(null);
   const { AddNewTeacher } = useTeacherContext();
   const { AddNewParent } = useParentContext();
   const { AddNewStudent } = useStudentContext();
+  const [url, setURL] = useState(null);
 
+  const handleImageChange = (image) => {
+    setSelectedImage(image); // Lưu ảnh đã chọn vào state của form
+  };
   const handleSaveClick = async (e) => {
-    
+    console.log("Save Click: ", selectedImage);
     e.preventDefault();
     if (
       email === "" ||
@@ -312,6 +300,8 @@ export const FormAddNewUser = () => {
     <div className="card cardStyle">
       <div className="card-body cardBodyStyle">
         <div class="row mb-3" />
+        <FirebaseImageUpLoad onImageChange={handleImageChange} onSetURL={setURL}/>
+
         <EditFormText
           label="Full Name"
           defaultValue={name}

@@ -46,17 +46,17 @@ export const CourseProfile = () => {
                     target="#profile-overview"
                     active={true}
                   />
-                  {role === "admin" && (
+                  {/* {role === "admin" && (
                     <NavButton
                       value="Edit"
                       target="#profile-edit"
                       active={false}
                     />
-                  )}
+                  )} */}
                 </ul>
                 <div className="tab-content pt-2">
                   <OverviewCourse />
-                  {role === "admin" && <FormEditCourse />}
+                  {/* {role === "admin" && <FormEditCourse />} */}
                 </div>
               </div>
             </div>

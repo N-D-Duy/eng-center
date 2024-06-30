@@ -7,10 +7,7 @@ const ParentContext = createContext();
 
 export const ParentProvider = ({ children }) => {
 
-    const [parents, setParents] = useState(() => {
-        const savedParents = localStorage.getItem('parents');
-        return savedParents ? JSON.parse(savedParents) : [];
-    });
+    const [parents, setParents] = useState([]);
 
     const fetchAllParents = async () => {
         try {

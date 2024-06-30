@@ -1,11 +1,11 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.min.css';
-import logo from '../../img/logo192.png';
 import { useEffect, useState } from 'react';
 import { Dropdown } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../Context/AuthContext';
 import { useUserContext } from '../../Context/UserContext';
+import { logoImageDefault } from '../../config/imageDefault';
 
 const Header = () => {
   const [isSidebarToggled, setIsSidebarToggled] = useState(false);
@@ -60,8 +60,8 @@ const Header = () => {
     <header id="header" className="header fixed-top d-flex align-items-center">
       <div className="d-flex align-items-center justify-content-between">
         <div className="logo d-flex align-items-center">
-          <img src={logo} alt="Logo" />
-          <span className="d-none d-lg-block">NiceAdmin</span>
+          <img src={logoImageDefault} alt="Logo" style={{ maxWidth: "60px", maxHeight: "60px" }}/>
+          <span className="d-none d-lg-block">EngCenter</span>
         </div>
         <i className="bi bi-list toggle-sidebar-btn" onClick={toggleSidebar}></i>
       </div>
@@ -70,7 +70,7 @@ const Header = () => {
           <li className="nav-item dropdown pe-3">
             <Dropdown>
               <Dropdown.Toggle as="a" className="nav-link nav-profile d-flex align-items-center pe-0" href="#null">
-                <img src={logo} alt="Profile" className="rounded-circle" />
+                <img src={logoImageDefault} alt="Profile" className="rounded-circle" />
                 <span className="d-none d-md-block ps-2">{(role === 'admin' || role == null ? 'Admin' : user?.account.full_name)}</span>
               </Dropdown.Toggle>
               <Dropdown.Menu className="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
