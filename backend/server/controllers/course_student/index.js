@@ -25,6 +25,14 @@ const triggerCourseStudentJoin = async (req, res) => {
             });
         }
 
+        //check if student already joined the course
+        const courseStudentData = await CourseStudent.findOne({ student: student, course: course });
+        if (courseStudentData) {
+            return res.status(400).json({
+                message: 'Student already joined the course'
+            });
+        }
+
         //if yes, create a new courseStudent
         const courseStudent = new CourseStudent({
             student: student,
@@ -56,6 +64,14 @@ const triggerCourseStudentLeave = async (req, res) => {
         if (!courseData || !studentData) {
             return res.status(404).json({
                 message: 'Course or student not found'
+            });
+        }
+
+        //check if student already joined the course
+        const courseStudentData = await CourseStudent.findOne({ student: student, course: course });
+        if (!courseStudentData) {
+            return res.status(400).json({
+                message: 'Student not joined the course'
             });
         }
 

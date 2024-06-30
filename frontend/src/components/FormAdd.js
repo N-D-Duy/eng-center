@@ -69,7 +69,6 @@ export const FormAddNewCourse = () => {
         grade: +grade,
         price: +price,
         capacity: +capacity,
-        teacher: teacher,
         current_joined: 0,
         status: "active",
       },
