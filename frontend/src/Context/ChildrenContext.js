@@ -3,6 +3,7 @@ import { useAuthContext } from './AuthContext';
 import { useUserContext } from './UserContext';
 import { convertStudentDataToModels } from '../components/Controller/ConvertData';
 import axios from 'axios';
+import { APIPath } from "../App.js";
 
 const ChildrenContext = createContext();
 
@@ -14,21 +15,23 @@ const ChildrenProvider = ({ children }) => {
     const [childrenData, setChildrenData] = useState([]);
 
     useEffect(() => {
-        const storedChildren = JSON.parse(localStorage.getItem('children'));
+        const storedChildren = JSON.parse(localStorage.getItem('allchildren'));
         if (storedChildren) {
             setChildrenData(storedChildren);
+        }else{
+            fetchData();
         }
     }, []);
 
     const fetchData = async () => {
         try {
             // Example API call based on role
-            const response = await axios.get(`http://165.232.161.56:8000/api/children/student/${user._id}`);
+            const response = await axios.get(APIPath + `children/student/${user._id}`);
             if (response.status === 200) {
                 console.log(response.data.data);
                 const data = convertStudentDataToModels(response.data.data);
                 setChildrenData(data);
-                localStorage.setItem('children', JSON.stringify(data));
+                localStorage.setItem('allchildren', JSON.stringify(data));
             }
         } catch (error) {
             console.error('Error fetching children data:', error);

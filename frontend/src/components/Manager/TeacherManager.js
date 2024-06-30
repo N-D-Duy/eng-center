@@ -31,7 +31,6 @@ export const TeacherManager = () => {
                     <div className="card">
                         <div className="card-body">
                             <h5 className="card-title">Teachers</h5>
-                            {console.log(allTeachers)}
                             <TableComponent columns={columns} data={allTeachers} generateRow={generateRow} />
                         </div>
                     </div>

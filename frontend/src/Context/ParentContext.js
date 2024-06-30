@@ -1,6 +1,7 @@
 import React, { createContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { convertParentDataToModels } from '../components/Controller/ConvertData.js';
+import { APIPath } from "../App.js";
 
 const ParentContext = createContext();
 
@@ -13,7 +14,7 @@ export const ParentProvider = ({ children }) => {
 
     const fetchAllParents = async () => {
         try {
-            const response = await axios.get('http://165.232.161.56:8000/api/parents');
+            const response = await axios.get(APIPath + 'parents');
             if (response.status === 200) {
                 const data = convertParentDataToModels(response.data.data);
                 setParents(data);
@@ -32,9 +33,15 @@ export const ParentProvider = ({ children }) => {
 
     const AddNewParent = async (value) => {
         try {
-            const response = await axios.post('http://165.232.161.56:8000/api/student', value);
+            console.log("Parent: ", value);
+            const response = await axios.post(APIPath + 'student', value);
+            if(response && response.status === 200){
+                console.log("Parent: ", response.data.data);
+                return true;
+            }
         } catch (error) {
             console.error('Error:', error);
+            return false;
         }
     }
 

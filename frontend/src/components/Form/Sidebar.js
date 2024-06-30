@@ -173,15 +173,17 @@ const ParentSlidebar = () => {
         <div>
             <li class="nav-item">
                 <div class="nav-link collapsed">
-                <i class="bi bi-person"></i>
-                <span>All Children</span>
+                <Link to ="/parent/allchildren"> 
+                    <i class="bi bi-person"></i>
+                    <span>All Children</span>
+                </Link>
                 </div>
             </li>
             <li class="nav-item">
-                <a class="nav-link collapsed" href="#slidebar-payment">
+                <div class="nav-link collapsed" href="#slidebar-payment">
                 <i class="bi bi-person"></i>
                 <span>Payment</span>
-                </a>
+                </div>
             </li>
         </div>
     )

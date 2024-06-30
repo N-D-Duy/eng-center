@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
 import { useCourseContext } from "./CourseContext";
 import { convertStudentDataToModels } from "../components/Controller/ConvertData";
+import { APIPath } from "../App.js";
 
 const AttendanceContext = createContext();
 
@@ -31,7 +32,7 @@ const AttendanceProvider = ({ children }) => {
     try {
       // Fetch dữ liệu từ API dựa trên courseId
       const studentsResponse = await axios.get(
-        `http://165.232.161.56:8000/api/${courseId}/students`
+        APIPath + `${courseId}/students`
       );
       const datesResponse = courseDetail.schedule;
       if (studentsResponse.status === 200) {
@@ -75,7 +76,7 @@ const AttendanceProvider = ({ children }) => {
   const fetchDataStudentInfo = async (studentId) => {
     try {
       const response = await axios.get(
-        `http://165.232.161.56:8000/api/student/${studentId}`
+        APIPath + `student/${studentId}`
       );
       return response.data.data;
     } catch (error) {
@@ -87,7 +88,7 @@ const AttendanceProvider = ({ children }) => {
   const fetchDataStudent = async (courseId, studentId) => {
     try {
       const response = await axios.get(
-        `http://165.232.161.56:8000/api/course/${courseId}/student/${studentId}/attendance`
+        APIPath + `course/${courseId}/student/${studentId}/attendance`
       );
       return response.data.data;
     } catch (error) {
@@ -103,6 +104,8 @@ const AttendanceProvider = ({ children }) => {
     for (const student of studentsData) {
       if(student == null || student._id == null) continue;
       initialData[student._id] = {};
+      console.log("Course: " , course);
+      console.log("student: " , student);
       const studentAttendance = await fetchDataStudent(course._id, student._id);
       for (const date of datesData) {
         var attendanceStatus = false;
@@ -139,7 +142,7 @@ const AttendanceProvider = ({ children }) => {
 
   const fetchDataStudentAttendance = async (studentId, isAttandance, date) => {
     try {
-      const response = await axios.post(`http://165.232.161.56:8000/api/course/attendance`,
+      const response = await axios.post(`http://api.duynguyendev.xyz/api/course/attendance`,
         {
           course: course._id,
           students: [

@@ -13,11 +13,17 @@ import { UserOtherProfile, UserProfile } from './components/Profile/UserProfile'
 import { UserProvider } from './Context/UserContext';
 import { Schedule } from './components/Form/Schedule/Scheduele';
 import { FormAddNewCourse, FormAddNewUser } from './components/FormAdd';
-import { NewCourseProvider } from './Context/NewCourseContext';
 import { CourseProvider } from './Context/CourseContext';
+import { ChildrenManager } from './components/Manager/ChildrenManager';
 
+
+const APIVer_0 = "http://165.232.161.56:8000/api/";     
+const APIVer_1 =  "http://localhost:8000/";    
+
+export const APIPath = APIVer_0;
 function App() {
 
+  //localStorage.clear();
   return (<div>
     <UserProvider>
       <CourseProvider>
@@ -75,6 +81,7 @@ function App() {
             {/* Profile  */}
               <Route path={"/parent/courseprofile"} element = {<CourseProfile />}/>
               <Route path={'/parent/otherprofile'} element = {<UserOtherProfile />}/>
+              <Route path={'/parent/allchildren'} element = {<ChildrenManager />}/>
               <Route path={'/parent/profile'} element = {<UserProfile />}/>
 
               {/* Schedule */}

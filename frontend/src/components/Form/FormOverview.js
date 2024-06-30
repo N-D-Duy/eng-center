@@ -1,35 +1,77 @@
 import { useEffect, useState } from "react";
 import { useCourseContext } from "../../Context/CourseContext";
-import { convertTime } from "../Controller/Time";
 import { useUserContext } from "../../Context/UserContext";
 import { DaysOfWeek } from "./FormEdit";
+import { Button } from "../Buttons/Button";
+import { useAuthContext } from "../../Context/AuthContext";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useAttendanceContext } from "../../Context/AttendanceContext";
+import axios from "axios";
 
 export const OverviewCourse = () => {
   const { courseDetail } = useCourseContext();
-  const [scheduleData] = useState(courseDetail.schedule);
-  const [startDate] = useState(scheduleData[0].day);
-  const [endDate] = useState(scheduleData[scheduleData.length - 1].day);
-  const [startTime] = useState(scheduleData[0].start_time);
-  const [endTime] = useState(scheduleData[0].end_time);
+  const [scheduleData, setScheduleData] = useState();
+  const [startDate, setStartDate] = useState();
+  const [endDate, setEndDate] = useState();
+  const [startTime, setStartTime] = useState();
+  const [endTime, setEndTime] = useState();
+  const { role } = useAuthContext();
+  const { user } = useUserContext();
+  const { students } = useAttendanceContext();
 
-const getDayOfWeek = (dateString) => {
+  useEffect(() => {
+    if(courseDetail){
+      setScheduleData(courseDetail.schedule);
+      setStartDate(courseDetail.schedule[0].day);
+      setEndDate(courseDetail.schedule[courseDetail.schedule.length - 1].day);
+      setStartTime(courseDetail.schedule[0].start_time);
+      setEndTime(courseDetail.schedule[0].end_time);
+      setSelectedDays(updateSelectedDays(courseDetail.schedule));
+    }
+  }, [courseDetail]);
+  
+  const navigate = useNavigate();
+  const location = useLocation();
+  const getDayOfWeek = (dateString) => {
     const date = new Date(dateString);
     return date.getDay(); // returns 0 for Sunday, 1 for Monday, ..., 6 for Saturday
-};
+  };
 
-const updateSelectedDays = (schedule) => {
+  const updateSelectedDays = (schedule) => {
     const updatedSelectedDays = new Set();
-    
     schedule.forEach((s) => {
-        const dayOfWeek = getDayOfWeek(s.day);
-        updatedSelectedDays.add(dayOfWeek);
+      const dayOfWeek = getDayOfWeek(s.day);
+      updatedSelectedDays.add(dayOfWeek);
     });
     return updatedSelectedDays;
-};
-
-const [selectedDays = updateSelectedDays(scheduleData)] = useState();
-
+  };
   
+  const [selectedDays, setSelectedDays] = useState();
+
+  const handleLeaveCourse = async () => {
+    const response = await axios.post(`http://165.232.161.56:8000/api/course/leave`, {
+      course: courseDetail.course._id,
+      student: user._id,
+    });
+    if (response.status === 200) {
+      alert("You have left the course successfully!");
+      navigate("/");
+    } else {
+      alert("Failed to leave the course!");
+    }
+  };
+  const handleJoinCourse = async () => {
+    const response = await axios.post(`http://165.232.161.56:8000/api/course/join`, {
+      course: courseDetail.course._id,
+      student: user._id,
+    });
+    if (response.status === 200) {
+      alert("You have join the course successfully!");
+      navigate(location.pathname, { replace: true });
+    } else {
+      alert("Failed to leave the course!");
+    }
+  };
 
 
   return (
@@ -62,14 +104,14 @@ const [selectedDays = updateSelectedDays(scheduleData)] = useState();
       <OverviewField label="Begin" value={startTime} />
       <OverviewField label="End" value={endTime} />
       <div className="form-group">
-      <div class="col-lg-3 col-md-4 label">Days of the Week</div>
+        <div class="col-lg-3 col-md-4 label">Days of the Week</div>
         <br />
         {DaysOfWeek.map((day) => (
           <div key={day.value} className="form-check form-check-inline">
             <input
               type="checkbox"
               className="form-check-input custom-checkbox"
-              checked={selectedDays.has(day.value - 1)}
+              checked={selectedDays?.has(day.value - 1)}
               disabled={true}
             />
             <label htmlFor={day.value} className="form-check-label">
@@ -78,6 +120,15 @@ const [selectedDays = updateSelectedDays(scheduleData)] = useState();
           </div>
         ))}
       </div>
+      {role == "student" && (
+        <div className="row">
+         <div class="row mb-3"></div>
+          {(students.includes(user._id) ? (
+          <Button lable={"Leave Course"} onClick={handleLeaveCourse} />) : (
+          <Button lable={"Join Course"} onClick={handleJoinCourse} />
+          ))}
+        </div>
+      )}
     </div>
   );
 };
@@ -92,8 +143,8 @@ export const OverviewUser = () => {
     >
       <h5 className="card-title">Overview</h5>
       <OverviewField label="Full Name" value={user.account.full_name} />
-      <OverviewField label="Email" value={user.email} />
-      <OverviewField label="Phone" value={user.phone} />
+      <OverviewField label="Email" value={user.account.email} />
+      <OverviewField label="Phone" value={user.account.phone} />
       {/* Add more fields as needed */}
     </div>
   );
@@ -101,7 +152,17 @@ export const OverviewUser = () => {
 
 export const OverviewUserOther = () => {
   const { otherUser } = useUserContext();
-  console.log(otherUser);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    if (otherUser) {
+      setLoading(false);
+    }
+  }, [otherUser]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div
       className="tab-pane fade show active profile-overview"

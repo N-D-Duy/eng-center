@@ -1,9 +1,9 @@
 import React, { createContext, useEffect, useState } from "react";
 import axios from "axios";
 import {
-  convertLoginParentDataToModel,
-  convertLoginStudentDataToModel,
-  convertLoginTeacherDataToModel,
+  convertParentDataToModel,
+  convertStudentDataToModel,
+  convertTeacherDataToModel,
 } from "../components/Controller/ConvertData";
 import { useNavigate } from "react-router-dom";
 import { TeacherProvider } from "./TeacherContext";
@@ -11,6 +11,7 @@ import { StudentProvider } from "./StudentContext";
 import { ParentProvider } from "./ParentContext";
 import ScheduleProvider from "./ScheduleContext";
 import { useUserContext } from "./UserContext";
+import { APIPath } from "../App.js";
 
 const AuthContext = createContext();
 
@@ -56,7 +57,7 @@ export const AuthProvider = ({ children }) => {
     }
     try {
       const response = await axios.post(
-        "http://165.232.161.56:8000/api/login",
+        APIPath + "login",
         {
           emailOrUsername: email,
           password: password,
@@ -71,18 +72,18 @@ export const AuthProvider = ({ children }) => {
           var roleAccount = response.data.data.account.role;
           switch (roleAccount) {
             case "teacher": {
-              const TeacherData = convertLoginTeacherDataToModel(response.data.data);
+              const TeacherData = convertTeacherDataToModel(response.data.data);
               handleLogin(roleAccount, TeacherData);
               break;
             }
             case "student": {
-              const StudentData = convertLoginStudentDataToModel(response.data.data);
-              console.log("Studebt: ", StudentData);
+              const StudentData = convertStudentDataToModel(response.data.data);
+              console.log("Student: ", StudentData);
               handleLogin(roleAccount, StudentData);
               break;
             }
             case "parent": {
-              const ParentData = convertLoginParentDataToModel(response.data.data);
+              const ParentData = convertParentDataToModel(response.data.data);
               handleLogin(roleAccount, ParentData);
               break;
             }

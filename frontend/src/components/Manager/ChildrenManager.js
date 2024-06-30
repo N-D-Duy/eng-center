@@ -2,17 +2,17 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TableComponent from './TableComponent';
 import { useUserContext } from '../../Context/UserContext';
-import { useStudentContext } from '../../Context/StudentContext';
 import { useAuthContext } from '../../Context/AuthContext';
+import { useChildrenContext } from '../../Context/ChildrenContext';
 
-export const StudentManager = () => {
-    const { students } = useStudentContext();
+export const ChildrenManager = () => {
+    const { allchildren } = useChildrenContext();
     const navigate = useNavigate();
     const [allStudents, setAllStudents] = useState([]);
 
     useEffect(() => {
-        setAllStudents(students);
-    }, [students]);
+        setAllStudents(allchildren);
+    }, [allchildren]);
 
     const columns = [
         { header: 'Image' },
@@ -32,6 +32,7 @@ export const StudentManager = () => {
                     <div className="card">
                         <div className="card-body">
                             <h5 className="card-title">Students</h5>
+                            {console.log("All Child" ,allStudents)}
                             <TableComponent columns={columns} data={allStudents} generateRow={generateRow} />
                         </div>
                     </div>
@@ -46,6 +47,7 @@ const GenerateStudentTr = ({ data, navigate }) => {
     const { setOtherUser } = useUserContext();
     const {role} = useAuthContext();
     const clickOther = () => {
+        console.log(data);
         setOtherUser(data);
         navigate(`/${role}/otherprofile`);
     };

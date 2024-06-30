@@ -16,6 +16,7 @@ const Header = () => {
 
 
   const {handleLogout} = useAuthContext();
+  const {role} = useAuthContext();
   const [user, setUser] = useState(() => {
     const storedUser = localStorage.getItem('user');
     try {
@@ -64,20 +65,18 @@ const Header = () => {
         </div>
         <i className="bi bi-list toggle-sidebar-btn" onClick={toggleSidebar}></i>
       </div>
-
       <nav className="header-nav ms-auto">
         <ul className="d-flex align-items-center">
           <li className="nav-item dropdown pe-3">
             <Dropdown>
               <Dropdown.Toggle as="a" className="nav-link nav-profile d-flex align-items-center pe-0" href="#null">
                 <img src={logo} alt="Profile" className="rounded-circle" />
-                <span className="d-none d-md-block ps-2">{user?.name}</span>
+                <span className="d-none d-md-block ps-2">{(role === 'admin' || role == null ? 'Admin' : user?.account.full_name)}</span>
               </Dropdown.Toggle>
-
               <Dropdown.Menu className="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
                 <li className="dropdown-header">
-                  <h6>{user?.name}</h6>
-                  <span>{user?.role}</span>
+                  <h6>{role === 'admin' || role == null ?'Admin' :  user?.account.full_name}</h6>
+                  <span>{role === 'admin' || role == null ?'Admin' : user?.account.role}</span>
                 </li>
                 <li>
                   <hr className="dropdown-divider" />

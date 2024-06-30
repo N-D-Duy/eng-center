@@ -1,23 +1,52 @@
 // src/components/EventDetails.js
-import React from 'react';
-
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 const EventDetails = ({ date, events }) => {
     if (!date) return <p>Select a date to see events</p>;
 
     const eventList = events.filter(event => new Date(event.day).toDateString() === date.toDateString());
 
+    const getTeacherName = async (teacherId, setTeacherName) => {
+        try {
+            const response = await axios.get(`http://165.232.161.56:8000/api/teacher/${teacherId}`);
+            if (response.status === 200) {
+                setTeacherName(response.data.data.account.full_name);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            setTeacherName("Unknown Teacher");
+        }
+    };
+
     return (
         <div className="event-details">
             <h2>Schedule on {date.toDateString()}</h2>
-            {console.log("EventList:" , eventList)}
             {eventList.length > 0 ? (
                 eventList.map((event, index) => (
-                    <CardSchedule key={index} name={event.course.name} teacher={event.teacher.name} start_time={event.start_time} end_time={event.end_time} />
+                    <EventCard key={index} event={event} getTeacherName={getTeacherName} />
                 ))
             ) : (
                 <p>There is no event on this day</p> 
             )}
         </div>
+    );
+};
+
+
+const EventCard = ({ event, getTeacherName }) => {
+    const [teacherName, setTeacherName] = useState('');
+
+    useEffect(() => {
+        getTeacherName(event.teacher._id, setTeacherName);
+    }, [event.teacher._id, getTeacherName]);
+
+    return (
+        <CardSchedule
+            name={event.course.name}
+            teacher={teacherName}
+            start_time={event.start_time}
+            end_time={event.end_time}
+        />
     );
 };
 
