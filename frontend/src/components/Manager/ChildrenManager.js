@@ -53,10 +53,10 @@ const GenerateStudentTr = ({ data, navigate }) => {
     };
     return (
         <tr onClick={clickOther}>
-            <td className="text-center"><img src={data.account.image} alt="" /></td>
-            <td><div className="text-primary fw-bold">{data.account.full_name}</div></td>
-            <td>{data.account.email}</td>
-            <td>{data.account.phone}</td>
+            <td className="text-center vertical-align"><img src={data.account.image} alt="" /></td>
+            <td className= "vertical-align"><div className="text-primary fw-bold">{data.account.full_name}</div></td>
+            <td className= "vertical-align">{data.account.email}</td>
+            <td className= "vertical-align">{data.account.phone}</td>
         </tr>
     );
 };

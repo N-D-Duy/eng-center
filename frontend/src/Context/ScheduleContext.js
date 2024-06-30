@@ -26,7 +26,7 @@ const ScheduleProvider = ({ children }) => {
     const fetchData = async () => {
         try {
             // Example API call based on role
-            if(role === 'admin') return;
+            if(role === null || role === 'admin' || role === 'parent') return;
             const response = await axios.get(APIPath + `schedule/student/${user._id}`);
             if (response.status === 200) {
                 const data = convertScheduleDataToModels(response.data.data);

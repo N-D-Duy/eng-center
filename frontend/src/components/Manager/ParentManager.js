@@ -4,6 +4,7 @@ import TableComponent from './TableComponent';
 import { useParentContext } from '../../Context/ParentContext';
 import { useUserContext } from '../../Context/UserContext';
 import { useAuthContext } from '../../Context/AuthContext';
+import { userImageDefault } from '../../config/imageDefault';
 
 export const ParentManager = () => {
     const { parents } = useParentContext();
@@ -54,10 +55,10 @@ const GenerateParentTr = ({ data, navigate, setParent }) => {
 
     return (
         <tr onClick={ClickOther}>
-            <td className="text-center"><img src={data.account.image} alt="" /></td>
-            <td><div className="text-primary fw-bold">{data.account.full_name}</div></td>
-            <td>{data.account.email}</td>
-            <td>{data.account.phone}</td>
+            <td className="text-left vertical-align"><img src={data.account.image ? data.account.image : userImageDefault} alt="" style={{width: "50px"}}/></td>
+            <td className= "vertical-align"><div className="text-primary fw-bold">{data.account.full_name}</div></td>
+            <td className= "vertical-align">{data.account.email}</td>
+            <td className= "vertical-align">{data.account.phone}</td>
         </tr>
     );
 };

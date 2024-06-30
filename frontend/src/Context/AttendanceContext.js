@@ -104,8 +104,6 @@ const AttendanceProvider = ({ children }) => {
     for (const student of studentsData) {
       if(student == null || student._id == null) continue;
       initialData[student._id] = {};
-      console.log("Course: " , course);
-      console.log("student: " , student);
       const studentAttendance = await fetchDataStudent(course._id, student._id);
       for (const date of datesData) {
         var attendanceStatus = false;

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { convertTime } from "../Controller/Time";
 import TableComponent from "./TableComponent";
 import { useAuthContext } from "../../Context/AuthContext";
+import { courseImageDefault } from "../../config/imageDefault";
 
 export const CourseManager = () => {
     const { courses } = useCourseContext();
@@ -53,11 +54,11 @@ const GenerateCourseTr = ({ data, navigate }) => {
 
     return (
         <tr onClick={() => data && ClickCourse(data, navigate, setCourse, role)}>
-            <td className="text-center"><img src={data.image} alt="" /></td>
-            <td><div className="text-primary fw-bold">{data.name}</div></td>
-            <td>{convertTime(data.createdAt)}</td>
-            <td><span className={bgActive}>{data.status}</span></td>
-            <td>{data.current_joined}/{data.capacity}</td>
+            <td className="text-left vertical-align"><img src={data.image ? data.image : courseImageDefault} alt="" style={{width: "50px"}}/></td>
+            <td className= "vertical-align"><div className="text-primary fw-bold">{data.name}</div></td>
+            <td className= "vertical-align">{convertTime(data.createdAt)}</td>
+            <td className= "vertical-align"><span className={bgActive}>{data.status}</span></td>
+            <td className= "vertical-align">{data.current_joined}/{data.capacity}</td>
         </tr>
     );
 };

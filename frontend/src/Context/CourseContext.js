@@ -51,9 +51,10 @@ export const CourseProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    const savedCourse = localStorage.getItem("courseDetail");
-    if(savedCourse) setCourseDetail(JSON.parse(savedCourse));
-    else fetchAllCourses();
+    fetchAllCourses();
+    // const savedCourse = localStorage.getItem("courseDetail");
+    // if(savedCourse) setCourseDetail(JSON.parse(savedCourse));
+    //else fetchAllCourses();
   }, []);
 
   const setCourseData = async (course) => {
@@ -73,10 +74,13 @@ export const CourseProvider = ({ children }) => {
 
   const AddNewCourse = async (course) => {
     try {
+      console.log("Path: ", APIPath + 'course');
+
       const response = await axios.post(
         APIPath + 'course',
         course
       );
+      console.log("Response: ", response);
       if (response.status === 200 || response.status === 201) {
         fetchAllCourses();
         return true;
