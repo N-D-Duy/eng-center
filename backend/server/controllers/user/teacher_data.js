@@ -2,6 +2,7 @@ const Teacher = require('../../models/teacher');
 const Account = require('../../models/account');
 const mongoose = require('mongoose');
 const hashPassword = require('../../utils/hash_password');
+const { checkValidPassword } = require('../../utils/auth_check');
 
 const getTeacherInfor = async (req, res) => {
     try {
@@ -34,6 +35,11 @@ const getAllTeachers = async (req, res) => {
 const createTeacher = async (req, res) => {
     try {
         const accountData = req.body.account;
+        if(checkValidPassword(accountData.password) === false) {
+            return res.status(400).json({
+                error: 'Password is too weak (>8, contains number, special character)'
+            });
+        }
         //hash password before save to database
         accountData.password = await hashPassword(accountData.password);
         //create a new account first
@@ -44,12 +50,20 @@ const createTeacher = async (req, res) => {
             });
         }
 
+        //check email and username is already used
         const emailExist = await Account.findOne({ email: account.email });
+        const usernameExist = await Account.findOne({ user_name: account.user_name });
         if (emailExist) {
             return res.status(400).json({
                 error: 'Email already exists'
             });
         }
+        if (usernameExist) {
+            return res.status(400).json({
+                error: 'Username already exists'
+            });
+        }
+        
         await account.save();
         //then get the account id
         const account_id = account._id;
@@ -67,25 +81,6 @@ const createTeacher = async (req, res) => {
     }
 };
 
-
-const updateTeacher = async (req, res) => {
-    try {
-        const teacher = await Teacher.findById(req.params.id);
-        if (!teacher) {
-            return res.status(400).json({
-                error: 'Teacher not found'
-            });
-        }
-        await Teacher.findByIdAndUpdate(req.params.id, req.body);
-        return res.status(200).json({
-            data: 'Teacher updated successfully'
-        });
-    } catch (err) {
-        return res.status(400).json({
-            error: err.message
-        });
-    }
-};
 
 module.exports = {
     getTeacherInfor,

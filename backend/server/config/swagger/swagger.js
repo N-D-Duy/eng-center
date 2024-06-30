@@ -11,16 +11,12 @@ const options = {
     },
     servers: [
       {
-        url: 'http://localhost:8000',
-        description: 'Local server'
+        url: process.env.NODE_ENV === 'production' ? 'https://api.duynguyendev.xyz' : 'http://localhost:8000',
+        description: process.env.NODE_ENV === 'production' ? 'Production server' : 'Local server',
       },
-      {
-        url: 'http://165.232.161.56:8000',
-        description: 'Production server'
-      }
     ],
   },
-  apis: ['./server/config/router/*.js'], // Đường dẫn đến file chứa các định nghĩa API
+  apis: ['./server/config/router/*.js'],
 };
 
 const swaggerSpec = swaggerJsDoc(options);

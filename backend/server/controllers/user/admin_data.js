@@ -1,6 +1,7 @@
 const Admin = require('../../models/admin');
 const Account = require('../../models/account');
 const hashPassword = require('../../utils/hash_password');
+const { checkValidPassword } = require('../../utils/auth_check');
 
 
 const createAdmin = async (req, res) => {
@@ -12,6 +13,12 @@ const createAdmin = async (req, res) => {
 
     if(account.role !== "admin") {
         return res.status(400).send("Invalid role");
+    }
+
+    if(checkValidPassword(account.password) === false) {
+        return res.status(400).json({
+            error: 'Password is too weak (>8, contains number, special character)'
+        });
     }
 
     //hash password before save to database
