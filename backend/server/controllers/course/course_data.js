@@ -374,6 +374,32 @@ const updateStudentAttendance = async (req, res) => {
   }
 };
 
+
+const getTeacherCourses = async (req, res) => {
+  try {
+    const teacherId = req.params.id;
+    const courses = await Course.find({ teacher: teacherId }).populate({
+      path: 'teacher',
+      populate: {
+        path: 'account',
+        model: 'Account'
+      }
+    }).exec();
+    if (!courses) {
+      return res.status(404).json({
+        message: 'No courses found'
+      });
+    }
+    return res.status(200).json({
+      data: courses
+    });
+  } catch (err) {
+    return res.status(400).json({
+      error: err.message
+    });
+  }
+};
+
 module.exports = {
   getAllCourses,
   getCourseById,
@@ -390,5 +416,6 @@ module.exports = {
   getStudentAttendance,
   getStudentCourses,
   getAttendances,
-  updateStudentAttendance
+  updateStudentAttendance,
+  getTeacherCourses
 }

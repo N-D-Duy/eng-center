@@ -36,12 +36,12 @@ const createParent = async (req, res) => {
     //account and invite code from req.body
     const { account, parent } = req.body;
     const invite_code = parent.invite_code;
-    if(invite_code.length != 24) {
+    if (invite_code.length != 24) {
         return res.status(400).json({
             error: 'Invalid invite code'
         });
     }
-    
+
     //check if invite code is valid
     //query students to find the student match with the invite code
     const student = await Student.findOne({ _id: invite_code });
@@ -52,7 +52,7 @@ const createParent = async (req, res) => {
     }
     try {
         //check if password is valid
-        if(checkValidPassword(account.password) === false) {
+        if (checkValidPassword(account.password) === false) {
             return res.status(400).json({
                 error: 'Password is too weak (>8, contains number, special character)'
             });
@@ -61,7 +61,7 @@ const createParent = async (req, res) => {
         account.password = await hashPassword(account.password);
         //create new account
         const accountSchema = new Account(account);
-        if(account.role != 'parent'){
+        if (account.role != 'parent') {
             return res.status(400).json({
                 error: 'Invalid role'
             });
@@ -69,7 +69,7 @@ const createParent = async (req, res) => {
 
         //check email already exists
         const emailExist = await Account.findOne({ email: accountSchema.email });
-        if(emailExist){
+        if (emailExist) {
             return res.status(400).json({
                 error: 'Email already exists'
             });
@@ -77,7 +77,7 @@ const createParent = async (req, res) => {
 
         //check username already exists
         const usernameExist = await Account.findOne({ user_name: accountSchema.user_name });
-        if(usernameExist){
+        if (usernameExist) {
             return res.status(400).json({
                 error: 'Username already exists'
             });
@@ -88,9 +88,9 @@ const createParent = async (req, res) => {
         //get account id to assign to parent
         const account_id = accountSchema._id;
         req.body.parent.account = account_id;
-        
 
-        try{
+
+        try {
             //create new parent
             const parent = await Parent.create(req.body.parent);
             //update student (parent field) if invite code
@@ -106,7 +106,7 @@ const createParent = async (req, res) => {
             message: 'Parent created successfully'
         });
 
-        
+
     } catch (error) {
         return res.status(400).json({
             error: error.message
@@ -115,8 +115,25 @@ const createParent = async (req, res) => {
 };
 
 
+const getStudentsByParent = async (req, res) => {
+    try {
+        const students = await Student.find({ parent: req.params.id}).populate('account').exec();
+        return res.status(200).json({
+            data: students
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json({
+            error: error.message
+        });
+
+    }
+};
+
+
 module.exports = {
     getParentInfor,
     getAllParents,
-    createParent
+    createParent,
+    getStudentsByParent
 };

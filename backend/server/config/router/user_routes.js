@@ -4,6 +4,25 @@ module.exports = (app) => {
 
     /**
      * @swagger
+     * /api/parent/{id}/students:
+     *   get:
+     *     summary: Get students by parent ID
+     *     tags: [Parents]
+     *     parameters:
+     *       - in: path
+     *         name: id
+     *         schema:
+     *           type: string
+     *         required: true
+     *         description: Parent ID
+     *     responses:
+     *       200:
+     *         description: Parent's children
+     */
+    app.get('/api/parent/:id/students', controller.userData.ParentData.getStudentsByParent);
+
+    /**
+     * @swagger
      * /api/student/{id}:
      *   get:
      *     summary: Get student information by ID
@@ -422,4 +441,6 @@ module.exports = (app) => {
      *         description: Teacher schedule
      */
     app.put('/api/account/:id', controller.userData.updateAccount);
+
+    
 };

@@ -433,4 +433,24 @@ module.exports = (app) => {
      */
     app.get('/api/student/:student/courses', controller.courseData.getStudentCourses);
 
+
+    /**
+     * @swagger
+     * /api/teacher/{id}/courses:
+     *   get:
+     *     summary: Get all courses for a teacher
+     *     tags: [Courses]
+     *     parameters:
+     *       - in: path
+     *         name: id
+     *         schema:
+     *           type: string
+     *         required: true
+     *         description: Teacher ID
+     *     responses:
+     *       200:
+     *         description: List of courses for the teacher
+     */
+    app.get('/api/teacher/:id/courses', controller.courseData.getTeacherCourses);
+
 };
