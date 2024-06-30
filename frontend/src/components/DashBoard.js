@@ -4,13 +4,13 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuthContext } from "../Context/AuthContext";
 import { useCourseContext } from "../Context/CourseContext";
 import AwesomeSlider from "react-awesome-slider";
+import ClipLoader from 'react-spinners/ClipLoader';
 import withAutoplay from "react-awesome-slider/dist/autoplay";
 import "react-awesome-slider/dist/styles.css";
 import { ListCard } from "./Buttons/ListCard";
 import { useEffect, useState } from "react";
 import { newCourseImageDefault } from "../config/imageDefault";
 const AutoplaySlider = withAutoplay(AwesomeSlider);
-
 export const Dashboard = () => {
   const { newCourseData } = useNewCourseContext();
   const { role } = useAuthContext();
@@ -36,7 +36,7 @@ export const Dashboard = () => {
       setSlideImage(renderSlides(courses));
       setTimeout(() => {
         setLoadDone(true);
-      }, 3000); // Thời gian delay để hiển thị ảnh
+      }, 1500); // Thời gian delay để hiển thị ảnh
     }
   };
 
@@ -62,7 +62,9 @@ export const Dashboard = () => {
           {slideImage}
         </AutoplaySlider>
       ) : (
-        <p>Loading...</p> // Hoặc hiển thị một spinner hoặc thông báo khi đang tải ảnh
+        <div className="loading-demo">
+          <ClipLoader color="#36d7b7" size={150} />
+        </div>
       )}
       <div className="marginTop100">
         <ListCard cardData={courses} />

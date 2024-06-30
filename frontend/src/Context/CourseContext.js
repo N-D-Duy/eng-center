@@ -53,13 +53,9 @@ export const CourseProvider = ({ children }) => {
         );
         if (responseFetch.status === 200) {
           const data = convertCourseDataToModels(responseFetch.data.data);
-          
-          const filterData = data.filter((course, index, self) =>
-            index === self.findIndex((t) => t._id === course._id)
-          ); 
-
-          setCourses(filterData);
-          localStorage.setItem("courses", JSON.stringify(filterData));
+          setCoursesWithRole(data);
+          console.log("Courses: ", data); 
+          localStorage.setItem("coursesRole", JSON.stringify(data));
         }
       } else {
         console.log("Role: ", role);

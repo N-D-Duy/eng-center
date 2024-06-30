@@ -53,9 +53,7 @@ export const UserProvider = ({ children }) => {
   return (
     <UserContext.Provider value={{ user, setUser, otherUser, setOtherUser: SetOtherUser, UpdateUser }}>
         <AuthProvider>
-          <ChildrenProvider>
             {children}
-          </ChildrenProvider>
         </AuthProvider>
     </UserContext.Provider>
   );

@@ -1,6 +1,7 @@
-import React, { createContext, useEffect, useState } from "react";
+import React, { Children, createContext, useEffect, useState } from "react";
 import axios from "axios";
 import {
+  convertAdminDataToModel,
   convertParentDataToModel,
   convertStudentDataToModel,
   convertTeacherDataToModel,
@@ -12,6 +13,7 @@ import { ParentProvider } from "./ParentContext";
 import ScheduleProvider from "./ScheduleContext";
 import { useUserContext } from "./UserContext";
 import { APIPath } from "../App.js";
+import ChildrenProvider from "./ChildrenContext.js";
 
 const AuthContext = createContext();
 
@@ -56,16 +58,13 @@ export const AuthProvider = ({ children }) => {
       return;
     }
     try {
-      const response = await axios.post(
-        APIPath + "login",
-        {
-          emailOrUsername: email,
-          password: password,
-        }
-      );
+      const response = await axios.post(APIPath + "login", {
+        emailOrUsername: email,
+        password: password,
+      });
       if (response.status === 200) {
-        if (email.startsWith('admin')) {
-          handleLogin('admin', response.data);
+        if (email.startsWith("admin")) {
+          handleLogin("admin", response.data);
           alert("Đăng nhập thành công!");
           navigate(`/admin`);
         } else {
@@ -88,7 +87,8 @@ export const AuthProvider = ({ children }) => {
               break;
             }
             case "admin": {
-              handleLogin('admin', response.data);
+              const adminData = convertAdminDataToModel(response.data.data);
+              handleLogin("admin", adminData);
               break;
             }
             default: {
@@ -118,9 +118,11 @@ export const AuthProvider = ({ children }) => {
     >
       <TeacherProvider>
         <StudentProvider>
-          <ParentProvider>
-            <ScheduleProvider>{children}</ScheduleProvider>
-          </ParentProvider>
+          <ChildrenProvider>
+            <ParentProvider>
+              <ScheduleProvider>{children}</ScheduleProvider>
+            </ParentProvider>
+          </ChildrenProvider>
         </StudentProvider>
       </TeacherProvider>
     </AuthContext.Provider>

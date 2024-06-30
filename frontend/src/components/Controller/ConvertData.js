@@ -4,6 +4,7 @@ import { Course, CourseSchedule } from "../../model/course.ts";
 import { LoginParent, Parent } from "../../model/parent.ts";
 import { LoginTeacher, Teacher } from "../../model/teacher.ts";
 import { Schedule } from "../../model/schedule.ts";
+import { Admin } from "../../model/admin.ts";
 
 export const convertCourseDataToModels = (data) => {
   if (!data || !Array.isArray(data)) {
@@ -70,6 +71,14 @@ export const convertTeacherDataToModel = (data) => {
   }
 
   return new Teacher(data);
+}
+
+export const convertAdminDataToModel = (data) => {
+  if (!data) {
+    return [];
+  }
+
+  return new Admin(data);
 }
 
 export const convertLoginTeacherDataToModel = (data) => {
