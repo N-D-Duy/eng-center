@@ -12,9 +12,7 @@ const limiter = rateLimit({
 
 const cors = require('cors');
 app.use(express.json());
-app.use(cors({
-  origin: setting.origin
-}));
+app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use('/api/', limiter);
 

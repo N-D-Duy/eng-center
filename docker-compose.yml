@@ -4,7 +4,7 @@ services:
       context: ./backend
     container_name: backend
     ports:
-      - "8000:8000"  # Sửa cổng thành 8000:8000
+      - "8000:8000" 
     networks:
       - my-network
 
@@ -13,7 +13,7 @@ services:
       context: ./frontend
     container_name: frontend
     ports:
-      - "3000:3000"  # Sửa cổng thành 3000:3000
+      - "3000:3000" 
     networks:
       - my-network
 

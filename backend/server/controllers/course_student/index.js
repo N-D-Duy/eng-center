@@ -3,7 +3,6 @@ const Student = require('../../models/student');
 const Course = require('../../models/course');
 const CourseStudent = require('../../models/course_student');
 const Attendance = require('../../models/attendance');
-const { sendZaloMessage } = require('../direct_message');
 
 //trigger when a student join a course
 const triggerCourseStudentJoin = async (req, res) => {
@@ -142,7 +141,7 @@ const attendanceHandler = async (req, res) => {
             });
         };
 
-        //send zalo message to parent if student is absent
+        /* //send zalo message to parent if student is absent
         for(let student of students){
             if(!student.is_attended){
                 const studentData = await Student.findById(student.id).populate({
@@ -168,7 +167,7 @@ const attendanceHandler = async (req, res) => {
                     console.log('Parent does not have facebook account');
                 }
             }
-        }
+        } */
         return res.status(200).json({
             data: bulkWriteResult,
             message: 'Attendance updated successfully'

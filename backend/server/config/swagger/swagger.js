@@ -11,7 +11,7 @@ const options = {
     },
     servers: [
       {
-        url: process.env.NODE_ENV === 'production' ? 'http://165.232.161.56:8000' : 'http://localhost:8000',
+        url: process.env.NODE_ENV === 'production' ? 'https://api.duynguyendev.xyz' : 'http://localhost:8000',
         description: process.env.NODE_ENV === 'production' ? 'Production server' : 'Local server',
       },
     ],
