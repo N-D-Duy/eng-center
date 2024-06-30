@@ -17,7 +17,7 @@ import { CourseProvider } from './Context/CourseContext';
 import { ChildrenManager } from './components/Manager/ChildrenManager';
 
 
-const APIVer_0 = "http://165.232.161.56:8000/api/";     
+const APIVer_0 = "https://api.duynguyendev.xyz/api/";     
 const APIVer_1 =  "http://localhost:8000/";    
 
 export const APIPath = APIVer_0;

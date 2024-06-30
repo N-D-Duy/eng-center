@@ -4,7 +4,7 @@ module.exports = function(app) {
   app.use(
     '/api',
     createProxyMiddleware({
-      target: 'http://165.232.161.56:8000', // Địa chỉ máy chủ API
+      target: 'https://api.duynguyendev.xyz', // Địa chỉ máy chủ API
       changeOrigin: true,
     })
   );
