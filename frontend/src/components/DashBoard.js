@@ -8,33 +8,65 @@ import withAutoplay from "react-awesome-slider/dist/autoplay";
 import "react-awesome-slider/dist/styles.css";
 import { ListCard } from "./Buttons/ListCard";
 import { useEffect, useState } from "react";
-import { newCourseImageDefalut } from "../config/imageDefault";
+import { newCourseImageDefault } from "../config/imageDefault";
 const AutoplaySlider = withAutoplay(AwesomeSlider);
+
 export const Dashboard = () => {
   const { newCourseData } = useNewCourseContext();
   const { role } = useAuthContext();
   const { courses, setCourse } = useCourseContext();
   const navigate = useNavigate();
   const [allCourses, setAllCourses] = useState([]);
+  const [allImage, setAllImage] = useState([]);
+  const [loadDone , setLoadDone] = useState(false);
+  const [slideImage , setSlideImage] = useState(false);
 
   useEffect(() => {
-      setAllCourses(courses);
+    setAllCourses(courses);
+    loadImages();
   }, [courses]);
 
-  const renderSlides = (courses) => {
+  const loadImages = async () => {
+    if (courses.length > 0) {
+      const images = await Promise.all(courses.map(async course => {
+        const imageUrl = course.image ? course.image : newCourseImageDefault;
+        return await loadImage(imageUrl);
+      }));
+      setAllImage(images);
+      setSlideImage(renderSlides(courses));
+      setTimeout(() => {
+        setLoadDone(true);
+      }, 3000); // Thời gian delay để hiển thị ảnh
+    }
+  };
+
+  const loadImage = async (imageUrl) => {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => resolve(imageUrl);
+      img.onerror = () => reject(newCourseImageDefault);
+      img.src = imageUrl;
+    });
+  };
+
+  const renderSlides = courses => {
     return courses.map((course, index) => (
-        <div key={index} data-src= {newCourseImageDefalut} onClick={() => ClickCourse(course, navigate, setCourse, role)} />
-    ))
+      <div key={index} data-src={loadDone ? allImage[index] : newCourseImageDefault} onClick={() => ClickCourse(course, navigate, setCourse, role)} />
+    ));
   };
 
   return (
     <div>
-    <AutoplaySlider play={true} cancelOnInteraction={false} interval={3000}>
-        {renderSlides(newCourseData)}
-    </AutoplaySlider>
-    <div className="marginTop100">
-        <ListCard cardData={courses}/>
-    </div>
+      {loadDone ? (
+        <AutoplaySlider play={true} cancelOnInteraction={false} interval={1000}>
+          {slideImage}
+        </AutoplaySlider>
+      ) : (
+        <p>Loading...</p> // Hoặc hiển thị một spinner hoặc thông báo khi đang tải ảnh
+      )}
+      <div className="marginTop100">
+        <ListCard cardData={courses} />
+      </div>
     </div>
   );
 };

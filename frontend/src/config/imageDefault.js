@@ -5,4 +5,4 @@ import newCourse from "../img/default-newcourse.png";
 export const userImageDefault = profileImageDefault;
 export const logoImageDefault = logo;
 export const courseImageDefault = logo;
-export const newCourseImageDefalut = newCourse;
+export const newCourseImageDefault = newCourse;

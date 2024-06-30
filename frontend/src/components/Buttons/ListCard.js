@@ -27,7 +27,7 @@ export const ListCard = ({ cardData }) => {
             <Card
               hoverable
               cover={<img alt="example" src={card.imageUrl ? card.imageUrl : logoImageDefault}
-              height={200}
+              height={300}
               style={{ objectFit: 'cover'}}
               />}
             >
