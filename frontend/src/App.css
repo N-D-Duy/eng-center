@@ -184,3 +184,9 @@
 .vertical-align {
   vertical-align: middle;
 }
+.loading-demo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}

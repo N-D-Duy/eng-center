@@ -102,8 +102,6 @@ const AttendanceProvider = ({ children }) => {
     // Khởi tạo dữ liệu điểm danh ban đầu dựa trên students và dates
     const initialData = {};
     if (studentsData == null || datesData == null) return initialData;
-
-    console.log("course: ", courseDetail);
     for (const student of studentsData) {
       if (student == null || student._id == null) continue;
       initialData[student._id] = {};

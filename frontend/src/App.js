@@ -90,10 +90,6 @@ function App() {
               <Route index element = {<Dashboard />}/>
           </Route>
 
-
-
-
-
           <Route path='/login' element = {<Login />}/>
           <Route path='/policy' element = {<Login />}/>
           <Route path='/register' element = {<Register />}/>

@@ -2,14 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { useAttendanceContext } from '../../Context/AttendanceContext';
 import { useAuthContext } from '../../Context/AuthContext';
 import { Button } from '../Buttons/Button';
+import { useUserContext } from '../../Context/UserContext';
+import { useCourseContext } from '../../Context/CourseContext';
 
 export const CourseAttendance = () => {
     const { students, dates, SetDataAttendance, checkAttendance } = useAttendanceContext();
     const { role } = useAuthContext();
     const today = new Date().toISOString().slice(0, 10);
-
     const [initialAttendance, setInitialAttendance] = useState({});
     const [editMode, setEditMode] = useState(true);
+    const {user} = useUserContext();
+    const {courseDetail} = useCourseContext();
 
     useEffect(() => {
         const initialData = {};
@@ -22,7 +25,7 @@ export const CourseAttendance = () => {
         setInitialAttendance(initialData);
     }, [students, dates, checkAttendance]);
 
-    const canEditToday = dates.includes(today);
+    const canEdit = dates.includes(today) && courseDetail.course.teacher._id === user._id && role === 'teacher';
 
     const handleEditButtonClick = () => {
         setEditMode(!editMode);
@@ -45,7 +48,7 @@ export const CourseAttendance = () => {
     };
 
     const renderButtons = () => {
-        if (role === 'teacher' && canEditToday) {
+        if (canEdit) {
             return <Button onClick={handleSubmit} />;
         }
         return null;
@@ -53,6 +56,7 @@ export const CourseAttendance = () => {
 
     return (
         <div className="container-fluid">
+            {console.log('today', today)}
             <div className="table-responsive containerScroll">
                 <table className="table table-bordered table-hover" id="attendanceTable">
                     <thead className="thead-light">

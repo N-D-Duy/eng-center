@@ -1,7 +1,8 @@
-import React, { createContext, useEffect, useState } from 'react';
+import React, { Children, createContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { convertParentDataToModels } from '../components/Controller/ConvertData.js';
 import { APIPath } from "../App.js";
+import ChildrenProvider from './ChildrenContext.js';
 
 const ParentContext = createContext();
 
@@ -44,7 +45,7 @@ export const ParentProvider = ({ children }) => {
 
     return (
         <ParentContext.Provider value={{ parents, AddNewParent }}>
-            {children}
+             {children}
         </ParentContext.Provider>
     );
 };

@@ -4,6 +4,7 @@ import { useUserContext } from "../../Context/UserContext";
 import axios from "axios";
 import { Button } from "../Buttons/Button";
 import { useLocation, useNavigate } from "react-router-dom";
+import { APIPath } from "../../App";
 
 export const FormChangePassword = () => {
   const [currentPassword, setCurrentPassword] = useState("");
@@ -19,29 +20,30 @@ export const FormChangePassword = () => {
     }
     console.log("Current Password:", currentPassword);
     console.log("New Password:", newPassword);
+    console.log("Current email:", user.account.email ? user.account.email : user.account.user_name);
+
     if (newPassword !== renewPassword) {
       alert("New password and re-enter new password do not match!");
-      return;
-    }
-    if (user.account.password !== currentPassword) {
-      alert("Current password is incorrect!");
       return;
     }
 
     // Call API to update password
     try {
-      const response = await axios.put(
-        `http://165.232.161.56:8000/api/account/change-password`,
+      const response = await axios.post(
+        APIPath + `account/change-password`,
         {
-          id: user.account._id,
-          password: newPassword,
+          emailOrUsername: user.account.email ? user.account.email : user.account.user_name,
+          oldPassword: currentPassword,
+          newPassword: newPassword
         }
       );
       if (response.status === 200) {
         alert("Password updated successfully!");
         user.account.password = newPassword;
         setUser(user);
-        navigate(location.pathname, { replace: true });
+        setCurrentPassword("");
+        setNewPassword("");
+        setRenewPassword("");
         return;
       }
     } catch (error) {

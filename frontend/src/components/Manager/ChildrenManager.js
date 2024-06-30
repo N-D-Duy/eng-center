@@ -4,15 +4,20 @@ import TableComponent from './TableComponent';
 import { useUserContext } from '../../Context/UserContext';
 import { useAuthContext } from '../../Context/AuthContext';
 import { useChildrenContext } from '../../Context/ChildrenContext';
-
+import ClipLoader from 'react-spinners/ClipLoader';
 export const ChildrenManager = () => {
-    const { allchildren } = useChildrenContext();
+    const { childrenData, fetchData } = useChildrenContext();
     const navigate = useNavigate();
     const [allStudents, setAllStudents] = useState([]);
-
+    const [initDone, setInitDone] = useState(false);
+    
     useEffect(() => {
-        setAllStudents(allchildren);
-    }, [allchildren]);
+        if(childrenData){
+            setInitDone(true);
+            setAllStudents(childrenData);
+        }
+    }, [childrenData]);
+
 
     const columns = [
         { header: 'Image' },
@@ -26,19 +31,22 @@ export const ChildrenManager = () => {
     );
 
     return (
-        <section className="section">
+        (!initDone) ? (<section className='section'>
+            <div className="loading-demo">
+                <ClipLoader color="#36d7b7" size={150} />
+            </div>
+        </section>) : (<section className="section">
             <div className="row">
                 <div className="col-lg-12">
                     <div className="card">
                         <div className="card-body">
                             <h5 className="card-title">Students</h5>
-                            {console.log("All Child" ,allStudents)}
                             <TableComponent columns={columns} data={allStudents} generateRow={generateRow} />
                         </div>
                     </div>
                 </div>
             </div>
-        </section>
+        </section>)
     );
 };
 
@@ -54,9 +62,9 @@ const GenerateStudentTr = ({ data, navigate }) => {
     return (
         <tr onClick={clickOther}>
             <td className="text-center vertical-align"><img src={data.account.image} alt="" /></td>
-            <td className= "vertical-align"><div className="text-primary fw-bold">{data.account.full_name}</div></td>
-            <td className= "vertical-align">{data.account.email}</td>
-            <td className= "vertical-align">{data.account.phone}</td>
+            <td className="vertical-align"><div className="text-primary fw-bold">{data.account.full_name}</div></td>
+            <td className="vertical-align">{data.account.email}</td>
+            <td className="vertical-align">{data.account.phone}</td>
         </tr>
     );
 };
