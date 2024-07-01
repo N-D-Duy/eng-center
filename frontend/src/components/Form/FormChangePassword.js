@@ -1,9 +1,7 @@
-import { EditFormText } from "./FormEdit";
 import { useState } from "react";
 import { useUserContext } from "../../Context/UserContext";
 import axios from "axios";
 import { Button } from "../Buttons/Button";
-import { useLocation, useNavigate } from "react-router-dom";
 import { APIPath } from "../../App";
 
 export const FormChangePassword = () => {
@@ -11,8 +9,6 @@ export const FormChangePassword = () => {
   const [newPassword, setNewPassword] = useState("");
   const [renewPassword, setRenewPassword] = useState("");
   const { user, setUser } = useUserContext();
-  const navigate = useNavigate();
-  const location = useLocation();
   const handleChangePassword = async () => {
     if(currentPassword === "" || newPassword === "" || renewPassword === "") {
         alert("Please fill in all fields!");
@@ -57,12 +53,12 @@ export const FormChangePassword = () => {
   return (
     <>
       <div class="tab-pane fade pt-3" id="profile-change-password">
-        <EditFormText
+        <EditFormPasswordText
           label={"Current Password"}
           onChange={setCurrentPassword}
         />
-        <EditFormText label={"New Password"} onChange={setNewPassword} />
-        <EditFormText
+        <EditFormPasswordText label={"New Password"} onChange={setNewPassword} />
+        <EditFormPasswordText
           label={"Re-enter New Password"}
           onChange={setRenewPassword}
         />
@@ -70,5 +66,30 @@ export const FormChangePassword = () => {
         <Button onClick={handleChangePassword} lable={"Save"} />
       </div>
     </>
+  );
+};
+
+
+const EditFormPasswordText = ({
+  label,
+  defaultValue,
+  onChange,
+  type = null,
+}) => {
+  return (
+    <div>
+      <div class="row mb-3">
+        <label class="col-md-4 col-lg-3 col-form-label">{label}</label>
+        <div class="col-md-8 col-lg-9">
+          <input
+            type="password"
+            class="form-control"
+            value={defaultValue}
+            onChange={(e) => onChange(e.target.value)}
+            required
+          />
+        </div>
+      </div>
+    </div>
   );
 };

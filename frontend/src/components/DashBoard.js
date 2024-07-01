@@ -67,7 +67,7 @@ export const Dashboard = () => {
         </div>
       )}
       <div className="marginTop100">
-        <ListCard cardData={courses} />
+        <ListCard cardData={courses} onClickCard={(i) => ClickCourse(courses[i], navigate, setCourse, role)}/>
       </div>
     </div>
   );
