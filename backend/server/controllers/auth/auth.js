@@ -40,8 +40,6 @@ const loginWithEmailOrUsernameAndPassword = async (req, res) => {
         });
     }
 
-    const bcrypt = require('bcrypt');
-
     try {
         // find account by email or username
         const account = await Account.findOne({
@@ -159,7 +157,10 @@ const changePassword = async (req, res) => {
             });
         }
 
-        account.password = newPassword;
+        //hash new password
+        const hashedNewPassword = await hashPassword(newPassword);
+
+        account.password = hashedNewPassword;
         await account.save();
 
         return res.status(200).json({
