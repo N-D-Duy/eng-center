@@ -4,7 +4,7 @@ import { logoImageDefault } from '../../config/imageDefault';
 
 const { Meta } = Card;
 
-export const ListCard = ({ cardData }) => {
+export const ListCard = ({ cardData, onClickCard }) => {
   const [currentPage, setCurrentPage] = useState(1);
   // Kiểm tra nếu cardData không tồn tại hoặc không phải là một mảng thì trả về một phần tử rỗng
   if (!cardData || !Array.isArray(cardData)) {
@@ -29,6 +29,7 @@ export const ListCard = ({ cardData }) => {
               cover={<img alt="example" src={card.imageUrl ? card.imageUrl : logoImageDefault}
               height={300}
               style={{ objectFit: 'cover'}}
+              onClick={onClickCard(index)}
               />}
             >
               <Meta 
