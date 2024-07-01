@@ -2,6 +2,7 @@ import React, { createContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { convertTeacherDataToModels } from '../components/Controller/ConvertData.js';
 import { APIPath } from "../App.js";
+import { json } from 'react-router-dom';
 
 const TeacherContext = createContext();
 
@@ -35,9 +36,16 @@ export const TeacherProvider = ({ children }) => {
 
     const AddNewTeacher = async (teacher) => {
         try {
-            console.log(teacher);
-            const response = await axios.post(APIPath + "teacher", teacher);
-            if (response.status === 200) {
+            console.log("teacher", teacher);
+            // const response = await axios.post(APIPath + "teacher", teacher);
+            const response = await fetch(APIPath + "teacher", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: teacher,
+            });
+            if (response.status === 200 || response.status === 201) {
                 return true;
             }
         } catch (error) {

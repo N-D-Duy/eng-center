@@ -32,8 +32,15 @@ export const ParentProvider = ({ children }) => {
     const AddNewParent = async (value) => {
         try {
             console.log("Parent: ", value);
-            const response = await axios.post(APIPath + 'student', value);
-            if(response && response.status === 200){
+            // const response = await axios.post(APIPath + 'student', value);
+            const response = await fetch(APIPath + 'parent', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: value,
+            });
+            if(response && response.status === 200 || response.status === 201){
                 console.log("Parent: ", response.data.data);
                 return true;
             }

@@ -250,8 +250,8 @@ export const FormAddNewUser = () => {
       case "teacher":
         //call api to create teacher
         const dataTeacher = {
-          account: newValueAccount,
-          teacher: {
+          "account": newValueAccount,
+          "teacher": {
             session_count: 0,
             account: "",
           },
@@ -261,27 +261,33 @@ export const FormAddNewUser = () => {
         else alert("User information saved FAIL!");
         break;
       case "student":
+        const dataStudent = {
+          "account": newValueAccount,
+          "student": {
+            cocc_percent: 0,
+            tuition_due: 0,
+            tuition_total: 0,
+            parent: "",
+            account: ""
+          }
+        };
         console.log("Save Click");
-        const responseStudent = await AddNewStudent({
-          account: newValueAccount,
-          student: {
-            session_count: 0,
-            account: newValueAccount,
-          },
-        });
+        const responseStudent = await AddNewStudent(JSON.stringify(dataStudent)
+        );
         if (responseStudent) alert("User information saved successfully!");
         else alert("User information saved FAIL!");
         //call api to create student
         break;
       case "parent":
-        const responseParent = await AddNewParent({
+        const dataParent = {
           account: newValueAccount,
           parent: {
             name: name,
             invite_code: studentIdCode,
             account: newValueAccount,
           },
-        });
+        };
+        const responseParent = await AddNewParent(JSON.stringify(dataParent));
         if (responseParent) alert("User information saved successfully!");
         else alert("User information saved FAIL!. Try Again!");
         break;

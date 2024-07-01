@@ -90,11 +90,20 @@ const RegisterView = () => {
 
   const onClickRegister = async (role, data) => {
     try {
-      const response = await axios.post(APIPath + `${role}`, {
-        data,
+      console.log("data", data);
+      // const response = await axios.post(APIPath + `${role}`, {
+      //   data
+      // });
+
+      const response = await fetch(APIPath + `${role}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
       });
       if (response.status === 200 || response.status === 201) {
-        alert("Đăng nhập thành công!");
+        alert("Đăng ký thành công!");
         navigate(`/login`);
       } else {
         alert(

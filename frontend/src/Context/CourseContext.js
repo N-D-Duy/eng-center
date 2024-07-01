@@ -107,12 +107,18 @@ export const CourseProvider = ({ children }) => {
 
   const AddNewCourse = async (course) => {
     try {
-      console.log("Path: ", APIPath + 'course');
-
-      const response = await axios.post(
-        APIPath + 'course',
-        course
-      );
+      // const response = await axios.post(
+      //   APIPath + 'course',
+      //   course
+      // );
+      console.log("Course: ", course);
+      const response = await fetch(APIPath + 'course', {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: course,
+      });
       console.log("Response: ", response);
       if (response.status === 200 || response.status === 201) {
         fetchAllCourses();
