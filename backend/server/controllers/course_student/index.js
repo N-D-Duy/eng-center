@@ -38,9 +38,13 @@ const triggerCourseStudentJoin = async (req, res) => {
             student: student,
             course: course
         });
+        courseStudent.tuition_course_due = courseData.price;
         await courseStudent.save();
         //joined increase by 1
         await Course.findByIdAndUpdate(course, { current_joined: courseData.current_joined + 1 });
+
+        //increase student tuition
+        await Student.findByIdAndUpdate(student, { tuition_total: studentData.tuition_total + courseData.price});
 
         return res.status(200).json({
             data: courseStudent,
@@ -80,6 +84,7 @@ const triggerCourseStudentLeave = async (req, res) => {
             student: student,
             course: course
         });
+
         if (!courseStudent) {
             return res.status(404).json({
                 message: 'Course student not found'
@@ -88,6 +93,9 @@ const triggerCourseStudentLeave = async (req, res) => {
 
         //joined decrease by 1
         await Course.findByIdAndUpdate(course, { current_joined: courseData.current_joined - 1 });
+
+        //decrease student tuition
+        await Student.findByIdAndUpdate(student, { tuition_total: studentData.tuition_total - courseData.price });
 
         return res.status(200).json({
             data: courseStudent,
