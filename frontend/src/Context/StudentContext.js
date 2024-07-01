@@ -51,12 +51,13 @@ export const StudentProvider = ({ children }) => {
             const response = await fetch(APIPath + 'student', {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
                 },
                 body: value,
-            });
+              });
             if (response.status === 200 || response.status === 201) {
-                console.log("Student: ", response.data.data);
+                console.log("Student: ", response.data);
+                fetchAllStudents();
                 return true;
             }
         } catch (error) {

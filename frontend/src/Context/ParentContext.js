@@ -34,14 +34,15 @@ export const ParentProvider = ({ children }) => {
             console.log("Parent: ", value);
             // const response = await axios.post(APIPath + 'student', value);
             const response = await fetch(APIPath + 'parent', {
-                method: 'POST',
+                method: "POST",
                 headers: {
-                    'Content-Type': 'application/json',
+                    "Content-Type": "application/json",
                 },
                 body: value,
-            });
+              });
             if(response && response.status === 200 || response.status === 201){
-                console.log("Parent: ", response.data.data);
+                console.log("Parent: ", response.data);
+                fetchAllParents();
                 return true;
             }
         } catch (error) {
