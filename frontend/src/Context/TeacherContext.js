@@ -38,14 +38,16 @@ export const TeacherProvider = ({ children }) => {
         try {
             console.log("teacher", teacher);
             // const response = await axios.post(APIPath + "teacher", teacher);
-            const response = await fetch(APIPath + "teacher", {
+            const response = await fetch(APIPath + 'teacher', {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: teacher,
-            });
+              });
             if (response.status === 200 || response.status === 201) {
+                console.log("Teacher: ", response.data);
+                fetchAllTeachers();
                 return true;
             }
         } catch (error) {
