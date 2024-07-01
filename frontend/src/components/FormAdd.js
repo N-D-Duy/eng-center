@@ -71,7 +71,7 @@ export const FormAddNewCourse = () => {
         description: description,
         category: category,
         price: +price,
-        image: "http://example.com/image.jpg",
+        image: url? url : "",
         grade: +grade,
         status: "active",
         teacher: teacher,
