@@ -49,19 +49,18 @@ export const CourseAttendance = () => {
 
     const renderButtons = () => {
         if (canEdit) {
-            return <Button onClick={handleSubmit} />;
+            return <Button onClick={handleSubmit} lable={"Save"}/>;
         }
         return null;
     };
 
     return (
         <div className="container-fluid">
-            {console.log('today', today)}
             <div className="table-responsive containerScroll">
                 <table className="table table-bordered table-hover" id="attendanceTable">
                     <thead className="thead-light">
                         <tr>
-                            <th className="sticky">Tất cả sinh viên</th>
+                            <th className="sticky sticky-column">Tất cả sinh viên</th>
                             {dates.map((date, index) => (
                                 <th key={index} className={date === today ? 'editable text-center' : 'text-center'}>
                                     {date}
@@ -72,7 +71,7 @@ export const CourseAttendance = () => {
                     <tbody>
                         {students.map((student, index) => (
                             <tr key={index}>
-                                <td className="sticky">{student.account.full_name}</td>
+                                <td className="sticky sticky-column">{student.account.full_name}</td>
                                 {dates.map((date, index) => (
                                     <td key={index} className="text-center">
                                         {editMode && date === today ? (

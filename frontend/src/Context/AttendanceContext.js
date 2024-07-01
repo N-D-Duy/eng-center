@@ -135,7 +135,6 @@ const AttendanceProvider = ({ children }) => {
   };
 
   const SetDataAttendance = async (dataAttendance, date) => {
-    console.log("Students: ", students);
     for (const student of students) {
       await fetchDataStudentAttendance(
         student._id,
@@ -148,20 +147,34 @@ const AttendanceProvider = ({ children }) => {
   const fetchDataStudentAttendance = async (studentId, isAttandance, date) => {
     try {
       const response = await axios.post(
-        `http://api.duynguyendev.xyz/api/course/attendance`,
+        APIPath + `course/attendance`,
         {
           course: courseDetail.course._id,
+          day: date,
           students: [
             {
               id: studentId,
               is_attended: isAttandance,
-              day: date,
               reasons: isAttandance ? "Good" : "Sick",
             },
           ],
         }
       );
-      return response.data.data;
+      const responseUpdate = await axios.put(
+        APIPath + `course/attendance`,
+        {
+          course: courseDetail.course._id,
+          day: date,
+          students: [
+            {
+              id: studentId,
+              is_attended: isAttandance,
+              reasons: isAttandance ? "Good" : "Sick",
+            },
+          ],
+        }
+      );
+      return responseUpdate.data.data;
     } catch (error) {
       console.error("Error fetching student attendance data:", error);
       return [];
