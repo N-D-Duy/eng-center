@@ -65,7 +65,7 @@ export const AuthProvider = ({ children }) => {
       if (response.status === 200) {
         if (email.startsWith("admin")) {
           handleLogin("admin", response.data);
-          alert("Đăng nhập thành công!");
+          alert("Success!");
           navigate(`/admin`);
         } else {
           var roleAccount = response.data.data.account.role;
@@ -93,22 +93,22 @@ export const AuthProvider = ({ children }) => {
             }
             default: {
               alert(
-                "Đăng nhập không thành công. Vui lòng kiểm tra lại tên đăng nhập và mật khẩu."
+                "Fail. Please check your email and password again"
               );
               return;
             }
           }
-          alert("Đăng nhập thành công!");
+          alert("Success!");
           navigate(`/${roleAccount}`);
         }
       } else {
         alert(
-          "Đăng nhập không thành công. Vui lòng kiểm tra lại tên đăng nhập và mật khẩu."
+          "Fail. Please check your email and password again"
         );
       }
     } catch (error) {
       console.error("Fail", error);
-      alert("Đăng nhập không thành công. Vui lòng thử lại sau.");
+      alert("Fail. Please check your email and password again");
     }
   };
 

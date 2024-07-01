@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { Card, Pagination, Row, Col } from 'antd';
-import { logoImageDefault } from '../../config/imageDefault';
+import React, { useState } from "react";
+import { Card, Pagination, Row, Col } from "antd";
+import { logoImageDefault } from "../../config/imageDefault";
 
 const { Meta } = Card;
 
@@ -13,12 +13,14 @@ export const ListCard = ({ cardData, onClickCard }) => {
 
   const pageSize = 10;
 
-  const currentData = cardData.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+  const currentData = cardData.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
+  );
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
 
-  
   return (
     <div>
       <Row gutter={[16, 16]}>
@@ -26,15 +28,25 @@ export const ListCard = ({ cardData, onClickCard }) => {
           <Col span={6} key={index}>
             <Card
               hoverable
-              cover={<img alt="example" src={card.imageUrl ? card.imageUrl : logoImageDefault}
-              height={300}
-              style={{ objectFit: 'cover'}}
-              onClick={onClickCard(index)}
-              />}
+              cover={
+                <img
+                  alt="example"
+                  src={card.imageUrl ? card.imageUrl : logoImageDefault}
+                  height={300}
+                  style={{ objectFit: "cover" }}
+                  onClick={() => {
+                    onClickCard(index);
+                  }}
+                />
+              }
             >
-              <Meta 
-                title={card.name} 
-                description={card.description.length > 20 ? `${card.description.substring(0, 20)}...` : card.description}
+              <Meta
+                title={card.name}
+                description={
+                  card.description.length > 20
+                    ? `${card.description.substring(0, 20)}...`
+                    : card.description
+                }
               />
             </Card>
           </Col>
@@ -45,7 +57,7 @@ export const ListCard = ({ cardData, onClickCard }) => {
         pageSize={pageSize}
         total={cardData.length}
         onChange={handlePageChange}
-        style={{ marginTop: '16px', textAlign: 'center' }}
+        style={{ marginTop: "16px", textAlign: "center" }}
       />
     </div>
   );

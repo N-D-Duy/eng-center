@@ -97,17 +97,14 @@ const RegisterView = () => {
         alert("Đăng nhập thành công!");
         navigate(`/login`);
       } else {
-        alert("email: " + email + " pass: " + pass);
         alert(
-          "Đăng ký không thành công. Vui lòng kiểm tra lại tên đăng nhập và mật khẩu."
+          "Fail. Please check your email and password again."
         );
       }
       console.log("response", response);
     } catch (error) {
-      console.error("Đăng ký không thành công:", error);
-      alert("email: " + email + " pass: " + pass);
-      console.log("RTesponse", error.response);
-      alert("Đăng ký không thành công. Vui lòng thử lại sau.");
+      console.error("Fail:", error);
+      alert("Fail. Try again later");
     }
   };
   return (
