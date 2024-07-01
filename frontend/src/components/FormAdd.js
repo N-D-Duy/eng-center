@@ -212,94 +212,94 @@ export const FormAddNewUser = () => {
   const { AddNewTeacher } = useTeacherContext();
   const { AddNewParent } = useParentContext();
   const { AddNewStudent } = useStudentContext();
-  const [url, setURL] = useState(null);
+  const [url, setURL] = useState("https://firebasestorage.googleapis.com/v0/b/engcenter-cd204.appspot.com/o/images%2Fbxcwogzk32u?alt=media&token=7d312ea0-6ab8-43fd-ab4e-f01a41989040");
 
   const handleImageChange = (image) => {
     setSelectedImage(image); // Lưu ảnh đã chọn vào state của form
   };
   const handleSaveClick = async (e) => {
-    console.log("Save Click: ", selectedImage);
-    e.preventDefault();
-    if (
-      email === "" ||
-      password === "" ||
-      name === "" ||
-      phone === "" ||
-      role === ""
-    ) {
-      alert("Please fill all required fields!");
-      return;
-    }
-    if (role === "parent" && studentIdCode === "") {
-      alert("Please fill id student required");
-      return;
-    }
+    console.log("Save Click: ", url);
+    // e.preventDefault();
+    // if (
+    //   email === "" ||
+    //   password === "" ||
+    //   name === "" ||
+    //   phone === "" ||
+    //   role === ""
+    // ) {
+    //   alert("Please fill all required fields!");
+    //   return;
+    // }
+    // if (role === "parent" && studentIdCode === "") {
+    //   alert("Please fill id student required");
+    //   return;
+    // }
     
-    //call api at here
-    const newValueAccount = {
-      user_name: name,
-      full_name: name,
-      password: password,
-      role: role,
-      status: "actived",
-      email: email,
-      phone: phone,
-    };
-    console.log("Save Click");
-    switch (role) {
-      case "teacher":
-        //call api to create teacher
-        const dataTeacher = {
-          "account": newValueAccount,
-          "teacher": {
-            session_count: 0,
-            account: "",
-          },
-        }
-        const responseTeacher = await AddNewTeacher(JSON.stringify(dataTeacher));
-        if (responseTeacher) alert("User information saved successfully!");
-        else alert("User information saved FAIL!");
-        break;
-      case "student":
-        const dataStudent = {
-          "account": newValueAccount,
-          "student": {
-            cocc_percent: 0,
-            tuition_due: 0,
-            tuition_total: 0,
-            parent: "",
-            account: ""
-          }
-        };
-        console.log("Save Click");
-        const responseStudent = await AddNewStudent(JSON.stringify(dataStudent)
-        );
-        if (responseStudent) alert("User information saved successfully!");
-        else alert("User information saved FAIL!");
-        //call api to create student
-        break;
-      case "parent":
-        const dataParent = {
-          account: newValueAccount,
-          parent: {
-            name: name,
-            invite_code: studentIdCode,
-            account: newValueAccount,
-          },
-        };
-        const responseParent = await AddNewParent(JSON.stringify(dataParent));
-        if (responseParent) alert("User information saved successfully!");
-        else alert("User information saved FAIL!. Try Again!");
-        break;
-      default:
-        break;
-    }
-    //Clear input
-    // setName("");
-    // setEmail("");
-    // setPhone("");
-    // setPassword("");
-    // setStatus("active");
+    // //call api at here
+    // const newValueAccount = {
+    //   user_name: name,
+    //   full_name: name,
+    //   password: password,
+    //   role: role,
+    //   status: "actived",
+    //   email: email,
+    //   phone: phone,
+    // };
+    // console.log("Save Click");
+    // switch (role) {
+    //   case "teacher":
+    //     //call api to create teacher
+    //     const dataTeacher = {
+    //       "account": newValueAccount,
+    //       "teacher": {
+    //         session_count: 0,
+    //         account: "",
+    //       },
+    //     }
+    //     const responseTeacher = await AddNewTeacher(JSON.stringify(dataTeacher));
+    //     if (responseTeacher) alert("User information saved successfully!");
+    //     else alert("User information saved FAIL!");
+    //     break;
+    //   case "student":
+    //     const dataStudent = {
+    //       "account": newValueAccount,
+    //       "student": {
+    //         cocc_percent: 0,
+    //         tuition_due: 0,
+    //         tuition_total: 0,
+    //         parent: "",
+    //         account: ""
+    //       }
+    //     };
+    //     console.log("Save Click");
+    //     const responseStudent = await AddNewStudent(JSON.stringify(dataStudent)
+    //     );
+    //     if (responseStudent) alert("User information saved successfully!");
+    //     else alert("User information saved FAIL!");
+    //     //call api to create student
+    //     break;
+    //   case "parent":
+    //     const dataParent = {
+    //       account: newValueAccount,
+    //       parent: {
+    //         name: name,
+    //         invite_code: studentIdCode,
+    //         account: newValueAccount,
+    //       },
+    //     };
+    //     const responseParent = await AddNewParent(JSON.stringify(dataParent));
+    //     if (responseParent) alert("User information saved successfully!");
+    //     else alert("User information saved FAIL!. Try Again!");
+    //     break;
+    //   default:
+    //     break;
+    // }
+    // //Clear input
+    // // setName("");
+    // // setEmail("");
+    // // setPhone("");
+    // // setPassword("");
+    // // setStatus("active");
   };
 
   return (
